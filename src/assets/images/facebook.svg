@@ -1,0 +1,7 @@
+<svg id="facebook" xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 35 35">
+  <g id="Ellipse_222" data-name="Ellipse 222" fill="none" stroke="#5b5b5b" stroke-width="1">
+    <circle cx="17.5" cy="17.5" r="17.5" stroke="none"/>
+    <circle cx="17.5" cy="17.5" r="17" fill="none"/>
+  </g>
+  <path id="Path_187741" data-name="Path 187741" d="M18.1,4H5.9A1.905,1.905,0,0,0,4,5.9V18.1A1.9,1.9,0,0,0,5.9,20H18.1A1.905,1.905,0,0,0,20,18.1V5.9A1.905,1.905,0,0,0,18.1,4ZM16.571,9.714H15.81c-.815,0-1.143.19-1.143.762v1.143h1.9l-.381,1.9H14.667v5.714h-1.9V13.524H11.238v-1.9h1.524V10.476c0-1.524.762-2.667,2.286-2.667a2.35,2.35,0,0,1,1.524.381Z" transform="translate(6 6)" fill="#5b5b5b"/>
+</svg>

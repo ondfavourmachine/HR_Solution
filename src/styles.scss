@@ -1,1 +1,677 @@
 /* You can add global styles to this file, and also import other style files */
+
+
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+/* You can add global styles to this file, and also import other style files */
+
+// html, body { height: 100%; }
+// body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+:root{}
+// html, body { height: 100%; }
+// body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+@font-face {
+    font-family: 'Campton Book';
+    src: url('./assets/fonts/Campton-Book.eot');
+    // src: url(./assets/fonts/Campton-Book.eot);
+    src: local('Campton Book'), local('Campton-Book'),
+        url('./assets/fonts/Campton-Book.eot?#iefix') format('embedded-opentype'),
+        url('./assets/fonts/Campton-Book.woff2') format('woff2'),
+        url('./assets/fonts/Campton-Book.woff') format('woff'),
+        url('./assets/fonts/Campton-Book.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Campton Book Italic';
+    src: url('./assets/fonts/Campton-BookItalic.eot');
+    src: local('Campton Book Italic'), local('Campton-BookItalic'),
+        url('./assets/fonts/Campton-BookItalic.eot?#iefix') format('embedded-opentype'),
+        url('./assets/fonts/Campton-BookItalic.woff2') format('woff2'),
+        url('./assets/fonts/Campton-BookItalic.woff') format('woff'),
+        url('./assets/fonts/Campton-BookItalic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Campton Light';
+    src: url('./assets/fonts/Campton-Light.eot');
+    src: local('Campton Light'), local('Campton-Light'),
+        url('./assets/fonts/Campton-Light.eot?#iefix') format('embedded-opentype'),
+        url('./assets/fonts/Campton-Light.woff2') format('woff2'),
+        url('./assets/fonts/Campton-Light.woff') format('woff'),
+        url('./assets/fonts/Campton-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Campton Medium';
+    src: url('./assets/fonts/Campton-Medium.eot');
+    src: local('Campton Medium'), local('Campton-Medium'),
+        url('./assets/fonts/Campton-Medium.eot?#iefix') format('embedded-opentype'),
+        url('./assets/fonts/Campton-Medium.woff2') format('woff2'),
+        url('./assets/fonts/Campton-Medium.woff') format('woff'),
+        url('./assets/fonts/Campton-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Campton Extra Bold';
+    src: url('./assets/fonts/Campton-ExtraBold.eot');
+    src: local('Campton ExtraBold'), local('Campton-ExtraBold'),
+        url('./assets/fonts/Campton-ExtraBold.eot?#iefix') format('embedded-opentype'),
+        url('./assets/fonts/Campton-ExtraBold.woff2') format('woff2'),
+        url('./assets/fonts/Campton-ExtraBold.woff') format('woff'),
+        url('./assets/fonts/Campton-ExtraBold.ttf') format('truetype');
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Campton Thin Italic';
+    src: url('./assets/fonts/Campton-ThinItalic.eot');
+    src: local('Campton Thin Italic'), local('Campton-ThinItalic'),
+        url('./assets/fonts/Campton-ThinItalic.eot?#iefix') format('embedded-opentype'),
+        url('./assets/fonts/Campton-ThinItalic.woff2') format('woff2'),
+        url('./assets/fonts/Campton-ThinItalic.woff') format('woff'),
+        url('./assets/fonts/Campton-ThinItalic.ttf') format('truetype');
+    font-weight: 100;
+    font-style: italic;
+}
+
+
+
+@font-face {
+    font-family: 'Campton Extra Light Italic';
+    src: url('./assets/fonts/Campton-ExtraLightItalic.eot');
+    src: local('Campton ExtraLight Italic'), local('Campton-ExtraLightItalic'),
+        url('./assets/fonts/Campton-ExtraLightItalic.eot?#iefix') format('embedded-opentype'),
+        url('./assets/fonts/Campton-ExtraLightItalic.woff2') format('woff2'),
+        url('./assets/fonts/Campton-ExtraLightItalic.woff') format('woff'),
+        url('./assets/fonts/Campton-ExtraLightItalic.ttf') format('truetype');
+    font-weight: 200;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Campton Black';
+    src: url('./assets/fonts/Campton-Black.eot');
+    src: local('Campton Black'), local('Campton-Black'),
+        url('./assets/fonts/Campton-Black.eot?#iefix') format('embedded-opentype'),
+        url('./assets/fonts/Campton-Black.woff2') format('woff2'),
+        url('./assets/fonts/Campton-Black.woff') format('woff'),
+        url('./assets/fonts/Campton-Black.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Campton Medium Italic';
+    src: url('./assets/fonts/Campton-MediumItalic.eot');
+    src: local('Campton Medium Italic'), local('Campton-MediumItalic'),
+        url('./assets/fonts/Campton-MediumItalic.eot?#iefix') format('embedded-opentype'),
+        url('./assets/fonts/Campton-MediumItalic.woff2') format('woff2'),
+        url('./assets/fonts/Campton-MediumItalic.woff') format('woff'),
+        url('./assets/fonts/Campton-MediumItalic.ttf') format('truetype');
+    font-weight: 500;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Campton Semi Bold';
+    src: url('./assets/fonts/Campton-SemiBold.eot');
+    src: local('Campton SemiBold'), local('Campton-SemiBold'),
+        url('./assets/fonts/Campton-SemiBold.eot?#iefix') format('embedded-opentype'),
+        url('./assets/fonts/Campton-SemiBold.woff2') format('woff2'),
+        url('./assets/fonts/Campton-SemiBold.woff') format('woff'),
+        url('./assets/fonts/Campton-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Campton Book Bold Italic';
+    src: url('./assets/fonts/Campton-BoldItalic.eot');
+    src: local('Campton Bold Italic'), local('Campton-BoldItalic'),
+        url('./assets/fonts/Campton-BoldItalic.eot?#iefix') format('embedded-opentype'),
+        url('./assets/fonts/Campton-BoldItalic.woff2') format('woff2'),
+        url('./assets/fonts/Campton-BoldItalic.woff') format('woff'),
+        url('./assets/fonts/Campton-BoldItalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Campton Black Italic';
+    src: url('./assets/fonts/Campton-BlackItalic.eot');
+    src: local('Campton Black Italic'), local('Campton-BlackItalic'),
+        url('./assets/fonts/Campton-BlackItalic.eot?#iefix') format('embedded-opentype'),
+        url('./assets/fonts/Campton-BlackItalic.woff2') format('woff2'),
+        url('./assets/fonts/Campton-BlackItalic.woff') format('woff'),
+        url('./assets/fonts/Campton-BlackItalic.ttf') format('truetype');
+    font-weight: 900;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Campton Semi Bold Italic';
+    src: url('./assets/fonts/Campton-SemiBoldItalic.eot');
+    src: local('Campton SemiBold Italic'), local('Campton-SemiBoldItalic'),
+        url('./assets/fonts//Campton-SemiBoldItalic.eot?#iefix') format('embedded-opentype'),
+        url('./assets/fonts/Campton-SemiBoldItalic.woff2') format('woff2'),
+        url('./assets/fonts/Campton-SemiBoldItalic.woff') format('woff'),
+        url('./assets/fonts/Campton-SemiBoldItalic.ttf') format('truetype');
+    font-weight: 600;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Campton Bold Normal';
+    src: url('./assets/fonts/Campton-Bold.eot');
+    src: local('Campton Bold'), local('Campton-Bold'),
+        url('./assets/fonts/Campton-Bold.eot?#iefix') format('embedded-opentype'),
+        url('./assets/fonts/Campton-Bold.woff2') format('woff2'),
+        url('./assets/fonts/Campton-Bold.woff') format('woff'),
+        url('./assets/fonts/Campton-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Campton Light Italic';
+    src: url('./assets/fonts/Campton-LightItalic.eot');
+    src: local('Campton Light Italic'), local('Campton-LightItalic'),
+        url('./assets/fonts/Campton-LightItalic.eot?#iefix') format('embedded-opentype'),
+        url('./assets/fonts/Campton-LightItalic.woff2') format('woff2'),
+        url('./assets/fonts/Campton-LightItalic.woff') format('woff'),
+        url('./assets/fonts/Campton-LightItalic.ttf') format('truetype');
+    font-weight: 300;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Campton Extra Light';
+    src: url('./assets/fonts/Campton-ExtraLight.eot');
+    src: local('Campton ExtraLight'), local('Campton-ExtraLight'),
+        url('./assets/fonts/Campton-ExtraLight.eot?#iefix') format('embedded-opentype'),
+        url('./assets/fonts/Campton-ExtraLight.woff2') format('woff2'),
+        url('./assets/fonts/Campton-ExtraLight.woff') format('woff'),
+        url('./assets/fonts/Campton-ExtraLight.ttf') format('truetype');
+    font-weight: 200;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Campton Thin';
+    src: url('./assets/fonts/Campton-Thin.eot');
+    src: local('Campton Thin'), local('Campton-Thin'),
+        url('./assets/fonts/Campton-Thin.eot?#iefix') format('embedded-opentype'),
+        url('./assets/fonts/Campton-Thin.woff2') format('woff2'),
+        url('./assets/fonts/Campton-Thin.woff') format('woff'),
+        url('./assets/fonts/Campton-Thin.ttf') format('truetype');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Campton Extra Bold Italic';
+    src: url('./assets/fonts/Campton-ExtraBoldItalic.eot');
+    src: local('Campton ExtraBold Italic'), local('Campton-ExtraBoldItalic'),
+        url('./assets/fonts/Campton-ExtraBoldItalic.eot?#iefix') format('embedded-opentype'),
+        url('./assets/fonts/Campton-ExtraBoldItalic.woff2') format('woff2'),
+        url('./assets/fonts/Campton-ExtraBoldItalic.woff') format('woff'),
+        url('./assets/fonts/Campton-ExtraBoldItalic.ttf') format('truetype');
+    font-weight: 800;
+    font-style: italic;
+}
+
+:root{
+    --general-padding: 10rem;
+    --subtitle-text: 2.5em;
+}
+
+*, 
+*::after,
+*::before{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+html{
+    font-size: 62.5%;
+    scroll-behavior: smooth;
+}
+
+
+body{
+  font-size: 1.6rem;
+  @apply font-hrmsCamptonLight;
+}
+
+h2{
+    font-size: var(--subtitle-text);
+    @apply font-hrmsCamptonBold text-hrms-genBlueColor-1;
+}
+
+h5{
+    font-size: 1.375em;
+    letter-spacing: .005ch;
+    @apply font-hrmsCamptonMedium ;
+}
+
+h6{
+    font-size: 1.375em;
+    @apply font-semibold text-black px-3;
+}
+
+.main{
+    @apply w-screen h-screen px-1;
+}
+
+
+.header_wrapper{
+    box-shadow:  0px 0px 8px 2px #F4F5FA;  
+    @apply w-full h-28 flex items-center py-2 sticky top-0 bg-white ;
+
+    & .header_content_container{
+        padding-inline: var(--general-padding);
+        @apply flex justify-between items-center w-full h-full ;
+
+        & .globus_logo{
+            @apply w-[18rem];
+        }
+    }
+
+    & .button_wrapper{
+      @apply  flex gap-6;
+    }
+}
+
+
+ .generic_button{
+    font-size: 0.825em;
+    @apply transition-all border-2 cursor-pointer border-hrms-slightRed font-hrmsCamptonMedium px-6 flex justify-center items-center py-2 rounded-md hover:shadow-lg hover:-translate-y-1;
+  }
+.generic_button.white_inside{
+    @apply bg-white text-hrms-slightRed
+  }
+
+.generic_button.red_inside{
+    @apply bg-hrms-slightRed text-white;
+  }
+
+.banner{
+    @apply w-full h-[55vh] bg-hrms-banner-1 grid place-content-center mb-8;
+
+    &__content_container{
+        @apply  p-2 flex justify-center flex-col items-center;
+
+        & h1{
+            font-size: 4.5em;
+            @apply font-hrmsCamptonBold text-center text-hrms-genBlueColor-1;
+        }
+
+        & p{
+            @apply text-center font-hrmsCamptonLight font-semibold text-2xl w-1/2 leading-relaxed;
+        }
+
+        & .job_opening_button{
+            @apply font-hrmsCamptonThin my-8 font-semibold;
+        }
+    }
+}
+
+.reasons_to_join{
+    padding-inline: var(--general-padding);
+    @apply w-full  pt-14;
+
+    & .content_wrapper{
+        @apply  w-full py-6;
+
+        & .first_part{
+            @apply h-auto grid grid-cols-2 grid-rows-1 gap-10 mb-[30px];
+
+            & [class*="picture_half_"]{
+                @apply  px-4 py-1;
+
+                & [class*="content_"]{
+                    @apply overflow-hidden;
+                }
+    
+            }
+
+            & .content_text{
+                @apply flex gap-4 flex-col pt-4; 
+                & > div{
+                    font-size: 1.05em;
+                    @apply font-medium flex gap-6 justify-between flex-col h-auto;
+                }
+            }
+
+            & .picture_half_one{
+                display: grid;
+                grid-template-columns: 100%;
+                grid-template-rows: 60% 40%;
+
+                & .content_picture{
+                    grid-column: 1/1;
+                    grid-row: 1/2;   
+                }
+    
+                & .content_text{
+                    grid-column: 1/1;
+                    grid-row: 2/3;
+                }
+            }
+            & .picture_half_two{
+                display: grid;
+                grid-template-columns: 100%;
+                grid-template-rows: 27% 73%;
+
+                & .content_text{
+                    @apply flex gap-4 flex-col pt-1; 
+                    grid-column: 1/1;
+                    grid-row: 1/2;   
+                }
+    
+                & .content_picture{
+                    grid-column: 1/1;
+                    grid-row: 2/3; 
+                    @apply overflow-hidden;   
+                }
+            }
+        }   
+
+        & .second_part{
+            @apply h-auto grid grid-cols-2 grid-rows-1 gap-10;
+
+            & .second_part__mission_vision{
+                @apply flex flex-col gap-4;
+            }
+
+            & .statement_container{
+                @apply flex-auto  py-2 flex flex-col justify-between;
+
+                & .vision_statement, .mission_statement{
+                    font-size: 1.15em;
+                    @apply flex gap-4 flex-col font-medium w-full;
+                }
+
+                & .vision_after_img, .mission_after_img{
+                    @apply w-full flex gap-3 items-center;
+
+                    & span:first-child{
+                        display: grid;
+                        grid-template-columns: 30% 70%;
+                        grid-template-rows: 100%;
+                        @apply w-64 h-2 relative;
+
+                        &::after, &::before{
+                            content: '';
+                            @apply absolute inset-0;
+                        }
+
+                        &::after{
+                            grid-column: 1/2;
+                            grid-row: 1/1;
+                            @apply bg-hrms-slightRed;
+                        }
+                        &::before{
+                            grid-column: 2/3;
+                            grid-row: 1/1;
+                            @apply bg-hrms-hoverBlue-1;
+                        }
+                    }
+                }
+
+                & .vision_after_img span:last-child, .mission_after_img span:last-child{
+                    @apply text-hrms-genBlueColor-1 font-semibold;
+                }
+            }
+
+        }
+    }
+}
+
+
+.core_values{
+    
+    &__content{
+      padding-inline: var(--general-padding);
+      display: grid;
+      grid-template-columns: 40% 60%;
+      grid-template-rows: 100%;
+      grid-gap: .2em;
+      @apply w-full h-auto my-16;
+    }
+
+    &__text_content{
+        grid-column: span 1;
+        grid-row: span 1;
+        @apply  flex flex-col gap-4;
+        & p{
+            max-width: 45ch;
+            @apply font-medium text-hrms-text-dark leading-normal
+        }
+    }
+
+    &__boxes{
+        grid-column: span 1;
+        grid-row: span 1;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(12vw, 1fr));
+        grid-gap: 1em;
+        @apply  p-2;
+
+        & .box{
+            @apply border h-auto border-black row-span-1 rounded-md;
+
+            & .innards{
+                @apply flex justify-between items-center p-3;
+
+                & span:last-child{
+                    @apply self-start;
+                }
+            }
+
+            &:last-child .innards{
+                @apply mb-6;
+            }
+        }
+    }
+}
+
+.benefits_of_joining_insurance{
+    padding-inline: var(--general-padding);
+    & .benefits{
+      @apply w-full mt-4 mb-10 py-1 flex gap-10;
+    }
+
+    & .benefit{
+        @apply flex flex-col gap-6;
+        & p{
+            max-width: 36ch;
+            @apply font-medium text-hrms-text-dark leading-normal
+        }
+
+        &:first-child .image{
+            @apply relative;
+
+            &::after{
+                content: '';
+                height: 1.55em;
+                width: 1.55em;
+                transform: translate(-244%, -50%);
+                @apply absolute top-1/2 left-[20%] bottom-0 rounded-full bg-green-700; 
+            }
+        }
+    }
+
+    
+
+    & .job_opening_container{
+        @apply flex  justify-center items-center pt-10 pb-28;
+
+        & > .generic_button{
+            @apply font-hrmsCamptonExtraLight px-24 py-4; 
+        }
+    }
+}
+
+footer{
+    @apply my-2;
+    & .footer_with_socialLinks{
+        padding-inline: var(--general-padding);
+        @apply w-full;
+        & .socialLinks_container{
+            font-size: .925em;
+            @apply px-6 pt-4 border-t-2 border-hrms-text-light h-[8vh] flex justify-between items-center font-hrmsCamptonMedium font-semibold;
+
+            & .privacy_policy_terms_condition{
+                @apply flex gap-12;
+            }
+
+            & .social_media_links{
+                @apply flex gap-16;
+            }
+        }
+    }
+    &  .globus_rights_reserved{
+        @apply w-full grid place-content-center h-[8vh] py-2 my-4 border border-hrms-genBlueColor-1 bg-hrms-genBlueColor-1;
+
+        &__contents{
+            font-size: .885em;
+            @apply  py-1 px-2 flex gap-1 font-hrmsCamptonLight font-bold text-white;
+        }
+      }
+}
+
+
+// external-candidate-jobs styles
+
+.search_bar{
+    padding-inline: var(--general-padding);
+    @apply w-full py-4 sticky top-[10%] z-10 bg-white h-[11vh];
+
+
+    &__container{
+        @apply w-full  h-auto bg-white;
+
+        & .form_parent{
+            @apply flex gap-10 w-full;
+        }
+
+        & .input_container, .select_container{
+            @apply w-full;
+        }
+
+        &  input, select{
+            @apply block p-4 h-[5rem] rounded-md pl-16 w-full 
+            placeholder:text-hrms-text-light placeholder:text-2xl text-2xl
+            placeholder:font-hrmsCamptonLight placeholder:py-2 focus:outline-0 focus:ring-0 focus:ring-offset-0 focus:ring-transparent;
+        }
+        
+        & select{
+            @apply px-3 py-2 w-4/6;
+        }
+        & .svg_container{
+            @apply flex absolute inset-y-0 left-2 items-center pl-3 pointer-events-none;
+        }
+
+        & .select_container{
+            @apply flex items-center gap-8 justify-end;
+        }
+
+        & label[class*="generic_select_"]{
+            @apply font-hrmsCamptonMedium text-black;
+        }
+    }
+}
+
+.jobs_wrapper{
+    padding-inline: var(--general-padding);
+    @apply  w-full h-auto mt-20;
+
+    &__container{
+        @apply flex flex-col gap-8;
+
+        & .history{
+            @apply pt-3
+        }
+
+        & .history, h2 + span{
+            font-size: .875em;
+            @apply font-hrmsCamptonBook text-hrms-black-text flex gap-3;
+        }
+
+        & .jobs_section{
+            & .jobs{
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(24vw, 1fr));
+                grid-gap: 1.5em;
+                @apply pt-5 px-2;
+        
+                & .job{
+                    transform: translateY(0px) scale(0.99);
+                    transition: transform .35s ease-in;
+                    @apply flex flex-col gap-8 cursor-pointer border border-hrms-read-notification p-8 rounded-md;
+
+                    &:hover{
+                        transform: translateY(-5px) scale(1.015);
+                        box-shadow: rgba(0, 51,102, .25) 0px 7px 29px 0px; 
+                        @apply border-2 border-hrms-genBlueColor-1;
+                    }
+                }
+
+                & .job_title{
+                    @apply flex gap-16 items-center relative; 
+
+                    &::after{
+                        content: '';
+                        @apply absolute h-4/6 w-[1px] bg-hrms-text-light left-1/2; 
+                    }
+                    & span:first-child{
+                        font-size: 1.275em;
+                        @apply font-hrmsCamptonBook font-semibold;
+                    }
+
+                    & span:last-child{
+                        font-size: .875em;
+                        @apply font-hrmsCamptonBook text-hrms-text-light;
+                    }
+                }
+
+                & .job_location{
+                    @apply flex gap-5 items-center;
+                    & span:first-child{
+                        font-size: .895em;
+                        @apply font-hrmsCamptonBook font-semibold text-hrms-black-text self-end pb-2;
+                    }
+
+                    & span:last-child{
+                        @apply  font-hrmsCamptonBook border border-hrms-read-notification text-hrms-read-notification px-3 py-2 rounded-[28px];
+                    }
+                }
+
+                & .job_dead_line{
+                    @apply flex gap-2 items-center; 
+
+                    & span{
+                        @apply font-hrmsCamptonBook text-hrms-read-notification;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
