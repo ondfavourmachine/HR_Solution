@@ -1,0 +1,79 @@
+
+ :host{
+    @apply w-full;
+ }
+
+ .applicant_search_params{
+    @apply flex gap-5;
+
+    & div:first-child{
+        width: 28%;
+    }
+
+    & div:not(:first-child){
+        flex: 1;
+    }
+
+    & .select_container, .input_container{
+        @apply w-auto;
+    }
+}
+ .statistics_text_and_image{
+     @apply w-full flex justify-between pb-2 border-b-2 mt-10 border-b-hrms-read-notification;
+ 
+     & .text{
+         font-size: 1.15em;
+         @apply font-hrmsCamptonBook font-medium
+     }
+ }
+ 
+.download_icons{
+         font-size: .876em;
+         @apply w-3/12 px-4 justify-end flex gap-10 items-center text-hrms-slightRed ;
+ 
+         & span{
+             @apply flex gap-1 items-center relative cursor-pointer isolate overflow-visible;
+ 
+             &::before{
+                 content: '';
+                 @apply -z-[1] absolute -inset-3 border border-hrms-gray-bg hidden;
+             }
+ 
+             &:hover::before{
+                 @apply block bg-hrms-gray-bg;
+             }
+         }
+     }
+  .form_parent{
+         @apply  h-auto;
+ 
+         & .date_picker_container{
+             @apply flex-none;
+         }
+ 
+         & .btn-red-custom{
+             @apply w-auto py-4 cursor-pointer;
+         }
+     }
+ 
+ 
+    // .svg_container{
+    //     // @apply h-8 top-[15px];
+    // }
+
+    select:focus{
+        font-size: 1em !important;
+        @apply px-3 py-2 #{!important};
+    }
+
+input:focus{
+    @apply pl-16 pt-4 #{!important};
+}
+
+
+
+     
+ 
+
+ 
+ 

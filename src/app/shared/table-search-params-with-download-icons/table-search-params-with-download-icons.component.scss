@@ -1,0 +1,26 @@
+
+
+:host{
+    @apply flex-auto;
+}
+
+
+select{
+    padding-inline: .2rem !important;
+    padding-block: .2rem !important;
+    font-size: 1em;
+}
+
+input:focus{
+    padding-left: 4rem !important;
+    padding-block: .2rem !important;
+}
+
+.select_container{
+    flex-basis: 40%;
+    @apply justify-start;
+
+    & select{
+        @apply w-full px-3 #{!important};
+    }
+}

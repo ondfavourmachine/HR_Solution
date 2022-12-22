@@ -1,0 +1,202 @@
+<main class="interview_summary__container relative">
+    <header>
+       <div class="first_part" [ngClass]="{ 'gap-5': true }">
+         {{getHeading(data?.inviteType)  }}
+        <span class="status_container" >Status: 
+            <span *ngIf="data?.stageOfCreation == 'PendingApproval'" class="status Pending" 
+            > Pending Approval
+          </span>
+          <span *ngIf="data?.stageOfCreation == 'Approved'" class="status Approved" 
+            > Approved
+          </span>
+        </span>
+       </div>
+       <div class="second_part" >
+        <span  ><img (click)="closeBtn()" src="../../../../assets/images/close-icon.svg" alt=""></span>
+       </div>
+    </header>
+
+    <div class="content ">
+        <section class="invite_information">
+            <div class="an_invite_info">
+                <h3 class="heading">Schedule Type</h3>
+                <p class="info">{{ data?.inviteTypeName!.split('_')!.splice(0, 2)!.join(' ') }}</p>
+            </div>
+            <div class="an_invite_info">
+                <h3 class="heading">Schedule ID</h3>
+                <p class="info"> {{ data?.scheduleId || 'N/A'}} </p>
+            </div>
+            
+            <div class="an_invite_info">
+                <h3 class="heading">Date & Time</h3>
+                <p class="info"> {{ appropriateDateTimeToDisplay }} </p>
+            </div>
+            <div class="an_invite_info">
+                <h3 class="heading">Job Title</h3>
+                <p class="info"> {{ data?.applicants![0].position || data?.jobTitle}} </p>
+            </div>
+            <div class="an_invite_info">
+                <h3 class="heading">Department</h3>
+                <p class="info">{{  data?.departmentName  || data?.department }}</p>
+            </div>
+            <div class="an_invite_info">
+                <h3 class="heading"> {{ data?.inviteTypeName == 'Test Invite' || data?.inviteTypeName == 'Test invites' ? 'No of Invigilators' : 'No of Interviewers'}} </h3>
+                
+                <div *ngIf="data?.inviteType == 1" class="applicant">
+                    <div class="applicant__passport_container">
+                        <img *ngFor="let invigilator of data?.testInvigilators | slice:0:3; index as i" class="passport" src="../../../assets/images/person_2.png" alt="">
+                        
+                    </div>
+                    <div class="applicant__number !text-hrms-genBlueColor-1 !font-bold">  {{ data?.testInvigilators!.length }} </div>
+                </div>
+
+                <div  class="applicant">
+                    <div class="applicant__passport_container">
+                        <img *ngFor="let invigilator of data?.interviewers | slice:0:3; index as i" class="passport" src="../../../assets/images/person_2.png" alt="">
+                        
+                    </div>
+                    <div class="applicant__number !text-hrms-genBlueColor-1 !font-bold">  {{ data?.interviewers!.length }} </div>
+                </div>
+
+            </div>
+            <div class="an_invite_info">
+                <h3 class="heading">No of Applicants</h3>
+                <div class="applicant">
+                    <div class="applicant__passport_container">
+                        <img *ngFor="let applicant of data?.applicants | slice:0:3; index as i" class="passport" src="../../../assets/images/person_2.png" alt="">
+                        <!-- <img class="passport" src="../../../assets/images/person_2.png" alt="">
+                        <img class="passport" src="../../../assets/images/person_2.png" alt=""> -->
+                    </div>
+                    <div class="applicant__number !text-hrms-genBlueColor-1 !font-bold"> {{ data?.applicants!.length }} </div>
+                </div>
+            </div>
+        </section>
+    
+        <section class="interview_applicant_section">
+            <div class="interview_half">
+                <!-- <pre>{{data?.inviteTypeName | json }}</pre> -->
+                <div class="main_interviewer">
+                    <span class="heading mb-3">{{
+                        (data?.inviteTypeName == 'Test Invite' || data?.inviteTypeName == 'Test invites') ? 'Invigilators' : 'Interviewers'}} 
+                        <span *ngIf="data?.inviteType! < 5" class="info"> {{ data?.inviteType == 1  ? data?.testInvigilators![0].displayName == null ? '' : data?.testInvigilators!.length : data?.interviewers![0].displayName == null ? ''  : data?.interviewers!.length }}  </span>
+                    </span>
+                    <div class="interviewer">
+                        <div *ngIf="(!data?.interviewChairPerson || data?.interviewChairPerson == '') && data?.inviteType! < 5" [ngClass]="{'!opacity-20': !data?.interviewChairPerson}" class="personality">
+                            <img *ngIf="(data?.testInvigilators![0]?.displayName ||  data?.interviewers![0]?.displayName || data?.testInvigilators![0]?.name || data?.interviewers![0]?.name)" src="../../../../assets/images/person_2.png" alt=""> <span class="name "> {{ displayAppropriateString(false, data?.interviewChairPerson)}} </span>
+                        </div>
+                        <div *ngIf="data?.interviewChairPerson && data?.inviteType! < 5" class="personality">
+                            <img *ngIf="(data?.testInvigilators![0]?.displayName ||  data?.interviewers![0]?.displayName || data?.testInvigilators![0]?.name || data?.interviewers![0]?.name)" src="../../../../assets/images/person_2.png" alt=""> <span class="name ">
+                                 {{ data?.interviewChairPerson!.split('/')!.length > 1 ? displayAppropriateString(false, data?.interviewChairPerson) : data?.interviewChairPerson }} 
+                            </span>
+                        </div>
+                        <div *ngIf="data?.inviteType! < 5" class="position_in_bank" [ngClass]="{'!opacity-20': !data?.interviewChairPerson}">
+                            <span class="position "> {{ displayAppropriateString(true, data?.interviewChairPerson) || "Not Available" }} </span>
+                            <span *ngIf="(data?.testInvigilators![0]?.displayName ||  data?.interviewers![0]?.displayName || data?.testInvigilators![0]?.name || data?.interviewers![0]?.name)" class="self-start">Interview Chair</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="other_interviewers">
+                    <ul *ngIf="data?.inviteType == 1">
+                        <li *ngFor="let interviewer of data?.testInvigilators; index as i">
+                            <ng-container *ngIf="data?.stageOfCreation == 'Initiation'; else PendingApproval">
+                                <div class="personality">
+                                    <img src="../../../../assets/images/person_2.png" alt=""> <span class="name ">  {{ interviewer?.name }} </span>
+                                </div>
+                                <span>Head Project Manager</span>
+                            </ng-container>
+                            <ng-template #PendingApproval>
+                                <div class="personality">
+                                    <img *ngIf="interviewer?.displayName != null" src="../../../../assets/images/person_2.png" alt=""> <span class="name ">  {{ interviewer?.displayName }} </span>
+                                </div>
+                                <span> {{ interviewer?.jobTitle}} </span>
+                            </ng-template>
+                        </li>
+                    </ul>
+                    <ul >
+                        <li *ngFor="let interviewer of data?.interviewers; index as i">
+                            <ng-container *ngIf="data?.stageOfCreation == 'Initiation'; else PendingApproval">
+                                <div class="personality">
+                                    <img src="../../../../assets/images/person_2.png" alt=""> <span class="name ">  {{ interviewer?.displayName || interviewer?.name }} </span>
+                                </div>
+                                <span>Head Project Manager</span>
+                            </ng-container>
+                            <ng-template #PendingApproval>
+                                <div class="personality">
+                                    <img *ngIf="interviewer?.displayName != null" src="../../../../assets/images/person_2.png" alt=""> <span class="name ">  {{ interviewer?.displayName }} </span>
+                                </div>
+                                <span> {{ interviewer?.jobTitle}} </span>
+                            </ng-template>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="applicant_half">
+                <span class="heading mb-3 pl-2">Applicants </span>
+                <div class="other_applicants">
+                    <ul>
+                        <li *ngFor="let interviewee of data?.applicants; index as i">
+                            <div class="personality">
+                                <img src="../../../../assets/images/person_2.png" alt=""> <span class="name ">  {{ interviewee?.firstName + ' ' + interviewee?.lastName  }} </span>
+                            </div>
+                            <span>{{ interviewee?.courseofStudy || 'Not Available' }}</span>
+
+                            <span> {{ interviewee?.position || data?.jobTitle}} </span>
+                        </li>
+                        
+                        <!-- <li>
+                            <div class="personality">
+                                <img src="../../../../assets/images/person_2.png" alt=""> <span class="name ">Bank Anthony</span>
+                            </div>
+                            <span>Economics</span>
+
+                            <span>Business Analyst</span>
+                        </li>
+
+                        <li>
+                            <div class="personality">
+                                <img src="../../../../assets/images/person_2.png" alt=""> <span class="name ">Bank Anthony</span>
+                            </div>
+                            <span>Economics</span>
+
+                            <span>Business Analyst</span>
+                        </li> -->
+                        
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer >
+        <!-- <div [ngClass]="{'!flex': !data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
+            <a (click)="edit()">   
+              <img  class="edit_button" src="../../../assets/images/edit_button.svg" alt="">   Edit
+            </a>
+            <button
+             class="btn-red-custom">
+                Submit Application
+            </button>
+        </div> -->
+
+        <div *ngIf="data.stageOfCreation == 'Initiation'" class="button_fields">
+            <button
+             (click)="createThisSchedule($event)"
+             class="btn-red-custom">
+                Submit
+            </button>
+        </div>
+
+        <div *ngIf="data.stageOfCreation == 'PendingApproval' && role == 'Approver'" class="button_fields">
+            <button
+             class="btn-red-custom">
+                Reject Invite
+            </button>
+            <button
+             (click)="triggerApprovalProcess($event)"
+             class="btn-red-custom green">
+                Approve Invite
+            </button>
+        </div>
+        
+    </footer>
+</main>

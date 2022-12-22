@@ -1,0 +1,31 @@
+.header_nav{
+    box-shadow: var(--general_box_shadow);
+    @apply py-1 bg-white h-[8vh] overflow-hidden w-full;
+    &__child{
+        @apply flex justify-end gap-2 h-full pr-10; 
+    }
+
+    & .second_half{
+        @apply flex gap-2 min-w-[26rem] overflow-hidden items-center justify-between;
+
+        & .bell_icon_container{
+            @apply py-1 overflow-visible;
+        }
+
+        & .logged_in_user_credential{
+            font-size: .905em;
+            @apply flex flex-col py-4 font-hrmsCamptonMedium font-semibold text-hrms-genBlueColor-1 items-center justify-end;
+
+            & span:last-child{
+                font-size: .85em;
+                @apply self-end font-hrmsCamptonLight text-hrms-text-dark;
+            }
+        }
+
+        & .logout_container{
+            @apply pr-6;
+        }
+
+    }
+
+}

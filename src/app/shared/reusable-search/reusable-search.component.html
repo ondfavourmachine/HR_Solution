@@ -1,4 +1,4 @@
-<section class="search_bar">
+<section class="search_bar sticky_bar">
     <div class="search_bar__container">
       
     <form class="form_parent">   
@@ -14,13 +14,12 @@
 
       <div class="relative select_container">
         
-            <label for="generic_select_location" class="">Location: </label>
+            <label for="generic_select_location" class="w-40">Location: </label>
             <select id="generic_select_location" class="">
               <option selected="">All Location</option>
-              <option value="US">United States</option>
-              <option value="CA">Canada</option>
-              <option value="FR">France</option>
-              <option value="DE">Germany</option>
+              <option [value]="location?.branchName" *ngFor="let location of (globusBankBranchLocations$ | async)?.result">
+                {{ location?.branchName }}
+              </option>
             </select>
 
     </div>
@@ -28,13 +27,13 @@
 
         <div class="relative select_container">
             
-          <label for="generic_select_type" class="">Type:</label>
+          <label for="generic_select_type" class="w-20">Type:</label>
           <select id="generic_select_type" class="">
             <option selected="">All Type</option>
-            <option value="US">United States</option>
-            <option value="CA">Canada</option>
-            <option value="FR">France</option>
-            <option value="DE">Germany</option>
+            <option [value]="type" *ngFor="let type of sharedService.convertJobTypesToArray()">
+              {{ type }}
+            </option>
+            
           </select>
 
         </div>

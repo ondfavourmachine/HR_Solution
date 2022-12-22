@@ -1,0 +1,14 @@
+
+main{
+    @apply overflow-y-visible h-[92vh];
+
+    & .search_bar{
+        @apply top-1
+    }
+
+    & .applicant_selection_table{
+        @apply shadow-none;
+    }
+ }
+ 
+ 

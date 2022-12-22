@@ -1,0 +1,44 @@
+<main class="main_container overflow-visible">
+
+<p class="text-hrms-black-text leading-loose text-[1.15em] 
+ border-b-2 border-b-hrms-border-line-dull font-semibold font-hrmsCamptonMedium flex justify-between items-center py-5 px-6">
+    Test Invite Details
+    <span (click)="close()"><img src="../../../../assets/images/close-icon.svg" alt=""></span>
+</p>
+
+<div class="w-full flex gap-3 px-6 my-5">
+    <div class="w-4/12 flex justify-start flex-col gap-1">
+        <span class="text-[#3C3C3C]">Test Name</span>
+       <span class="text-xl pl-1 text-hrms-hoverBlue-1 !font-hrmsCamptonBook !font-semibold">  {{data?.testInfo}} </span>
+    </div>
+    <div class="w-8/12 flex justify-start flex-col gap-1">
+       <span class="text-[#3C3C3C]">Test Description</span>
+       <span class="text-xl pl-1 text-hrms-hoverBlue-1 !font-hrmsCamptonBook !font-semibold">
+        {{ data?.testDescription }}
+       </span>
+    </div>
+</div>
+
+<div class="w-full flex gap-3 px-6 my-5">
+    <div class="w-4/12 flex justify-start flex-col gap-1">
+        <span class="text-[#3C3C3C]">Date</span>
+       <span class="text-xl pl-1 text-hrms-hoverBlue-1 !font-hrmsCamptonBook !font-semibold">
+        {{ data?.testDate | date:'mediumDate' }}
+       </span>
+    </div>
+    <div class="w-8/12 flex justify-start flex-col gap-1">
+       <span class="text-[#3C3C3C]">Test Location</span>
+       <span class="text-xl pl-1 text-hrms-hoverBlue-1 !font-hrmsCamptonBook !font-semibold">
+        {{ data?.testLocation }}
+       </span>
+    </div>
+</div>
+
+<div class="time w-full flex flex-col gap-3 px-6 my-5">
+    <span class="text-[#3C3C3C]">Time</span>
+    <span class="text-xl text-hrms-hoverBlue-1 !font-hrmsCamptonBook !font-semibold"> 
+        {{data?.testTime }}
+    </span>
+</div>
+
+</main>

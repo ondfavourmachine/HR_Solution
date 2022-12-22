@@ -1,0 +1,101 @@
+
+
+.jobs_wrapper .jobs_section .jobs.plenty{
+    grid-template-columns: repeat(auto-fit, minmax(28vw, 1fr));
+}
+
+.jobs_wrapper .jobs_section .jobs.one{
+    grid-template-columns: repeat(auto-fit, minmax(26vw, 1fr));
+}
+
+.apply_contents{
+    @apply flex flex-col gap-6 items-center justify-center;
+
+
+    & .warning{
+        font-size: .875em;
+        @apply flex gap-4 font-hrmsCamptonExtraLight;
+    }
+
+}
+
+.input_sub_group, .input_group{
+    @apply overflow-visible;
+}
+
+
+.input_group{
+    @apply relative;
+
+    .error_text{
+        @apply absolute hidden;
+
+        &.firstName.required{
+            @apply -top-[10px] left-2 border border-hrms-slightRed  rounded-md bg-white text-hrms-slightRed px-2 py-[2px] inline-block;
+        }   
+
+        &.lastName.required{
+            @apply top-[6.5rem] left-2 border border-hrms-slightRed  rounded-md bg-white text-hrms-slightRed px-2 py-[2px] inline-block;
+        }   
+
+        &.email.required{
+            @apply -top-[9px] left-2 border border-hrms-slightRed  rounded-md bg-white text-hrms-slightRed px-2 py-[2px] inline-block;
+        } 
+
+        &.dob.required{
+            @apply -top-[9px] left-2 border border-hrms-slightRed  rounded-md bg-white text-hrms-slightRed px-2 py-[2px] inline-block;
+        } 
+
+        &.age.required{
+            @apply -top-[9px] right-4 border border-hrms-slightRed  rounded-md bg-white text-hrms-slightRed px-2 py-[2px] inline-block;
+        }
+        
+        &.phone.required{
+            @apply -top-[9px] left-2 border border-hrms-slightRed  rounded-md bg-white text-hrms-slightRed px-2 py-[2px] inline-block;
+        } 
+
+        &.state.required{
+            @apply -top-[9px] left-2 border border-hrms-slightRed  rounded-md bg-white text-hrms-slightRed px-2 py-[2px] inline-block;
+        } 
+
+        &.residentialAddress.required{
+            @apply -top-[9px] left-2 border border-hrms-slightRed  rounded-md bg-white text-hrms-slightRed px-2 py-[2px] inline-block;
+        } 
+    }
+
+}
+
+.an_input.required, .a_select.requiredt, .a_textarea.required{
+    @apply outline-1 outline-hrms-lightRed-bg outline-offset-[-2px] outline;
+}
+
+.btn-red-custom:disabled{
+    @apply bg-red-200;
+}
+
+.front_facing.backgroundImageAdded{
+    @apply bg-center bg-no-repeat bg-cover relative;
+
+    & small{
+        @apply hidden;
+    }
+
+    &::after{
+        content: 'Replace';
+        font-size: .7em;
+        @apply absolute inset-0 pointer-events-none flex z-10 text-center text-white justify-center items-center;
+
+    }
+}
+
+.form_fields.disabled{
+    @apply opacity-30 pointer-events-none;
+} 
+
+
+.button_fields .btn-red-custom{
+        @apply w-auto #{!important};
+}
+
+
+

@@ -1,0 +1,16 @@
+<div class="header_nav ">
+    <div class="header_nav__child ">
+        <div class="second_half ">
+            <div class="bell_icon_container ">
+                <img  src="../../../assets/images/bell_icon.svg" alt="Bell Icon">
+            </div>
+            <div class="logged_in_user_credential">
+                <span>  {{ loggedInUser }} </span>
+                <span>{{roleOfLoggedInUser}}</span>
+            </div>
+            <div  (click)="logout()" class="logout_container cursor-pointer">
+                <img src="../../../assets/images/Logout_Icon.svg" alt="">
+            </div>
+        </div>
+    </div>
+</div>

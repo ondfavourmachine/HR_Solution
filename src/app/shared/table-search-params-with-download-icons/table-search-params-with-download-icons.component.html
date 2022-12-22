@@ -1,0 +1,49 @@
+<form class="form_parent applicant_search_params">   
+    <div class="relative input_container ">
+        <input type="text" id="job_search" class="" placeholder="Search by Job name" required="">
+        <div class="svg_container">
+          <svg aria-hidden="true" class="w-7 h-7 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z">
+            </path>
+          </svg>
+        </div>
+    </div>
+
+     <div class="date_picker_container">
+
+        <div class="fake_date_picker">
+            <span (click)="triggerCalendarOfDatePicker()" class="real_date_picker_trigger">
+                <img src="../../../assets/images/calender_trigger.svg" alt="">
+            </span>
+            <span [ngClass]="{'dull': start?.value == null && end?.value == null }" class="date_placeholders">
+                {{(start?.value | date:'mediumDate') || 'Start'}} - {{(end?.value | date:'mediumDate') || 'End Date'}}
+            </span>
+        </div>
+        <div class="real_date_picker">
+                <mat-form-field appearance="fill">
+                <mat-label>Start - End Date</mat-label>
+                <mat-date-range-input [formGroup]="range" [rangePicker]="picker" [min]="minDate" [max]="maxDate">
+                <input matStartDate formControlName="start" placeholder="Start date">
+                <input matEndDate  formControlName="end" placeholder="End date">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+        </div>
+
+     </div>
+
+
+     <div class="relative select_container">
+        <select id="generic_select_type" class="">
+          <option selected="">Completed</option>
+          <option value="US">Not Started</option>
+          <option value="CA">Ongoing</option>
+        </select>
+
+      </div>
+
+     <button class="btn-red-custom no_bottom_margin">
+        Fetch
+     </button>    
+</form>

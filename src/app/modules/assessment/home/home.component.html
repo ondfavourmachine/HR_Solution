@@ -1,0 +1,28 @@
+<main class="px-4">
+
+    <div class="body_content w-full ">
+        <section class="tab_container">
+            <app-general-use-tabs
+             [tabArray]="tabList"
+             [tabGroupName]="''"
+             (changeTab)="routeToAppropriateComponent($event)"
+             ></app-general-use-tabs>
+        </section>
+    </div>
+
+    <section class="search_bar">
+        <div class="search_bar__container"> 
+            <app-general-search-bar
+             [quartersToUse]="quartersToUse"
+             [agesToUse]="agesToUse"
+             [globusBranches]="globusBranches"
+            ></app-general-search-bar>
+        </div>
+     </section>
+
+     <section class="applicant_selection_table">
+        <router-outlet></router-outlet>
+     </section>
+
+    
+</main>

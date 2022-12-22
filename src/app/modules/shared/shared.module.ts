@@ -3,22 +3,105 @@ import { CommonModule } from '@angular/common';
 import { NavigationBarComponent } from '../../shared/navigation-bar/navigation-bar.component';
 import { FooterComponent } from '../../shared/footer/footer.component';
 import { ReusableSearchComponent } from '../../shared/reusable-search/reusable-search.component';
-
-
+import { CreateJobFormComponent } from '../../shared/create-job-form/create-job-form.component';
+import { NgxEditorModule } from 'ngx-editor';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SuccessfulInitiationComponent } from '../../shared/successful-initiation/successful-initiation.component';
+import { ApprovalModalComponent } from '../../shared/approval-modal/approval-modal.component';
+import { RouterModule } from '@angular/router';
+import { SideBarComponent } from '../../pages/side-bar/side-bar.component';
+import { NavBarComponent } from '../../pages/nav-bar/nav-bar.component';
+import { JobComponent } from '../../pages/job/job.component';
+import { GeneralUseTabsComponent } from '../../shared/general-use-tabs/general-use-tabs.component';
+import { SlickCarouselModule } from 'ngx-slick-carousel';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatNativeDateModule } from '@angular/material/core';
+import {NgxSkeletonModule} from 'ngx-skeleton'
+import { PreviewApplicationComponent } from 'src/app/pages/preview-application/preview-application.component';
+import { CreateAScheduleComponent } from '../../shared/create-aschedule/create-aschedule.component';
+import { MultiSelectComponent } from '../../shared/multi-select/multi-select.component';
+import { AnIndividualScheduleComponent } from '../../shared/an-individual-schedule/an-individual-schedule.component';
+import { InterviewSummaryComponent } from '../../pages/shared/interview-summary/interview-summary.component';
+import { InterviewApprovalComponent } from 'src/app/shared/interview-approval/interview-approval.component';
+import { TestInviteDescriptionViewComponent } from '../../pages/shared/test-invite-description-view/test-invite-description-view.component';
+import { GeneralSearchBarComponent } from '../../shared/general-search-bar/general-search-bar.component';
+import { TableSearchParamsWithDownloadIconsComponent } from '../../shared/table-search-params-with-download-icons/table-search-params-with-download-icons.component';
+import { ApplicantImageCvDetailsComponent } from '../../shared/applicant-image-cv-details/applicant-image-cv-details.component';
+import { AssessApplicantModalComponent } from '../../shared/assess-applicant-modal/assess-applicant-modal.component';
+import { InterviewAssessmentDetailsComponent } from '../../shared/interview-assessment-details/interview-assessment-details.component';
+import { AssessmentSheetComponent } from '../../shared/assessment-sheet/assessment-sheet.component';
+import { TitleStringDisplayForGradingPipe } from '../../shared/title-string-display-for-grading.pipe';
+import { LoadingSpinnerComponent } from '../../shared/loading-spinner/loading-spinner.component';
 
 @NgModule({
   declarations: [
     NavigationBarComponent,
     FooterComponent,
-    ReusableSearchComponent
+    ReusableSearchComponent,
+    CreateJobFormComponent,
+    SideBarComponent,
+    JobComponent,
+    PreviewApplicationComponent,
+    NavBarComponent,
+    SuccessfulInitiationComponent,
+    ApprovalModalComponent,
+    GeneralUseTabsComponent,
+    CreateAScheduleComponent,
+    MultiSelectComponent,
+    AnIndividualScheduleComponent,
+    InterviewSummaryComponent,
+    InterviewApprovalComponent,
+    TestInviteDescriptionViewComponent,
+    GeneralSearchBarComponent,
+    TableSearchParamsWithDownloadIconsComponent,
+    ApplicantImageCvDetailsComponent,
+    AssessApplicantModalComponent,
+    InterviewAssessmentDetailsComponent,
+    AssessmentSheetComponent,
+    TitleStringDisplayForGradingPipe,
+    LoadingSpinnerComponent
+
+
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    SlickCarouselModule,
+    NgxSkeletonModule,
+    NgxEditorModule,
+    MatFormFieldModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   exports: [
     NavigationBarComponent,
+    SideBarComponent,
+    GeneralUseTabsComponent,
+    PreviewApplicationComponent,
+    JobComponent,
+    NavBarComponent,
     FooterComponent,
-    ReusableSearchComponent
-  ]
+    ReusableSearchComponent,
+    NgxEditorModule,
+    SlickCarouselModule,
+    FormsModule,
+    MatFormFieldModule,
+    NgxSkeletonModule,
+    MatDatepickerModule,
+    MatNativeDateModule ,
+    MultiSelectComponent,
+    AnIndividualScheduleComponent,
+    GeneralSearchBarComponent,
+    TableSearchParamsWithDownloadIconsComponent,
+    ApplicantImageCvDetailsComponent,
+    AssessApplicantModalComponent,
+    InterviewAssessmentDetailsComponent,
+    LoadingSpinnerComponent
+  ], 
+  providers: [TitleStringDisplayForGradingPipe]
 })
 export class SharedModule { }

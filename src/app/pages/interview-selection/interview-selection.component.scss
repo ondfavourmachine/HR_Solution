@@ -1,0 +1,8 @@
+
+.applicant{
+    @apply justify-center gap-0 #{!important};
+
+     & .applicant__number{
+        @apply flex-initial #{!important};
+     }
+}

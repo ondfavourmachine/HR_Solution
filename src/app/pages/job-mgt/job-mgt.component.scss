@@ -1,0 +1,34 @@
+
+
+
+.jobs_wrapper{
+    padding-inline: 0px;
+    @apply mt-1
+}
+
+
+.edit_button{
+    transform: translateY(-2px);
+    @apply cursor-pointer;
+}
+
+
+
+.approval_panel{
+    @apply fixed left-0 right-0  h-auto bottom-1 border border-hrms-text-light bg-white  py-5 flex justify-end gap-9 px-10;
+
+    button[class*="approval_buttons_"]{
+        @apply transition-all px-16 py-3 rounded-md font-hrmsCamptonLight bg-white border border-hrms-text-dark;
+    }
+
+    button[class$="_reject"]{
+        @apply bg-hrms-slightRed text-white border-hrms-slightRed;
+    }
+
+    button[class$="_approve"]{
+        @apply bg-hrms-green text-white border-hrms-green;
+    }
+}
+
+
+

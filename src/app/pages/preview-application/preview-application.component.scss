@@ -1,0 +1,12 @@
+
+.grid_item .status.Approved{
+    @apply text-hrms-green w-max px-3 py-1 rounded-3xl bg-[#E6F5EF];
+}
+
+.interviewScores .grid_item:last-child{
+    transition: all 300ms ease-in-out;
+}
+
+.interviewScores:hover .grid_item:last-child{
+        @apply pr-4;
+}

@@ -1,13 +1,38 @@
-<header class="header_wrapper">
+<header class="header_wrapper" *ngIf="!showApplicantNavigation">
     <nav class="header_content_container">
         <a href="" class="globus_logo">
             <img src="../../../assets/images/globus_logo_with_text.svg" alt="Globus Logo with Text">
         </a>
          <div class="button_wrapper">
-            <a class="generic_button track_application white_inside">
+            <a routerLink="/login" class="generic_button track_application white_inside">
                 Track Your Application
             </a>
-            <a class=" generic_button join_tribe red_inside">Join Our Team</a>
+            <a [routerLink]="['jobs', 'External']" class=" generic_button join_tribe red_inside">Join Our Team</a>
+         </div>
+    </nav>
+</header>
+
+<header class="header_wrapper applied_job_header" *ngIf="showApplicantNavigation">
+    <nav class="header_content_container">
+        <a href="" class="globus_logo">
+            <img src="../../../assets/images/globus_logo_with_text.svg" alt="Globus Logo with Text">
+        </a>
+         <div class="profile_display_wrapper">
+            <div class="profile_text">
+                <span class="logged_in_username">
+                    {{ loggedInUser }}
+                </span>
+                <span class="logged_in_useremail">
+                    {{ emailOfLoggedInUser }}
+                </span>
+            </div>
+            <div (click)="showLogout = !showLogout" class="profile_icon_container">
+                <img src="../../../assets/images/profile_icon.svg" alt=""> <img class="self-end pb-4" src="../../../assets/images/drop_down_icon.svg" alt="">
+                <div (click)="logout()" [ngClass]="{'!flex': showLogout}" class="drop_down_container">
+                    Logout
+                </div>
+            </div>
+            
          </div>
     </nav>
 </header>

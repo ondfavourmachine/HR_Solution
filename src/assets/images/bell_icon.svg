@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44">
+  <g id="Not_icon" data-name="Not icon" transform="translate(0 0.422)">
+    <g id="Group_2302" data-name="Group 2302" transform="translate(0 0)">
+      <circle id="Ellipse_79" data-name="Ellipse 79" cx="22" cy="22" r="22" transform="translate(0 -0.422)" fill="#e5e9ef" opacity="0.5"/>
+    </g>
+    <g id="Group_24" data-name="Group 24" transform="translate(9.588 8.716)">
+      <path id="baseline-notifications-24px" d="M12.527,23.284a2.138,2.138,0,0,0,2.132-2.132H10.4A2.131,2.131,0,0,0,12.527,23.284Zm6.4-6.4V11.56c0-3.272-1.748-6.011-4.8-6.736V4.1a1.6,1.6,0,0,0-3.2,0v.725c-3.059.725-4.8,3.453-4.8,6.736v5.329L4,19.021v1.066H21.053V19.021Z" transform="translate(-0.186 0.389)" fill="#036"/>
+      <rect id="Rectangle_8" data-name="Rectangle 8" width="25" height="26" transform="translate(0.413 -0.136)" fill="none"/>
+    </g>
+  </g>
+</svg>

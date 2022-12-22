@@ -1,0 +1,238 @@
+<main class="create_schedule__container">
+    <header>
+       <div class="first_part"> Create a New Invitation    </div>
+       <div class="second_part" >
+        <span (click)="closeBtn(false)" ><img  src="../../../assets/images/close-icon.svg" alt=""></span>
+       </div>
+    </header>
+
+    <div class="main_body">
+        <div class="main_body__content overflow-visible">
+             <section class="toggle_container">
+                <p>Select Invite types</p>
+                <div class="toggle_group">
+                    <div class="input_group_radio">                    
+                        <input 
+                         (change)="handleToggling($event)"
+                        [(ngModel)]="typeOfInvite"
+                         name="test"
+                         type="radio" value="Test_invites_1" class="an_input half" id="test_invite">
+                        <label for="test_invite">Test Invite</label>
+                      </div>
+                    <div class="input_group_radio"> 
+                                          
+                        <input 
+                        (change)="handleToggling($event)"
+                        type="radio"
+                        [(ngModel)]="typeOfInvite"
+                        name="interview"
+                        value="Interview_invites_2" class="an_input half" id="interview_invites">
+                        <label for="interview_invites">Interview Invites</label>
+                      </div>
+                      <div class="input_group_radio"> 
+                                          
+                        <input 
+                        (change)="handleToggling($event)"
+                        type="radio"
+                        [(ngModel)]="typeOfInvite"
+                        name="interview"
+                        value="Interview_invites_3" class="an_input half" id="interview_invites">
+                        <label for="interview_invites">Interview Invite 2</label>
+                    </div>
+                    <div class="input_group_radio"> 
+                                          
+                        <input 
+                        (change)="handleToggling($event)"
+                        type="radio"
+                        [(ngModel)]="typeOfInvite"
+                        name="interview"
+                        value="Interview_invites_4" class="an_input half" id="interview_invites">
+                        <label for="interview_invites">Interview Invite 3</label>
+                    </div>
+                     <div class="input_group_radio">                    
+                        <input 
+                        (change)="handleToggling($event)"
+                        [(ngModel)]="typeOfInvite"
+                        name="medical"
+                         type="radio" value="Medical_invites_5" class="an_input half" id="medical_invites">
+                        <label for="medical_invites">Medical Invites</label>
+                      </div>
+
+                      <div class="input_group_radio">                    
+                        <input 
+                        (change)="handleToggling($event)"
+                        [(ngModel)]="typeOfInvite"
+                        name="offer"
+                         type="radio" value="Offer_letter_invites_6" class="an_input half" id="offer_letter_invites">
+                        <label for="offer_letter_invites">Offer Letter Invites</label>
+                      </div>
+                </div>
+             </section>
+
+             <section class="form_contents overflow-visible">
+                <div class="form-group parent_input_control">                       
+                    <label for="description" class="form-labels">Give a description</label> 
+                    <textarea [(ngModel)]="description" name="description" id="description"  class="a_textarea full" placeholder="Enter description here"></textarea>
+                  </div>
+             </section>
+             <section class="form_contents overflow-visible">
+                  <div class="form-group parent_input_control">
+                        <label for="classOfDegree" class="form-labels">Department</label>
+                        <select [(ngModel)]="selectedDept" name="selectedDept" name="" id="selectedDept" class="form-control">
+                            <option selected>Select Department</option>
+                            <option [value]="dept.name" *ngFor="let dept of departmentsInGlobus; index as i">  {{ dept?.name }} </option>
+                        </select>     
+                 </div> 
+             </section>
+
+             <section class="multi_select_wrapper overflow-visible">  
+              <app-multi-select 
+               [interviewType]="typeOfInvite"
+              (sendUpApplicants)="showApplicantsSelected($event)" [labelName]="'Add Applicant'"></app-multi-select>
+            </section>
+
+            <section class="applicant_display">
+                <ul class="applicant_display__container">
+                    <li class="applicant" *ngFor="let invitee of interviewInvitees; index as i">
+                        <div class="flex-grow">
+                            <span class="flex gap-1 applicant__image_name"><img src="../../../../assets/images/male_avatar.svg" alt=""> {{ invitee?.firstName + ' ' + invitee?.lastName }} </span> 
+                            <span class="applicant__course_of_study">{{invitee?.courseofStudy}}</span>
+                            <span class="applicant__proffession"> {{ invitee?.position }} </span>
+                        </div>
+                        <div class="flex-shrink" (click)="removeInvitee(i, interviewInvitees)">
+                            <img src="../../../../assets/images/close-icon.svg" alt="">
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+
+
+            <section *ngIf="selectedInviteType == 'Test_invites_1'" class="form_contents overflow-visible">
+                <div class="form-group parent_input_control">
+                      <label for="classOfDegree" class="form-labels">Test Location (Branch Name)</label>
+                      <select [(ngModel)]="selectedTestLocation" name="selectedDept" name="" id="selectedDept" class="form-control">
+                          <option selected>Select a branch</option>
+                          <option [value]="branch.branchName + '--' + branch.id " *ngFor="let branch of (testLocations$ | async)?.result; index as i">  {{ branch?.branchName }} </option>
+                      </select>     
+               </div> 
+            </section>
+
+            <section *ngIf="selectedInviteType == 'Interview_invites_2' || selectedInviteType ==  'Interview_invites_3' || selectedInviteType ==  'Interview_invites_4'" class="form_contents overflow-visible">
+                <div class="form-group parent_input_control">
+                    <label for="interviewLink" class="form-labels">Type Interview Link</label>
+                    <input type="text"  [(ngModel)]="interviewTestLink" name="interviewLink"  placeholder="Enter Interview link" 
+                    class="form-control" id="interviewLink">  
+               </div> 
+             </section>
+
+             <section *ngIf="selectedInviteType == 'Medical_invites_5'" class="form_contents overflow-visible">
+                <div class="form-group parent_input_control">
+                    <label for="interviewLink" class="form-labels">Enter Hospital Name <small class="text-[0.788em] text-hrms-border-line-dull">(This is where applicants go to do their medical tests)</small> </label>
+                    <input type="text"  [(ngModel)]="hospitalName" name="hospitalName"  placeholder="Example Echolab" 
+                    class="form-control" id="interviewLink">  
+               </div> 
+             </section>
+
+            <section class="form_contents overflow-visible">
+                <div class="form-group parent_input_control">
+                      <label for="date_of_test" class="form-labels">
+                        
+                        {{( selectedInviteType == 'Interview_invites_2'
+                        || selectedInviteType == 'Interview_invites_3' || selectedInviteType == 'Interview_invites_4'  )  ? 
+                        'Pick Interview Date' : selectedInviteType == 'Medical_invites_5' ? 'Pick Visit Date' : 'Pick Test Date'}}
+                    </label>
+                      <input type="date"  [(ngModel)]="dateOfTest" name="dateOfTest"  [placeholder]="selectedInviteType == 'Interview_invites_2' ? 'Select Interview Date' : 'Select Test Date'" 
+                      class="form-control" id="date_of_test">  
+               </div> 
+            </section>
+
+            <section  *ngIf="selectedInviteType == 'Test_invites_1' || selectedInviteType == 'Interview_invites_2' 
+                     || selectedInviteType == 'Interview_invites_3' || selectedInviteType == 'Interview_invites_4' ||  selectedInviteType == 'Medical_invites_5'" 
+                      class="form_contents overflow-visible">
+                <div class="form-group parent_input_control">
+                      <label  for="classOfDegree" class="form-labels">{{
+                       (selectedInviteType == 'Interview_invites_2'
+                        || selectedInviteType == 'Interview_invites_3' || selectedInviteType == 'Interview_invites_4') 
+                        ? 'Choose time for interview' : selectedInviteType == 'Medical_invites_5' ? 'Time for medical appointment?' : 'What time is the test holding?'
+                        }}</label>
+                      <select [(ngModel)]="preferredTimeForTest" name="preferredTimeForTest" name="" id="selectedDept" class="form-control">
+                          <option selected>Select a suitable time</option>
+                          <option [value]="time" *ngFor="let time of businessHours; index as i">  {{ time }} </option>
+                      </select>     
+               </div> 
+            </section>
+
+
+              <section *ngIf="selectedInviteType == 'Test_invites_1'" class="multi_select_wrapper overflow-visible"> 
+                <app-multi-select 
+                (sendUpApplicants)="showApplicantsSelected($event)"
+                [department]="selectedDept" [labelName]="'Invigilators'" [placeholder]="'Input Staff name to pick an invigilator'"></app-multi-select>
+              </section>
+
+              <section *ngIf="selectedInviteType == 'Test_invites_1'" class="applicant_display">
+                <ul class="applicant_display__container">
+                    <li class="applicant" *ngFor="let interviewer of interviewers; index as i">
+                        <div class="flex-grow">
+                            <span class="flex gap-1 applicant__image_name"><img src="../../../../assets/images/male_avatar.svg" alt=""> {{ interviewer?.displayName }} </span> 
+                        </div>
+                        <div class="flex-shrink" (click)="removeInvitee(i, interviewers)">
+                            <img src="../../../../assets/images/close-icon.svg" alt="">
+                        </div>
+                    </li>
+                </ul>
+             </section>
+
+            <section *ngIf=" selectedInviteType == 'Interview_invites_2' || selectedInviteType ==  'Interview_invites_3' || selectedInviteType == 'Interview_invites_4'" class="multi_select_wrapper overflow-visible">  
+                <app-multi-select 
+                [labelName]="'Panel Chair (Main Interviewer)'" 
+                [placeholder]="'Type staff name here'"
+                (sendUpApplicants)="showApplicantsSelected($event)"
+                [department]="selectedDept"
+                [showAdditionButton]="true"></app-multi-select>
+            </section>
+
+            <ul *ngIf="(selectedInviteType == 'Interview_invites_2' || selectedInviteType ==  'Interview_invites_3' || selectedInviteType == 'Interview_invites_4') && mainInterviewer" class="applicant_display__container">
+                <li class="applicant" >
+                    <div class="flex-grow">
+                        <span class="flex gap-1 applicant__image_name"><img src="../../../../assets/images/male_avatar.svg" alt=""> {{ mainInterviewer?.displayName }} </span> 
+                    </div>
+                    <div class="flex-shrink" (click)="deleteMainInterviewer()">
+                        <img src="../../../../assets/images/close-icon.svg" alt="">
+                    </div>
+                </li>
+            </ul>
+
+              <section *ngIf="selectedInviteType == 'Interview_invites_2' || selectedInviteType ==  'Interview_invites_3' || selectedInviteType == 'Interview_invites_4' " class="multi_select_wrapper overflow-visible">  
+                <app-multi-select 
+                [labelName]="'Other Interviewers (Optional)'" 
+                [placeholder]="'Type staff name here'"
+                (sendUpApplicants)="showApplicantsSelected($event)"
+                [department]="selectedDept"
+                [showAdditionButton]="true"></app-multi-select>
+              </section>
+              
+              <section *ngIf="
+                     selectedInviteType == 'Interview_invites_2' || 
+                     selectedInviteType ==  'Interview_invites_3' || selectedInviteType == 'Interview_invites_4'" class="applicant_display">
+                <ul class="applicant_display__container">
+                    <li class="applicant" *ngFor="let interviewer of interviewers; index as i">
+                        <div class="flex-grow">
+                            <span class="flex gap-1 applicant__image_name"><img src="../../../../assets/images/male_avatar.svg" alt=""> {{ interviewer?.displayName }} </span> 
+                        </div>
+                        <div class="flex-shrink" (click)="removeInvitee(i, interviewers)">
+                            <img src="../../../../assets/images/close-icon.svg" alt="">
+                        </div>
+                    </li>
+                </ul>
+             </section>
+        </div>
+
+    </div>
+
+    <footer>
+        <button (click)="closeBtn(true)" class="btn-red-custom">
+            Continue
+        </button>
+    </footer>
+</main>

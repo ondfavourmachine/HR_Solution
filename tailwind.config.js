@@ -28,7 +28,15 @@ module.exports = {
         "hrms-dashboardSection-color": "#E4F1FF",
         "hrms-inactive-color": "#6F6F6F",
         "hrms-dull": "#CBCBCB",
-        "hrms-banner-1": "#F4F5FA"
+        "hrms-banner-1": "#F4F5FA",
+        "hrms-links-selected": "#82ADD870",
+        "hrms-tab-color-selected": "#075DB2",
+        "hrms-border-line-dull": "#DADADA",
+        "hrms-border-dull-blue": '#15457D',
+        'hrms-pending-color': '#FFF8E5',
+        'hrms-pending-text-color': '#F89946',
+        'hrms-calender-blue': '#F4F7FF',
+        'hrms-day-text-color': '#979797'
       },
       fontFamily: {
         hrmsCamptonBook: ['Campton Book', 'sans-serif'],

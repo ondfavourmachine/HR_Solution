@@ -1,0 +1,187 @@
+<section class="applicant_selection_table">
+    <div class="table_search_container">
+        <div class="search_bar__container">
+            <app-table-search-params-with-download-icons
+             [quartersToUse]="quartersToUse"
+             ></app-table-search-params-with-download-icons>
+            <div class="download_icons">
+                <span><img src="../../../assets/images/excel_icon.svg" alt="">Excel</span>
+                <span><img src="../../../assets/images/pdf_icon.svg" alt="">Pdf</span>
+            </div>
+        </div>
+    </div>
+    <div class="table-contents overflow-hidden">
+        <div class="flex flex-col">
+            <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div class="inline-block min-w-full sm:px-6 lg:px-8">
+                    <div class="overflow-hidden">
+                        <table class="min-w-full table-fixed">
+                            <thead class="bg-transparent border-b">
+                                <tr>
+                                    <th scope="col" class="individual_table_header">
+                                        S/N
+                                    </th>
+                                    <th scope="col" class="individual_table_header">
+                                        Applicant Name
+                                    </th>
+                                    <th scope="col"   class="individual_table_header !min-w-[10rem]">
+                                        Email
+                                    </th>
+                                    <th scope="col" class="individual_table_header">
+                                        Job Title
+                                    </th>
+                                    <th scope="col" class="individual_table_header">
+                                      Invitation
+                                    </th>
+                                    <th scope="col"  class="individual_table_header">
+                                      Hospital
+                                    </th>
+    
+                                  
+    
+                                    <th scope="col" class="individual_table_header">
+                                        Status
+                                    </th>
+                                    <th scope="col" class="individual_table_header">
+                                        View
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+    
+                                <tr *ngIf="isLoading">
+                                    <td  class="px-4">   
+                                        <ng-container >
+                                            <ngx-skeleton  borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                          </ng-container>
+                          
+                                       
+                                    </td>
+                                    <td class="px-4"> 
+                                        <ng-container >
+                                            <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                          </ng-container>
+                          
+                                      
+                                    </td>
+                                    <td class="px-4">
+                                        <ng-container >
+                                            <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                          </ng-container>
+                          
+                                    </td>
+                                    <td class="px-4">
+                                        <ng-container >
+                                            <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                          </ng-container>
+                          
+                                    
+                                    </td>
+                                    <td class="px-4">
+                                        <ng-container >
+                                            <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                          </ng-container>
+                          
+                                      
+                                    </td>
+                                    <td class="px-4">
+                                        <ng-container >
+                                            <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                          </ng-container>
+                          
+                                     
+                                    </td>
+                                    
+                                    <td class="px-4" > 
+                                        <ng-container >
+                                            <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                          </ng-container>
+                                    </td>
+                                    <td class="px-4" > 
+                                        <ng-container >
+                                            <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                          </ng-container>
+                                    </td>
+                                </tr>
+                                <ng-container *ngFor="let applicant of applicantsToBeSelected; index as i; trackBy: trackByFn" >
+                                    <tr  class="bg-white cursor-pointer border-b">
+                                        <td class="individual_tableCell_data !text-ro-black-text !opacity-90 font-semibold">
+                                            {{ i < 9 ? '0' + (i + 1) : i + 1 }}
+                                        </td>
+                                        <td class="individual_tableCell_data !text-ro-black-text flex gap-2 justify-start items-center !opacity-90 font-semibold">
+                                           <span class="thumbnail">
+                                            <img  [src]="applicant?.passport_URL || '../../../assets/images/place_holder_img.svg'" alt="">
+                                          </span> 
+                                           <span class="name_display">{{ applicant?.firstName + ' ' + applicant?.middleName + ' ' + applicant?.lastName }}</span>
+                                        </td>
+                                        <td  class="individual_tableCell_data !text-ro-black-text !opacity-90 font-semibold">
+                                            <span class="w-40 text-ellipsis">{{ applicant?.email }}</span>
+                                        </td>
+                                        <td class="individual_tableCell_data !text-ro-black-text !opacity-90 font-semibold">
+                                            {{ applicant?.jobTitle || applicant?.applyPosition }}
+                                        </td>
+                                        <td class="individual_tableCell_data !text-ro-black-text !opacity-90">
+                                            <span [ngClass]="
+                                              {'Pending': applicant.invitationStatus == 'Not Sent' , 
+                                               'Approved': applicant.invitationStatus == 'Sent'}" 
+                                              class="status">{{ applicant?.invitationStatus }}</span>
+                                         </td>
+                                         <td class="individual_tableCell_data !text-ro-black-text !opacity-90 font-semibold">
+                                            {{ applicant?.hospitalName || '0' }}
+                                         </td>
+                                         
+                                         <td class="individual_tableCell_data">
+                                            <span [ngClass]="
+                                              {
+                                             'Approved': applicant.approverStatus == 'Approve', 
+                                             'Waiting': applicant.approverStatus == 'Awaiting', 
+                                             'Rejected' : applicant.hR_Status == 'Fail' || applicant.hR_Status == 'Returned',
+                                             'Pending': applicant.approverStatus == 'Pending' || applicant.hR_Status == 'Pending' || applicant.hR_Status == ''
+                                             }" 
+                                              class="status">{{  applicant?.approverStatus == 'Pending' ? 'Pending' : applicant?.approverStatus == 'Approve' ? 'Passed' :  applicant?.approverStatus == 'Awaiting' ? 'Awaiting' : 'Failed'  }}</span>
+                                        </td>
+                                        <td class="individual_tableCell_data align-middle">
+                                            <img  (click)="gotoApplicantView(applicant)" src="../../../assets/images/eye_view.svg" alt="">
+                                        </td>    
+                                    </tr>  
+                                </ng-container>   
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>  
+        
+        <div class="pagination_count !hidden">
+            <div class="form-group w-auto flex gap-3 px-1">
+                <input
+                 
+                 
+                 name="records"
+                 type="number" class="w-12 pb-0 border-t-0 border-l-0 border-r-0 border-b border-b-ro-hoverBlue-1 h-6 mb-3">
+                <small class="self-center text-[#8F8F8F]">Records</small>
+            </div>
+            <div class="flex-grow flex items-center justify-end  border border-black">
+                <div
+             
+             
+             class="prev transition-all justify-center items-center cursor-pointer hover:shadow-md hover:px-1">
+                <span class="h-5 flex items-center"><img class="max-w-[80%]" src="../../../assets/images/chevron_left.svg" alt=""></span>
+            </div>
+             
+            <div class="pages flex gap-4">
+                <span 
+                class="a_page_number">
+                1
+               </span>
+            </div>
+            <div 
+             
+             class="next transition-all flex justify-center items-center cursor-pointer hover:shadow-md hover:px-1">
+                <span class="h-5 flex items-center"><img class="max-w-[80%]" src="../../../assets/images/chevron_right.svg" alt="">
+                </span>
+            </div>
+            </div>
+        </div>
+    </div>
+ </section>

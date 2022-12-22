@@ -1,0 +1,562 @@
+<div [ngClass]="{'default': views == 'jobs'}" class=" dashboard_view"> 
+    <div class="body_content w-full ">
+      <section class="tab_container">
+        <app-general-use-tabs
+         [tabArray]="tabList"
+         [tabGroupName]="'Job'"
+          (changeTab)="handleChangeOfTab($event)"
+         ></app-general-use-tabs>
+      </section>
+      <section class="search_bar">
+        <div class="search_bar__container">
+          
+        <form class="form_parent">   
+          <div class="relative input_container">
+              <input type="search" id="job_search" class="" placeholder="Search by Job name" required="">
+              <div class="svg_container  ">
+                <svg aria-hidden="true" class="w-10 h-10 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z">
+                  </path>
+                </svg>
+            </div>
+          </div>
+            <div class="relative select_container">
+              <select id="generic_select_type" class="">
+                <option selected="">All Location</option>
+                <option value="US">United States</option>
+                <option value="CA">Canada</option>
+                <option value="FR">France</option>
+                <option value="DE">Germany</option>
+              </select>
+    
+            </div>
+
+            <div class="relative select_container">
+              <select id="generic_select_type" class="">
+                <option selected="">All Job Type</option>
+                <option value="US">United States</option>
+                <option value="CA">Canada</option>
+                <option value="FR">France</option>
+                <option value="DE">Germany</option>
+              </select>
+    
+            </div>
+
+            <div class="relative select_container">
+              <select id="generic_select_type" class="">
+                <option selected="">All Job Category</option>
+                <option value="US">United States</option>
+                <option value="CA">Canada</option>
+                <option value="FR">France</option>
+                <option value="DE">Germany</option>
+              </select>
+    
+            </div>
+        </form>
+
+        <div class="create_button">
+          <button (click)="startCreatingJob($event)" class="btn-red-custom">
+            <img src="../../../assets/images/add_white_version.svg" alt=""> Create Job
+          </button>
+        </div>
+    
+        </div>
+    </section>
+
+    <section [style.display]="tabToSelect == 'Approved' ? 'block': 'none'" class="created_jobs">
+      <div class="jobs_wrapper" [ngClass]="{'default': views == 'jobs'}">
+        <div class="jobs_wrapper__container">
+          <div class="jobs_section">
+            <div [ngClass]="{'plenty': approvedJobs.length > 1, 'one': approvedJobs.length == 1}" class="jobs mb-20" >
+              <ng-container *ngFor="let job of approvedJobs; index as i">
+                <app-job [showPending]="showPendingJobs"
+                [AnApprovedJob]="job"></app-job>
+              </ng-container>
+
+              <ng-container *ngIf="approvedJobs.length < 1">
+                <ngx-skeleton  borderRadius="12px" height="30vh" margin="15px 0 8px 0" width="100%">
+                  <div class="job" >
+                    <div class="job_title">
+                      <span>  </span>
+                      <span>   </span>
+                    </div>
+                
+                    <div class="job_location">
+                      <span> </span>
+                      <span> </span>
+                    </div>
+                
+                    <div class="job_dead_line">
+                      <span></span>
+                      <span>   </span>
+                    </div>
+                
+                    <div class="approved_jobs_actions" >
+                      <span></span> <span>  </span>
+                    </div>
+                  </div>
+                </ngx-skeleton>
+  
+                <ngx-skeleton  borderRadius="12px" height="30vh" margin="15px 0 8px 0" width="100%">
+                  <div class="job" >
+                    <div class="job_title">
+                      <span>  </span>
+                      <span>   </span>
+                    </div>
+                
+                    <div class="job_location">
+                      <span> </span>
+                      <span> </span>
+                    </div>
+                
+                    <div class="job_dead_line">
+                      <span></span>
+                      <span>   </span>
+                    </div>
+                
+                    <div class="approved_jobs_actions" >
+                      <span></span> <span>  </span>
+                    </div>
+                  </div>
+                </ngx-skeleton>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section [style.display]="tabToSelect == 'Pending' ? 'block': 'none'" class="created_jobs">
+      <div class="jobs_wrapper" [ngClass]="{'default': views == 'jobs'}">
+        <div class="jobs_wrapper__container">
+          <div class="jobs_section">
+            <div class="jobs pending mb-20" [ngClass]="{'plenty': pendingJobs.length > 1, 'one': pendingJobs.length == 1}">
+              <ng-container *ngFor="let pendinjob of pendingJobs; index as i">
+                <app-job [showPending]="showPendingJobs"
+                 (startApproveJob)="startApprovalProcessForAJob($event)"
+                  [APendingJob]="pendinjob">
+                </app-job>
+              </ng-container>
+
+              <ng-container *ngIf="pendingJobs.length  < 1">
+                <ngx-skeleton  borderRadius="12px" height="30vh" margin="15px 0 8px 0" width="100%">
+                  <div class="job" >
+                    <div class="job_title">
+                      <span>  </span>
+                      <span>   </span>
+                    </div>
+                
+                    <div class="job_location">
+                      <span> </span>
+                      <span> </span>
+                    </div>
+                
+                    <div class="job_dead_line">
+                      <span></span>
+                      <span>   </span>
+                    </div>
+                
+                    <div class="approved_jobs_actions" >
+                      <span></span> <span>  </span>
+                    </div>
+                  </div>
+                </ngx-skeleton>
+  
+                <ngx-skeleton  borderRadius="12px" height="30vh" margin="15px 0 8px 0" width="100%">
+                  <div class="job" >
+                    <div class="job_title">
+                      <span>  </span>
+                      <span>   </span>
+                    </div>
+                
+                    <div class="job_location">
+                      <span> </span>
+                      <span> </span>
+                    </div>
+                
+                    <div class="job_dead_line">
+                      <span></span>
+                      <span>   </span>
+                    </div>
+                
+                    <div class="approved_jobs_actions" >
+                      <span></span> <span>  </span>
+                    </div>
+                  </div>
+                </ngx-skeleton>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    </div>
+ </div> 
+
+ <div [ngClass]="{'default': views == 'preview'}" class="preview_page">
+   <div class="body_content w-full ">
+    <a (click)="views = 'jobs';" class="history"><img src="../../../assets/images/go_back.svg" alt=""> Go back</a>
+
+    <section class="main_view">
+      <h5>Preview the Job Details Before Submitting for Approval</h5>
+
+      <div class="main_view__content">
+        <div class="heading_content">
+          <div class="text">
+            <span class="bigger_text"> {{ dataFromCreateJob?.jobTitle }} </span>
+            <span class="smaller_text"> {{ dataFromCreateJob?.department }} </span>
+          </div>
+          <div class="edit_container">
+            <span>
+              <img class="edit_button" src="../../../assets/images/edit_button.svg" alt="">
+              <small>Edit</small>
+            </span>
+          </div>
+        </div>
+          
+         <div class="reportTo_supervises">
+            <div class="reportTo">
+              <span>Report To</span>
+              <p> {{ dataFromCreateJob?.reportTo }} </p>
+            </div>
+            <div class="supervises">
+              <span>Supervises</span>
+              <p> {{ dataFromCreateJob?.supervise }} </p>
+            </div>
+         </div>
+
+         <div class="reportTo_supervises">
+          <div class="reportTo">
+            <span>Class of Degree</span>
+            <p> {{ dataFromCreateJob?.classOfDegree }} </p>
+          </div>
+          <div class="supervises">
+            <span>NYSC</span>
+            <p>Must be {{ dataFromCreateJob?.nysc }} </p>
+          </div>
+       </div>
+
+         <div class="job_objectives" >
+           <span>Job Objective</span> 
+           <ul #JobObjectives>
+            
+           </ul>
+         </div>
+
+         <div class="accountabilities">
+          <span>Accountabilities</span>
+           <ul class="holder" #Accountability>
+
+           </ul>
+        </div>
+
+        <div class="professional_competencies" >
+          <span>Professional Competencies</span>
+          <ul class="holder" #ProfessionalCompetencies>
+            
+          </ul>
+        </div>
+
+        <div class="behavioralCompetencies_organisationalCompetencies">
+          <div class="behavioralCompetencies" >
+            <span>Behavioral Competencies</span>
+            <ul class="holder" #BehavioralCompetencies>
+
+            </ul>
+          </div>
+          <div class="organisationalCompetencies" >
+            <span>Organisational Competencies</span>
+            <ul class="holder" #OrganisationalCompetencies>
+
+            </ul>
+          </div>
+         </div>
+
+         <div class="person_specifications">
+          <span>Person Specification/Job Profile</span>
+          <ul class="holder" #PersonSpecifications>
+             
+          </ul> 
+           
+        </div>
+          
+        <div class="job_objectives" >
+          <span>Educational Qualification</span>
+           <ul class="holder" #EducationalQualifications>
+
+           </ul>
+        </div>
+
+        <div class="job_objectives">
+          <span>Experience</span>
+           <ul class="holder" #Experience>
+
+           </ul>
+        </div>
+
+      </div>
+    </section>
+    <aside class="floating_view">
+      <ul class="floating_view__container">
+        <li>
+          <p class="heading">
+            <span>Location</span> 
+            <span>
+              <img class="edit_button" src="../../../assets/images/edit_button.svg" alt="">
+              <small>Edit</small>
+            </span>
+          </p>
+          <p class="text"> {{ currentBranchInView }} </p>
+        </li>
+        <li class="">
+          <p class="heading">
+            <span>Deadline</span> 
+            
+          </p>
+          <p class="text">  {{ dataFromCreateJob?.deadline | date: 'mediumDate'}} </p>
+        </li>
+
+        <li class="">
+          <p class="heading">
+            <span>Grade</span> 
+            
+          </p>
+          <p class="text">  {{ dataFromCreateJob?.grade }} </p>
+        </li>
+
+        <li class="">
+          <p class="heading">
+            <span>Type</span> 
+            
+          </p>
+          <p class="text">  {{ dataFromCreateJob?.type }} </p>
+        </li>
+        <li class="">
+          <p class="heading">
+            <span>Category</span> 
+            
+          </p>
+          <p class="text">{{dataFromCreateJob?.category}}</p>
+        </li>
+        <li class="">
+          <p class="heading">
+            <span>Unit</span> 
+            
+          </p>
+          <p class="text"> {{ dataFromCreateJob?.unit }} </p>
+        </li>
+
+        <li class="">
+          <p class="heading">
+            <span>Test Required</span> 
+            
+          </p>
+          <p class="text">{{dataFromCreateJob?.testIsRequired }}</p>
+        </li>
+
+        <li class="">
+          <p class="heading">
+            <span>Interview Required</span> 
+            
+          </p>
+          <p class="text">{{ dataFromCreateJob?.interviewIsRequired }}</p>
+        </li>
+
+      </ul>
+      <button 
+       (click)="sendJobForApproval($event)"
+      class="btn-red-custom">
+        Submit for Approval
+      </button>
+    </aside>
+   </div>
+ </div>
+
+ <div [ngClass]="{'default': views == 'approve'}" class="preview_page relative">
+  <div class="body_content w-full ">
+   <a (click)="views = 'preview'" class="history"><img src="../../../assets/images/go_back.svg" alt=""> Go back</a>
+
+   <section class="main_view">
+     <h5>Preview the Job Details Before Submitting for Approval</h5>
+
+     <div class="main_view__content">
+       <div class="heading_content">
+         <div class="text">
+           <span class="bigger_text"> {{ dataFromCreateJob?.jobTitle }} </span>
+           <span class="smaller_text"> {{ dataFromCreateJob?.department }} </span>
+         </div>
+         <div class="edit_container">
+           <span>
+             <img class="edit_button" src="../../../assets/images/edit_button.svg" alt="">
+             <small>Edit</small>
+           </span>
+         </div>
+       </div>
+         
+        <div class="reportTo_supervises">
+           <div class="reportTo">
+             <span>Report To</span>
+             <p> {{ dataFromCreateJob?.reportTo }} </p>
+           </div>
+           <div class="supervises">
+             <span>Supervises</span>
+             <p> {{ dataFromCreateJob?.supervise }} </p>
+           </div>
+        </div>
+
+        <div class="reportTo_supervises">
+         <div class="reportTo">
+           <span>Class of Degree</span>
+           <p> {{ dataFromCreateJob?.classOfDegree }} </p>
+         </div>
+         <div class="supervises">
+           <span>NYSC</span>
+           <p>Must be {{ dataFromCreateJob?.nysc }} </p>
+         </div>
+      </div>
+
+        <div class="job_objectives" >
+          <span>Job Objective</span> 
+          <ul #JobObjectivesTwo>
+           
+          </ul>
+        </div>
+
+        <div class="accountabilities">
+         <span>Accountabilities</span>
+          <ul class="holder" #AccountabilityTwo>
+
+          </ul>
+       </div>
+
+       <div class="professional_competencies" >
+         <span>Professional Competencies</span>
+         <ul class="holder" #ProfessionalCompetenciesTwo>
+           
+         </ul>
+       </div>
+
+       <div class="behavioralCompetencies_organisationalCompetencies">
+         <div class="behavioralCompetencies" >
+           <span>Behavioral Competencies</span>
+           <ul class="holder" #BehavioralCompetenciesTwo>
+
+           </ul>
+         </div>
+         <div class="organisationalCompetencies" >
+           <span>Organisational Competencies</span>
+           <ul class="holder" #OrganisationalCompetenciesTwo>
+
+           </ul>
+         </div>
+        </div>
+
+        <div class="person_specifications">
+         <span>Person Specification/Job Profile</span>
+         <ul class="holder" #PersonSpecificationsTwo>
+            
+         </ul> 
+          
+       </div>
+         
+       <div class="job_objectives" >
+         <span>Educational Qualification</span>
+          <ul class="holder" #EducationalQualificationsTwo>
+
+          </ul>
+       </div>
+
+       <div class="job_objectives">
+         <span>Experience</span>
+          <ul class="holder" #ExperienceTwo>
+
+          </ul>
+       </div>
+
+     </div>
+   </section>
+    <aside class="floating_view">
+      <ul class="floating_view__container">
+        <li>
+          <p class="heading">
+            <span>Location</span> 
+            <span>
+              <img class="edit_button" src="../../../assets/images/edit_button.svg" alt="">
+              <small>Edit</small>
+            </span>
+          </p>
+          <p class="text"> {{ currentBranchInView }} </p>
+        </li>
+        <li class="">
+          <p class="heading">
+            <span>Deadline</span> 
+            
+          </p>
+          <p class="text">  {{ dataFromCreateJob?.deadline | date: 'mediumDate'}} </p>
+        </li>
+
+        <li class="">
+          <p class="heading">
+            <span>Grade</span> 
+            
+          </p>
+          <p class="text">  {{ dataFromCreateJob?.grade }} </p>
+        </li>
+
+        <li class="">
+          <p class="heading">
+            <span>Type</span> 
+            
+          </p>
+          <p class="text">  {{ dataFromCreateJob?.type }} </p>
+        </li>
+        <li class="">
+          <p class="heading">
+            <span>Category</span> 
+            
+          </p>
+          <p class="text">{{dataFromCreateJob?.category}}</p>
+        </li>
+        <li class="">
+          <p class="heading">
+            <span>Unit</span> 
+            
+          </p>
+          <p class="text"> {{ dataFromCreateJob?.unit }} </p>
+        </li>
+
+        <li class="">
+          <p class="heading">
+            <span>Test Required</span> 
+            
+          </p>
+          <p class="text">{{dataFromCreateJob?.testIsRequired }}</p>
+        </li>
+
+        <li class="">
+          <p class="heading">
+            <span>Interview Required</span> 
+            
+          </p>
+          <p class="text">{{ dataFromCreateJob?.interviewIsRequired }}</p>
+        </li>
+
+      </ul>
+    </aside>
+
+    <div class="approval_panel">
+      <button
+        (click)="refresh()"
+        class="approval_buttons_return">
+        Return
+      </button>
+      <button class="approval_buttons_reject">
+        Reject
+      </button>
+      <button
+        (click)="startApproval($event)"
+        class="approval_buttons_approve">
+        Approve
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,526 @@
+<main class="assessment_applicant__container">
+    <header>
+       <div class="first_part" [ngClass]="{'gap-20': true}">
+        Assess Applicant   
+        <span class="status_container" [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen }">Test Activity Status: 
+            <span *ngIf="data?.applicantData?.assessmentStatus" class="status" [ngClass]="{'Approved': true}" > Completed</span>
+            <span *ngIf="!data?.applicantData?.assessmentStatus" class="status" [ngClass]="{'Pending': true}" > Pending</span>
+        </span>
+       </div>
+       <div class="second_part" >
+        <span (click)="closeBtn()"  ><img  src="../../../assets/images/close-icon.svg" alt=""></span>
+       </div>
+    </header>
+
+    <div class="application_container">
+        <app-applicant-image-cv-details [data]="data"></app-applicant-image-cv-details>
+        <section>
+            <div class="main_content">
+                <div class="applicant_details">
+                    <div class="typical_details">
+                      <div class="a_typical_detail">
+                        <span>
+                          Full Name
+                        </span>
+                        <span>
+                          {{ data?.applicantData?.firstName + ' ' +  data?.applicantData?.lastName}}
+                        </span>
+                      </div>
+                        <div class="a_typical_detail">
+                          <span>
+                            Age
+                          </span>
+                          <span>
+                            {{data?.applicantData?.age}} years
+                          </span>
+                        </div>
+
+                        <div class="a_typical_detail">
+                            <span>
+                              Gender
+                            </span>
+                            <span>
+                              {{data?.applicantData?.gender}}
+                            </span>
+                          </div>
+
+                          <div class="a_typical_detail">
+                            <span>
+                              Marital Status
+                            </span>
+                            <span>
+                              {{ data?.applicantData?.maritalStatus }}
+                            </span>
+                          </div>
+
+                          <div class="a_typical_detail">
+                            <span>
+                              Position
+                            </span>
+                            <span>
+                               {{ data?.applicantData?.position }}
+                            </span>
+                          </div>
+
+                          <div class="a_typical_detail">
+                            <span>
+                              Educational Qualifications
+                            </span>
+                            <span>
+                              {{ data?.applicantData?.qualification }}
+                            </span>
+                          </div>
+
+                    </div>
+                    <div  class="professional_certificates">
+                            <div class="a_typical_detail">
+                              <div>
+                                Professional Certificate
+                              </div>
+                              <div *ngIf="data?.applicantData?.certification; else NotAvailable">
+                                   <span>
+                                      {{ data?.applicantData?.certification }}
+                                  </span>
+                              </div>
+                              <ng-template #NotAvailable>
+                                  <div>Not Available</div>
+                              </ng-template>
+                            </div>                    
+                    </div>
+                    <div class="test_location" *ngIf="data?.extraInfo?.extras.inviteType == 1">
+                      <div class="a_typical_detail">
+                        <div>
+                          Test Location
+                        </div>
+                        <div>
+                            <span>
+                               {{ data?.extraInfo?.extras?.location }}
+                            </span>
+                        </div>
+                      </div>                    
+                  </div>
+                </div>
+                <div *ngIf="!data?.applicantData?.assessmentStatus && !data.extraInfo?.interviewForm" class="performance_assessment">
+                    <h5>Input Test Assessment performance</h5>
+                    <div class="performance_assessment_container">
+                      
+                      <!-- <section class="form_contents overflow-visible"> -->
+                        <div class="form-group parent_input_control">
+                              <label for="candidate_score" class="form-labels">Candidate Score</label>
+                              <input [(ngModel)]="score" name="score" type="tel" name="dateOfTest"  placeholder="Input candidate scores here"
+                              class="form-control" id="candidate_score">  
+                       </div> 
+
+                       
+                        <!-- <div class="form-group parent_input_control">
+                              <label for="classOfDegree" class="form-labels">Status (Pass or Fail)</label>
+                              <select [(ngModel)]="statusOfScore" name="statusOfScore" id="statusOfScore" class="form-control">
+                                  <option selected>Select a Score Status</option>
+                                  <option >  Pass </option>
+                                  <option >  Fail </option>
+                              </select>     
+                       </div>  -->
+                    
+                     <!-- </section> -->
+
+                      <div class="upload_test_record_container">
+                          <div class="test_record_contents">
+                            <h5 [ngClass]="{'!text-hrms-bgBlue-1': hasUploadedScore}">Test Record</h5>
+                            <p *ngIf="!hasUploadedScore">
+                              <span (click)="triggerUpload()" class="trigger cursor-pointer">Upload</span>
+                              <span class="test">Click here to upload Test Record</span>
+                              <input (change)="catchSelectedFile($event)" id="uploadScore" type="file" class="hidden">
+                            </p>
+                            <p class="!flex-row !gap-0" *ngIf="hasUploadedScore">
+                              <span class="trigger !px-1 !border-0 !bg-transparent">
+                                <img [src]="uploadedMimeType" alt="">
+                              </span>
+                              <span class="test flex-grow inline-flex items-center overflow-visible gap-2">
+                                <span class="inline-flex flex-grow items-center gap-2">
+                                  <small class="text-xl basis-[86%] whitespace-nowrap text-ellipsis border-b border-dashed border-hrms-bgBlue-1 !text-hrms-bgBlue-1">  {{ file?.name}} </small>
+                                  <small class="text-xl size_of_file font-bold">{{ convertToHumanReadableFileSize(file?.size) }}</small>
+                                </span>
+                                <span class="w-[60%] cancelBtn_container"><small (click)="removeUploadedFile()" class="cancelBtn"></small></span>
+                              </span>
+                            </p>
+                          </div>
+                          <div class="image_container" *ngIf="!hasUploadedScore">
+                            <span><img src="../../../assets/images/no_uploaded_data.svg" alt=""></span>
+                          </div>
+                          <div class="image_container" *ngIf="hasUploadedScore">
+                            <span><img src="../../../assets/images/no_uploaded_data.svg" alt=""></span>
+                          </div>
+                      </div>
+                    </div>
+                </div>
+
+                <div *ngIf="data?.applicantData?.assessmentStatus && !data.extraInfo?.interviewForm" class="performance_assessment">
+                  <h5 class="!font-bold !text-hrms-black-text mb-4">Test Assessment performance</h5>
+                  <div class="typical_details">
+                    <div class="flex w-full flex-col gap-3">
+                      <span class="!text-hrms-read-notification">
+                        Candidate Score
+                      </span>
+                      <span class="!text-hrms-bgBlue-1 font-bold">
+                        {{ data?.applicantData?.testScore }}%
+                      </span>
+                    </div>
+                  </div>
+                  <div class="typical_details mt-4 overflow-visible">
+                    <div class="flex w-full flex-col gap-1 overflow-visible">
+                      <span class="!text-hrms-read-notification">
+                        Attached Document
+                      </span>
+                      <span class="flex gap-2 w-full items-center overflow-visible">
+                        <span><img src="../../../assets/images/pdf_uploaded.svg" alt=""></span>
+                        <span class=" text-hrms-bgBlue-1 border-b border-dashed border-hrms-bgBlue-1">{{data?.applicantData?.scoreSheet_URL!.split('/')[4] }}</span>
+                        <span class=" text-hrms-bgBlue-1 border-b border-dashed border-hrms-bgBlue-1">{{data?.applicantData?.scoreSheet_URL!.split('/')[5]}}</span>
+                        <span (click)="downloadFile(data?.applicantData!.scoreSheet_URL)" 
+                         class="cursor-pointer relative isolate download z-[1] overflow-visible ml-4"><img src="../../../assets/images/download_icon.svg" alt="">
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div *ngIf="data.extraInfo?.interviewForm" class="interview_form_questionaire">
+                    <h5>Post Work Information</h5>
+                    <div class="performance_assessment_container">
+                      
+                      <!-- <section class="form_contents overflow-visible"> -->
+                        <div class="form-group parent_input_control">
+                              <label for="cumulative_years_of_experience" class="form-labels">Cumulative years of relevant work experience</label>
+                              <input [disabled]="disableInput" [(ngModel)]="interviewChairDetails.cummulativeYearOfExperience" type="tel" name="cumulative_years_of_experience"  
+                                
+                               placeholder="Enter cumulative years of work experience"
+                              class="form-control" id="cumulative_years_of_experience">  
+                       </div> 
+
+                       
+                       <div class="form-group parent_input_control">
+                        <label for="current_position" class="form-labels">Current Position</label>
+                        <input [disabled]="disableInput" [(ngModel)]="interviewChairDetails.currentPosition"  type="tel" name="current_position"  placeholder="Enter current position"
+                        class="form-control" id="current_position">  
+                      </div> 
+
+                      <div class="form-group parent_input_control">
+                        <label for="notice_period" class="form-labels">Notice Period</label>
+                        <input [disabled]="disableInput" [(ngModel)]="interviewChairDetails.noticePeriod"  type="tel" name="notice_period"  placeholder="Enter notice period"
+                        class="form-control" id="notice_period">  
+                      </div> 
+
+
+                      <div class="form-group parent_input_control">
+                        <label for="indebtedness" class="form-labels">Indebtedness <small class=" text-hrms-day-text-color">(Input Zero if applicant isn't owing anything)</small></label>
+                        <input [disabled]="disableInput" [(ngModel)]="interviewChairDetails.indebtness"(change)="formatAmount($event)"  type="tel" name="indebtedness"  placeholder="Enter Indebtedness"
+                        class="form-control" id="indebtedness">  
+                      </div> 
+
+                      <div class="form-group parent_input_control">
+                        <label for="reason" class="form-labels">Reasons for leaving previous employer</label>
+                        <input [disabled]="disableInput" [(ngModel)]="interviewChairDetails.reasonForLeaving"  type="tel" name="reason"  placeholder="Enter reasons for leaving previous employer"
+                        class="form-control" id="reason">  
+                      </div> 
+
+                      <div class="form-group parent_input_control">
+                        <label for="current_renumeration" class="form-labels">Current Renumeration</label>
+                        <input [disabled]="disableInput" [(ngModel)]="interviewChairDetails.currentRenumeration"  (change)="formatAmount($event)" type="tel" name="current_renumeration"  placeholder="Enter current renumeration"
+                        class="form-control" id="current_renumeration">  
+                      </div> 
+
+                      <div class="form-group parent_input_control">
+                        <label for="financial" class="form-labels">Financial Expectation/Level</label>
+                        <input [disabled]="disableInput" [(ngModel)]="interviewChairDetails.financialExpectation"  (change)="formatAmount($event)" type="tel" name="financial"  placeholder="Enter Financial Expectation/Level here"
+                        class="form-control" id="financial">  
+                      </div>
+
+                      <div *ngIf="!data?.applicantData?.chairPersonAssessed" class="w-full flex justify-end items-center">
+                        <button (click)="submitInterViewChairDetails($event)" class="btn-red-custom !mb-0  !w-max !px-4 !py-2">
+                          Submit Details
+                        </button>
+                      </div>
+                    
+                     <!-- </section> -->
+                    </div>
+
+                   <ng-container *ngIf="data?.applicantData?.chairPersonAssessed">
+                    <div class="performance_dimension_rating">
+                      <div class="performance_dimension_rating__heading">
+                          <div class="dimension"><span>Performance Dimension</span></div>
+                          <div class="rating"><span>Rating <small class="text-red-600 font-hrmsCamptonLight font-normal">*</small>
+                              <span class="text-hrms-read-notification font-normal font-hrmsCamptonLight">(1 = Very poor, 5= Excellent)</span></span></div>
+                      </div>
+                    </div>
+
+                    <div class="performance_dimension_question">
+                      <div class="performance_dimension_question__heading">
+                          <div class="dimension"><span>Authenticity</span></div>
+                          
+                          <div class="rating cursor-pointer">
+                            <!-- answers -->
+                             <div class="answer_button " *ngFor="let answer of [1,2,3,4,5]; index as i">
+                               <input  [(ngModel)]="answers.authenticity" [name]="answers.authenticity" 
+                                  type="radio" [id]="'authenticity'+'_input_'+ answer" 
+                                   title="{{  answer | titleStringDisplayForGrading  }}"
+                                   [value]="'authenticity'+'_input_'+ answer"
+                                   class="answer_input">
+                               <label [for]="'authenticity'+'_input_'+ i" class="label_for_input cursor-pointer"> {{answer}} </label>
+                             </div>
+                             <!-- ends here -->
+                          </div>
+                
+                      </div>
+                    </div>
+
+                    <div class="performance_dimension_question">
+                      <div class="performance_dimension_question__heading">
+                          <div class="dimension"><span>Integrity</span></div>
+                          <div class="rating cursor-pointer">
+                            <div class="answer_button" *ngFor="let answer of [1,2,3,4,5]; index as i">
+                              <input [(ngModel)]="answers.intergrity" [name]="answers.intergrity" 
+                                 type="radio" [id]="'intergrity'+'_input_'+ answer" 
+                                  [value]="'intergrity'+'_input_'+ answer"
+                                  title="{{  answer | titleStringDisplayForGrading  }}"
+                                  class="answer_input">
+                              <label [for]="'intergrity'+'_input_'+ i" class="label_for_input cursor-pointer"> {{answer}} </label>
+                            </div>
+                            
+                          </div>
+                      </div>
+                    </div>
+
+                    <div class="performance_dimension_question">
+                      <div class="performance_dimension_question__heading">
+                          <div class="dimension"><span>Focus</span></div>
+                          <div class="rating cursor-pointer">
+                            <div class="answer_button" *ngFor="let answer of [1,2,3,4,5]; index as i">
+                              <input [(ngModel)]="answers.focus" [name]="answers.focus" 
+                                 type="radio" [id]="'focus'+'_input_'+ answer" 
+                                  [value]="'focus'+'_input_'+ answer" title="{{  answer | titleStringDisplayForGrading  }}"
+                                  class="answer_input">
+                              <label [for]="'focus'+'_input_'+ i" class="label_for_input cursor-pointer"> {{answer}} </label>
+                            </div>
+                            
+                          </div>
+                      </div>
+                    </div>
+
+                    <div class="performance_dimension_question">
+                      <div class="performance_dimension_question__heading">
+                          <div class="dimension"><span>Drive</span></div>
+                          <div class="rating cursor-pointer">
+                            <div class="answer_button" *ngFor="let answer of [1,2,3,4,5]; index as i">
+                              <input [(ngModel)]="answers.drive" [name]="answers.drive" 
+                                 type="radio" [id]="'drive'+'_input_'+ answer" 
+                                  [value]="'drive'+'_input_'+ answer" title="{{  answer | titleStringDisplayForGrading  }}"
+                                  class="answer_input">
+                              <label [for]="'drive'+'_input_'+ i" class="label_for_input cursor-pointer"> {{answer}} </label>
+                            </div>
+                            
+                          </div>
+                      </div>
+                    </div>
+
+                    <div class="performance_dimension_question">
+                      <div class="performance_dimension_question__heading">
+                          <div class="dimension"><span>Intelligence</span></div>
+                          <div class="rating cursor-pointer">
+                            <div class="answer_button" *ngFor="let answer of [1,2,3,4,5]; index as i">
+                              <input [(ngModel)]="answers.intelligence" [name]="answers.intelligence" 
+                                 type="radio" [id]="'intelligence'+'_input_'+ answer" 
+                                  [value]="'intelligence'+'_input_'+ answer" title="{{  answer | titleStringDisplayForGrading  }}"
+                                  class="answer_input">
+                              <label [for]="'intelligence'+'_input_'+ i" class="label_for_input cursor-pointer"> {{answer}} </label>
+                            </div>
+                            
+                          </div>
+                      </div>
+                    </div>
+
+                    <div class="performance_dimension_question">
+                      <div class="performance_dimension_question__heading">
+                          <div class="dimension"><span>Communication</span></div>
+                          <div class="rating cursor-pointer">
+                            <div class="answer_button" *ngFor="let answer of [1,2,3,4,5]; index as i">
+                              <input [(ngModel)]="answers.communication" [name]="answers.communication" 
+                                 type="radio" [id]="'communication'+'_input_'+ answer" 
+                                  [value]="'communication'+'_input_'+ answer" title="{{  answer | titleStringDisplayForGrading  }}"
+                                  class="answer_input">
+                              <label [for]="'communication'+'_input_'+ i" class="label_for_input cursor-pointer"> {{answer}} </label>
+                            </div>
+                            
+                          </div>
+                      </div>
+                    </div>
+
+                    <div class="performance_dimension_question">
+                      <div class="performance_dimension_question__heading">
+                          <div class="dimension"><span>Competence</span></div>
+                          <div class="rating cursor-pointer">
+                            <div class="answer_button" *ngFor="let answer of [1,2,3,4,5]; index as i">
+                              <input [(ngModel)]="answers.competence" [name]="answers.competence" 
+                                 type="radio" [id]="'competence'+'_input_'+ answer" 
+                                  [value]="'competence'+'_input_'+ answer" title="{{  answer | titleStringDisplayForGrading  }}"
+                                  class="answer_input">
+                              <label [for]="'competence'+'_input_'+ i" class="label_for_input cursor-pointer"> {{answer}} </label>
+                            </div>
+                            
+                          </div>
+                      </div>
+                    </div>
+
+                    <div class="performance_dimension_question">
+                      <div class="performance_dimension_question__heading">
+                          <div class="dimension"><span>Experience</span></div>
+                          <div class="rating cursor-pointer">
+                            <div class="answer_button" *ngFor="let answer of [1,2,3,4,5]; index as i">
+                              <input [(ngModel)]="answers.experience" [name]="answers.experience" 
+                                 type="radio" [id]="'experience'+'_input_'+ answer" 
+                                  [value]="'experience'+'_input_'+ answer" title="{{  answer | titleStringDisplayForGrading  }}"
+                                  class="answer_input">
+                              <label [for]="'experience'+'_input_'+ i" class="label_for_input cursor-pointer"> {{answer}} </label>
+                            </div>
+                            
+                          </div>
+                      </div>
+                    </div>
+
+                    <div class="performance_dimension_question">
+                      <div class="performance_dimension_question__heading">
+                          <div class="dimension"><span>Performance Track Record</span></div>
+                          <div class="rating cursor-pointer">
+                            <div class="answer_button" *ngFor="let answer of [1,2,3,4,5]; index as i">
+                              <input [(ngModel)]="answers.performanceTrackRecord" [name]="answers.performanceTrackRecord" 
+                                 type="radio" [id]="'performanceTrackRecord'+'_input_'+ answer" 
+                                  [value]="'performanceTrackRecord'+'_input_'+ answer" title="{{  answer | titleStringDisplayForGrading  }}"
+                                  class="answer_input">
+                              <label [for]="'performanceTrackRecord'+'_input_'+ i" class="label_for_input cursor-pointer"> {{answer}} </label>
+                            </div>
+                            
+                          </div>
+                      </div>
+                    </div>
+
+                    <div class="performance_dimension_question">
+                      <div class="performance_dimension_question__heading">
+                          <div class="dimension"><span>Interpersonal Skilss</span></div>
+                          <div class="rating cursor-pointer">
+                            <div class="answer_button" *ngFor="let answer of [1,2,3,4,5]; index as i">
+                              <input [(ngModel)]="answers.interPersonalSkill" [name]="answers.interPersonalSkill" 
+                                 type="radio" [id]="'interPersonalSkill'+'_input_'+ answer" 
+                                  [value]="'interPersonalSkill'+'_input_'+ answer" title="{{  answer | titleStringDisplayForGrading  }}"
+                                  class="answer_input">
+                              <label [for]="'interPersonalSkill'+'_input_'+ i" class="label_for_input cursor-pointer"> {{answer}} </label>
+                            </div>
+                            
+                          </div>
+                      </div>
+                    </div>
+
+                    <div class="performance_dimension_question">
+                      <div class="performance_dimension_question__heading">
+                          <div class="dimension"><span>Leadership/Organisational skills</span></div>
+                          <div class="rating cursor-pointer">
+                            <div class="answer_button" *ngFor="let answer of [1,2,3,4,5]; index as i">
+                              <input [(ngModel)]="answers.leadershipSkill" [name]="answers.leadershipSkill" 
+                                 type="radio" [id]="'leadershipSkill'+'_input_'+ answer" 
+                                  [value]="'leadershipSkill'+'_input_'+ answer" title="{{  answer | titleStringDisplayForGrading  }}"
+                                  class="answer_input">
+                              <label [for]="'leadershipSkill'+'_input_'+ i" class="label_for_input cursor-pointer"> {{answer}} </label>
+                            </div>
+                            
+                          </div>
+                      </div>
+                    </div>
+
+                    <div class="performance_dimension_question">
+                      <div class="performance_dimension_question__heading">
+                          <div class="dimension"><span>Job Fit</span></div>
+                          <div class="rating cursor-pointer">
+                            <div class="answer_button" *ngFor="let answer of [1,2,3,4,5]; index as i">
+                              <input [(ngModel)]="answers.jobFit" [name]="answers.jobFit" 
+                                 type="radio" [id]="'jobFit'+'_input_'+ answer" 
+                                  [value]="'jobFit'+'_input_'+ answer" title="{{  answer | titleStringDisplayForGrading  }}"
+                                  class="answer_input">
+                              <label [for]="'jobFit'+'_input_'+ i" class="label_for_input cursor-pointer"> {{answer}} </label>
+                            </div>
+                            
+                          </div>
+                      </div>
+                    </div>
+
+                    <div class="performance_dimension_question">
+                      <div class="performance_dimension_question__heading">
+                          <div class="dimension flex flex-col gap-2">
+                            <span class="text-hrms-genBlueColor-1 font-bold">Overall Assessment Score</span>
+                            <small class="text-[0.8em] text-hrms-black-text-2">Computed performance dimension</small>
+                          </div>
+                          <div class="rating">
+                            
+                              <input 
+                                 disabled
+                                 [(ngModel)]="answers.totalScore" 
+                                 name="score"
+                                  type="tel"
+                                  class="overall_assessment_score text-[1em]"> 
+                          </div>
+                      </div>
+                    </div>
+                    <div class="performance_dimension_question extra_bits">
+                      <div class="performance_dimension_question__heading">
+                          <div class="dimension flex flex-col gap-2">
+                            <span class="text-hrms-genBlueColor-1 font-bold">Recommendation</span>
+                            <small class="text-[0.8em] text-hrms-black-text-2">Give your recommendation </small>
+                          </div>
+                          <div class="rating radio_buttons"> 
+                            <div class="form_fields_with_radios">
+                              <div class="input_group_radio">                    
+                               <input [(ngModel)]="recommendation"  name="passed" value="Pass" type="radio" class="an_input half" id="passed" >
+                               <label for="pass">Passed</label>
+                             </div>
+           
+                             <div class="input_group_radio">                    
+                               <input [(ngModel)]="recommendation"  name="failed" value="Fail" type="radio" class="an_input half" id="failed">
+                               <label for="fail">Failed</label>
+                             </div>
+                           </div>
+                          </div>
+                      </div>
+                    </div>
+                   </ng-container>
+                </div>
+
+                
+            </div>  
+        </section>
+    </div>
+    <div *ngIf="role == 'HRAdmin' && data?.applicantData?.chairPersonAssessed && !loggedInUserHasntGradedApplicant" 
+      class="w-full flex justify-end items-center gap-5 px-6">
+      <button
+        (click)="calculateScore($event)" 
+        class="btn-red-custom !mb-0 !w-max px-4 !py-4 !bg-transparent !border-hrms-read-notification !border !text-hrms-black-text">Calculate Score</button>
+        <button
+       (click)="submitAssessment($event)" 
+       class="btn-red-custom !mb-0 !w-max px-6 !py-4">Submit Assessment</button>
+     </div>
+     <div *ngIf="role == 'HRAdmin' && data?.extraInfo?.extras?.inviteType == 1 && !data?.applicantData?.assessmentStatus"
+      class="w-full flex justify-end items-center gap-5 px-6">
+        <button
+       (click)="uploadApplicantTestScore($event)" 
+       class="btn-red-custom !mb-0 !w-max px-6 !py-4">Submit Assessment</button>
+     </div>
+    <div *ngIf="data?.applicantData?.assessmentStatus && 
+        data?.applicantData?.auditApproval == 'Pending' && role == 'Audit'" 
+        class="w-full flex justify-end gap-7 items-center px-6">
+      <button 
+      (click)="approveOrReturnAssessment($event, 3)"
+      class="btn-red-custom !mb-0 border !border-hrms-slightRed !w-max px-6 !py-4">Return</button>
+      <button  
+      (click)="approveOrReturnAssessment($event, 2)"
+      class="btn-red-custom border hover:!border-hrms-green  hover:!bg-transparent hover:!text-hrms-green !bg-hrms-green !text-white !mb-0 !w-max px-6 !py-4">Approve</button>
+    </div>
+</main>
+
+
+
+

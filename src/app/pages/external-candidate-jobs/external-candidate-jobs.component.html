@@ -1,99 +1,610 @@
-<div class="main">
+<div class="main overflow-visible">
     <app-navigation-bar></app-navigation-bar>
-    <app-reusable-search></app-reusable-search>
+
+    <!-- <section class="search_bar"></section> -->
+    <ng-container *ngIf="views == 'jobs'">
+      <app-reusable-search></app-reusable-search>
+    </ng-container>
+    
 
 
-    <div class="jobs_wrapper">
+    <div class="jobs_wrapper !mt-10" [ngClass]="{'default': views == 'jobs'}">
       <div class="jobs_wrapper__container">
-        <a class="history"><img src="../../../assets/images/go_back.svg" alt=""> Go back</a>
+        <a [routerLink]="['/']" class="history"><img src="../../../assets/images/go_back.svg" alt=""> Go back</a>
         <div class="jobs_section">
           <h2>Join Our Team</h2>
           <span>See Available Openings below</span>
-          <div class="jobs">
-            <div class="job">
-              <div class="job_title">
-                <span>Graduate Trainee</span>
-                <span>All Department</span>
-              </div>
+          <div  class="jobs mb-20" [ngClass]="{'plenty': approvedJobs.length > 1, 'one': approvedJobs.length == 1}">
+            <ng-container *ngFor="let job of approvedJobs; index as i">
+              <app-job
+               [AnApprovedJob]="job"
+               [otherRelevantData]="relevantData"
+               (displayJobDetails)="handleJobDisplay($event)"></app-job>
+            </ng-container>
 
-              <div class="job_location">
-                <span>Imo, Nigeria</span>
-                <span>Entry Level</span>
-              </div>
+            <ng-container *ngIf="approvedJobs!.length < 1">
+              <ngx-skeleton  borderRadius="12px" height="30vh" margin="15px 0 8px 0" width="100%">
+                <div class="job" >
+                  <div class="job_title">
+                    <span>  </span>
+                    <span>   </span>
+                  </div>
+              
+                  <div class="job_location">
+                    <span> </span>
+                    <span> </span>
+                  </div>
+              
+                  <div class="job_dead_line">
+                    <span></span>
+                    <span>   </span>
+                  </div>
+              
+                  <div class="approved_jobs_actions" >
+                    <span></span> <span>  </span>
+                  </div>
+                </div>
+              </ngx-skeleton>
 
-              <div class="job_dead_line">
-                <span>Deadline:</span>
-                <span>12-Oct-2022</span>
-              </div>
-            </div>
-            <div class="job">
-              <div class="job_title">
-                <span>Graduate Trainee</span>
-                <span>All Department</span>
-              </div>
-
-              <div class="job_location">
-                <span>Imo, Nigeria</span>
-                <span>Entry Level</span>
-              </div>
-
-              <div class="job_dead_line">
-                <span>Deadline:</span>
-                <span>12-Oct-2022</span>
-              </div>
-            </div>
-            <div class="job">
-              <div class="job_title">
-                <span>Graduate Trainee</span>
-                <span>All Department</span>
-              </div>
-
-              <div class="job_location">
-                <span>Imo, Nigeria</span>
-                <span>Entry Level</span>
-              </div>
-
-              <div class="job_dead_line">
-                <span>Deadline:</span>
-                <span>12-Oct-2022</span>
-              </div>
-            </div>
-            <div class="job">
-              <div class="job_title">
-                <span>Graduate Trainee</span>
-                <span>All Department</span>
-              </div>
-
-              <div class="job_location">
-                <span>Imo, Nigeria</span>
-                <span>Entry Level</span>
-              </div>
-
-              <div class="job_dead_line">
-                <span>Deadline:</span>
-                <span>12-Oct-2022</span>
-              </div>
-            </div>
-            <div class="job">
-              <div class="job_title">
-                <span>Graduate Trainee</span>
-                <span>All Department</span>
-              </div>
-
-              <div class="job_location">
-                <span>Imo, Nigeria</span>
-                <span>Entry Level</span>
-              </div>
-
-              <div class="job_dead_line">
-                <span>Deadline:</span>
-                <span>12-Oct-2022</span>
-              </div>
-            </div>
-
-
+              <ngx-skeleton  borderRadius="12px" height="30vh" margin="15px 0 8px 0" width="100%">
+                <div class="job" >
+                  <div class="job_title">
+                    <span>  </span>
+                    <span>   </span>
+                  </div>
+              
+                  <div class="job_location">
+                    <span> </span>
+                    <span> </span>
+                  </div>
+              
+                  <div class="job_dead_line">
+                    <span></span>
+                    <span>   </span>
+                  </div>
+              
+                  <div class="approved_jobs_actions" >
+                    <span></span> <span>  </span>
+                  </div>
+                </div>
+              </ngx-skeleton>
+            </ng-container>
           </div>
         </div>
+      </div>
+    </div>
+
+    <div [ngClass]="{'default': views == 'preview'}" class="preview_page external_job_view">
+      <div class="body_content w-full ">
+       <a (click)="views = 'jobs'"  class="history"><img src="../../../assets/images/go_back.svg" alt=""> Go back</a>
+
+       <section class="main_view">
+         <!-- <h5 *ngIf="views == 'preview' && subView == 'preview'">Preview the Job Details Before Submitting for Approval</h5> -->
+
+         <div class="main_view__content">
+           <div class="heading_content">
+             <div class="text">
+               <span class="bigger_text"> {{ dataFromCreateJob?.jobTitle }} </span>
+               <span class="smaller_text"> {{ dataFromCreateJob?.department }} </span>
+             </div>
+             <div class="edit_container" [ngClass]="{'opacity-0': relevantData.whoIsViewing != 'Others'}">
+               <span>
+                 <img class="edit_button" src="../../../assets/images/edit_button.svg" alt="">
+                 <small>Edit</small>
+               </span>
+             </div>
+           </div>
+             
+            <div [ngClass]="{'block': subView == 'preview', 'hidden': subView == 'apply'}" class="preview_details_container">
+              <div class="reportTo_supervises">
+                <div class="reportTo">
+                  <span>Report To</span>
+                  <p> {{ dataFromCreateJob?.reportTo }} </p>
+                </div>
+                <div class="supervises">
+                  <span>Supervises</span>
+                  <p> {{ dataFromCreateJob?.supervise }} </p>
+                </div>
+             </div>
+ 
+             <div class="reportTo_supervises">
+              <div class="reportTo">
+                <span>Class of Degree</span>
+                <p> {{ dataFromCreateJob?.classOfDegree }} </p>
+              </div>
+              <div class="supervises">
+                <span>NYSC</span>
+                <p>Must be {{ dataFromCreateJob?.nysc }} </p>
+              </div>
+           </div>
+ 
+             <div class="job_objectives" >
+               <span>Job Objective</span> 
+               <ul #JobObjectivesThree>
+                
+               </ul>
+             </div>
+ 
+             <div class="accountabilities">
+              <span>Accountabilities</span>
+               <ul class="holder" #AccountabilityThree>
+ 
+               </ul>
+            </div>
+ 
+            <div class="professional_competencies" >
+              <span>Professional Competencies</span>
+              <ul class="holder" #ProfessionalCompetenciesThree>
+                
+              </ul>
+            </div>
+ 
+            <div class="behavioralCompetencies_organisationalCompetencies">
+              <div class="behavioralCompetencies" >
+                <span>Behavioral Competencies</span>
+                <ul class="holder" #BehavioralCompetenciesThree>
+ 
+                </ul>
+              </div>
+              <div class="organisationalCompetencies" >
+                <span>Organisational Competencies</span>
+                <ul class="holder" #OrganisationalCompetenciesThree>
+ 
+                </ul>
+              </div>
+             </div>
+ 
+             <div class="person_specifications">
+              <span>Person Specification/Job Profile</span>
+              <ul class="holder" #PersonSpecificationsThree>
+                 
+              </ul> 
+               
+            </div>
+              
+            <div class="job_objectives" >
+              <span>Educational Qualification</span>
+               <ul class="holder" #EducationalQualificationsThree>
+ 
+               </ul>
+            </div>
+ 
+            <div class="job_objectives">
+              <span>Experience</span>
+               <ul class="holder" #ExperienceThree>
+ 
+               </ul>
+            </div>
+            </div>
+
+            <div class="application_details_container" [ngClass]="{'hidden': subView == 'preview', 'block': subView == 'apply'}" >
+              <div class="for_application">
+                 <div class="stage_indicators">
+                  <div class="a_stage">
+                    <div class="active_parts">
+                      <span [ngClass]="{'current': applicationView == 1, 'completed': applicationViewName == 'Education' || applicationView > 1}" class="stage_number  relative">1</span>
+                      <span class="stage_bar"></span>
+                    </div>
+                     <div class="passive_parts">
+                      <span class="stage_text">
+                        Personal
+                      </span>
+                     </div>
+                  </div>
+
+                  <div class="a_stage">
+                    <div class="active_parts">
+                      <span [ngClass]="{'current': applicationView == 2, 'completed': applicationViewName == 'Experience' || applicationView > 2}" class="stage_number relative">2</span>
+                      <span class="stage_bar"></span>
+                    </div>
+                     <div class="passive_parts">
+                      <span class="stage_text">
+                        Education
+                      </span>
+                     </div>
+                  </div>
+
+                  <div class="a_stage">
+                    <div class="active_parts">
+                      <span [ngClass]="{'current': applicationView == 3}" class="stage_number">3</span>
+                      <span class="stage_bar"></span>
+                    </div>
+                     <div class="passive_parts">
+                      <span class="stage_text">
+                        Experience
+                      </span>
+                     </div>
+                  </div>
+                 </div>
+                  <!-- this.personalDataForm.touched && this.personalDataForm.invalid && this.personalDataForm.errors -->
+                 <form [formGroup]="personalDataForm" class="" [ngClass]="{'!block': applicationView == 1}">
+                    <div class="file_container">
+                      <label for="" class="passport_label">
+                        <span>Passport Photograph</span>
+                        <small class="text-hrms-slightRed">Maximum Size is 2mb</small>
+                      </label>
+                      <div class="input_group passport_input"> 
+                        <div #PassportInsertionPoint class="front_facing"><small>Click here to Upload</small></div>
+                        <input type="file" (change)="insertImageIntoFileStorage($event)" class="an_input back_facing" placeholder="">
+                      </div>
+                   </div>
+                  <div class="form_fields">
+                    <label for="">Full Name</label>
+                    <div class="input_group">
+                      <div class="input_sub_group">
+                         <small 
+                           [ngClass]="{'required': firstName?.touched && firstName?.errors}" 
+                           class="error_text firstName">First name must be 3 letters or more !!</small>
+                         <input 
+                          [ngClass]="{'required': firstName?.touched && firstName?.errors}" 
+                          formControlName="firstName" type="text"  class="an_input half" placeholder="First name">
+                          
+                         <input formControlName="middleName" type="text" class="an_input half" placeholder="Middle name (Optional)">
+                      </div>
+                       <small 
+                        [ngClass]="{'required': lastName?.touched && lastName?.errors}" 
+                        class="error_text lastName">Last name must be 3 letters or more !!</small>
+                      <input type="text"
+                        [ngClass]="{'required': lastName?.touched && lastName?.errors}" 
+                        formControlName="lastName" class="an_input full" placeholder="Last name">
+                    </div>
+                  </div>
+
+                 <div class="form_fields">
+                  <label for="">Email Address</label>
+                  <div class="input_group">  
+                    <small 
+                        [ngClass]="{'required': email?.touched && email?.errors}" 
+                        class="error_text email">Enter a valid email !!</small>                  
+                    <input [ngClass]="{'required': email?.touched && email?.errors}"  
+                      formControlName="email" type="email" class="an_input full" placeholder="Enter email">
+                  </div>
+                </div>
+
+                <div class="form_fields">
+                  <label for="">Date of Birth</label>
+                   <div class="input_group">                    
+                    <div class="input_sub_group">
+                      <small 
+                        [ngClass]="{'required': dob?.touched && dob?.errors}" 
+                        class="error_text dob">Enter a  valid date of birth !!</small>
+                      <input [ngClass]="{'required': dob?.touched && dob?.errors}"   formControlName="dob" type="date" class="an_input three_quarters" >
+
+                      <small 
+                        [ngClass]="{'required': age?.touched && age?.errors}" 
+                        class="error_text age">Enter a valid age !!</small>
+                      <input [ngClass]="{'required': age?.touched && age?.errors}"  formControlName="age" type="tel" class="an_input one_quarter" placeholder="Age">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form_fields">
+                  <label for="">Mobile Number</label>
+                  <div class="input_group">
+                    <small 
+                        [ngClass]="{'required': phone?.touched && phone?.errors}" 
+                        class="error_text phone">Enter a valid Nigerian phone !! </small>
+                    <div class="input_sub_group">   
+                      <input [ngClass]="{'required': phone?.touched && phone?.errors}"  
+                        formControlName="phone" type="tel" class="an_input half" placeholder="Primary">
+                      <input formControlName="secondaryPhone" type="tel" class="an_input half" placeholder="Secondary (Optional)">
+                     </div>
+                  </div>
+                   
+                </div>
+
+                <div class="form_fields_with_radios">
+                   <label for="">Gender</label>
+                   <div class="input_group_radio">                    
+                    <input formControlName="gender" name="gender" value="Male" type="radio" class="an_input half" id="male" >
+                    <label for="male">Male</label>
+                  </div>
+
+                  <div class="input_group_radio">                    
+                    <input formControlName="gender" name="gender" value="Female" type="radio" class="an_input half" id="female">
+                    <label for="female">Female</label>
+                  </div>
+                </div>
+
+                <div class="form_fields_with_radios">
+                  <label for="">Marital Status</label>
+                  <div class="input_group_radio">  
+                                   
+                   <input formControlName="maritalStatus" name="maritalStatus" value="Single" type="radio" class="an_input half" id="single" >
+                   <label for="single">Single</label>
+                 </div>
+
+                 <div class="input_group_radio">                    
+                   <input formControlName="maritalStatus" name="maritalStatus" value="Married" type="radio" class="an_input half" id="married">
+                   <label for="married">Married</label>
+                 </div>
+
+                 <div class="input_group_radio">                    
+                  <input formControlName="maritalStatus" name="maritalStatus" value="Divorced" type="radio" class="an_input half" id="divorced">
+                  <label for="divorced">Divorced</label>
+                </div>
+               </div>
+
+
+                <div class="form_fields">
+                  <label for="">Residential State</label>
+                  <div class="input_group">  
+                    <small 
+                        [ngClass]="{'required': state?.touched && state?.errors}" 
+                        class="error_text state">Select a state !!</small>                     
+                    <select [ngClass]="{'required': state?.touched && state?.errors}"  
+                       formControlName="state"  class="a_select full">
+                      <option value="" selected>Select State</option>
+                      <option [value]="state.id" *ngFor="let state of states">{{state?.name}}</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form_fields">
+                  <label for="">Residential Address</label>
+                  <div class="input_group">   
+                    <small 
+                        [ngClass]="{'required': residentialAddress?.touched && residentialAddress?.errors}" 
+                        class="error_text residentialAddress">Enter a valid address!!
+                     </small>                    
+                    <textarea  [ngClass]="{'required': residentialAddress?.touched && residentialAddress?.errors}" 
+                       formControlName="residentialAddress"  class="a_textarea full"></textarea>
+                  </div>
+                </div>
+                 </form>
+                 <form 
+                   [formGroup]="educationRelatedRecords"
+                   action="" class="" [ngClass]="{'!block': applicationView == 2}">
+                  <div class="form_fields">
+                    <label for="universityBsc" class="passport_label">
+                      <span>University</span>
+                      <small>First Degree</small>
+                    </label>
+                    <div class="input_group">                    
+                      <!-- <input formControlName="universityBSc" id="universityBsc"  type="text" class="an_input full" placeholder="First Degree"> -->
+
+                      <select formControlName="universityBSc" class="a_select full" id="universityBsc">
+                        <option value="" selected>Select a university</option>
+                        <option [value]="university.name" *ngFor="let university of nigerianUniversities">
+                          {{ university?.name }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form_fields">
+                    <label for="degree">Degree</label>
+                    <div class="input_group">                    
+                      <!-- <input formControlName="degree"  type="text" id="degree"
+                       class="an_input full" placeholder="First Degree"> -->
+
+                       <select formControlName="degree" class="a_select full" id="degree">
+                        <option value="" selected>Select a degree</option>
+                        <option [value]="degree.description" *ngFor="let degree of degrees">
+                          {{ degree?.name + '-' + degree?.description }}
+                        </option>
+                      </select>
+
+
+                    </div>
+                  </div>
+                  <div class="form_fields">
+                    <label for="">Class of Degree</label>
+                    <div class="input_group">                    
+                      <select formControlName="classOfDegree" class="a_select full">
+                        <option value="" selected>Select a Class of Degree</option>
+                        <option [value]="degree" *ngFor="let degree of sharedService.convertClassOfDegreeToArray()">
+                          {{ degree }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form_fields">
+                    <label for="courseofStudy">Course of Study</label>
+                    <div class="input_group">                    
+                      <input formControlName="courseofStudy" 
+                       id="courseofStudy" type="text" class="an_input full" placeholder="Course">
+                    </div>
+                  </div>
+
+                  <div class="form_fields">
+                    <label for="" class="passport_label">
+                      <span>University</span>
+                      <small>Master Degree(Optional)</small>
+                    </label>
+                    <div class="input_group">                    
+                      <input formControlName="universityMSc" type="text" class="an_input full" placeholder="Master">
+                    </div>
+                  </div>
+
+                  <div class="form_fields">
+                    <label for="" class="passport_label">
+                      <span>Course</span>
+                      <small>Master Degree(Optional)</small>
+                    </label>
+                    <div class="input_group">                    
+                      <input formControlName="courseMsc" 
+                       type="text" class="an_input full" placeholder="Course of study in master degree">
+                    </div>
+                  </div>
+
+                  <div class="form_fields_with_radios">
+                    <label for="">Completed NYSC</label>
+                    <div class="input_group_radio">                    
+                     <input value="Completed" 
+                       formControlName="completedNYSC" 
+                       name="completedNYSC"
+                       type="radio" class="an_input half" id="completed" >
+                     <label for="completed">Yes</label>
+                   </div>
+  
+                   <div class="input_group_radio">                    
+                     <input 
+                     formControlName="completedNYSC"  
+                     name="completedNYSC" 
+                     value="InProgress" 
+                     type="radio" class="an_input half" id="in_progress">
+                     <label for="in_progress">No</label>
+                   </div>
+  
+                   <div class="input_group_radio">                    
+                    <input 
+                    formControlName="completedNYSC"  
+                     name="completedNYSC" 
+                     value="Exempted" 
+                    type="radio" class="an_input half" id="exempted">
+                    <label for="exempted">Exempted</label>
+                  </div>
+                 </div>
+
+                    <!-- {{ completedNYSC?.value }} -->
+                  <div class="form_fields" [ngClass]="{'disabled': completedNYSC?.value != 'Completed'}">
+                    <label for="" class="passport_label">
+                      <span>Year of Completion</span>
+                      <small>or year of exemption</small>
+                    </label>
+                    <div class="input_group">                    
+                      <select formControlName="yearOfCompletion" class="a_select full">
+                        <option value="" selected>Select Year</option>
+                        <option [value]="year" *ngFor="let year of acceptedYearsOfNYSCCompletion; index as i">
+                          {{year}}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                 </form>
+                 <form [formGroup]="extraInformation" class="" [ngClass]="{'!block': applicationView == 3}">
+                  <div class="file_container">
+                    <label for="" class="passport_label">
+                      <span>Curriculum Vitae</span>
+                      <small class="w-full text-hrms-lightRed-bg">Only Word Format</small>
+                    </label>
+                    <div class="input_group curriculum_vitae"> 
+                      <div  class="front_facing">
+                        <span class="choose_file">Choose File</span>
+                        <span #CVInsertionPoint class="file_selection_container">
+                          <img src="../../../assets/images/file_bland_style.svg" alt="">
+                          No File Selected
+                        </span>
+                      </div>
+                      <input type="file" (change)="insertFileIntoFileStorage($event)" accept=".docx" class="an_input back_facing" placeholder="">
+                    </div>
+                  </div>
+                  <div class="form_fields">
+                    <label for="" class="passport_label">
+                      <span>Professional Certificate</span>
+                      <small>Optional</small>
+                    </label>
+                    <div class="input_group">                    
+                      <input formControlName="certification" type="text" class="an_input full" placeholder="Professional">
+
+                      <div class="addition_panel">
+                        <span class="-mt-2"><img src="../../../assets/images/add.svg" alt=""></span>
+                        <span>Add Another certificate</span>
+                      </div>
+                    </div>
+                  </div>
+                   
+                  <div class="form_fields">
+                    <label for="" class="passport_label">
+                      <span>Year of Experience</span>
+                      <small>Optional</small>
+                    </label>
+                    <div class="input_group ml-4">                    
+                      <input formControlName="yearsOfExperience" type="text" class="an_input full" placeholder="Last name">
+                    </div>
+                  </div>
+
+                  <div class="form_fields">
+                    <label for="" class="passport_label">
+                      <span>Current Employer</span>
+                      <small>Optional</small>
+                    </label>
+                    <div class="input_group ml-4">                    
+                      <input formControlName="currentEmployer" type="text" class="an_input full" placeholder="Last name">
+                    </div>
+                  </div>
+
+                 </form>
+
+              <div class="button_fields">
+                <!--  -->
+                <a (click)="gotoPreviousApplicationForm()" >Previous</a>
+                 <button class="btn-red-custom" 
+                  [disabled]="enableNextButtonsForPersonal"
+                  *ngIf="applicationView == 1"  (click)="gotoNextApplicationForm()" >Next</button>
+                  <button class="btn-red-custom" 
+                  [disabled]="educationRelatedRecords.invalid"
+                  *ngIf="applicationView == 2" (click)="gotoNextApplicationForm()">Next</button>
+                <button class="btn-red-custom w-auto" 
+                 [disabled]="enablePreviewButtonForOthers"
+                 *ngIf="applicationView ==  3" (click)="previewApplication()" #FormPreviewButton>Preview</button>
+              </div>
+              </div>
+            </div>
+
+         </div>
+       </section>
+       <aside [ngClass]="{'!top-[16%]': views == 'preview', '!top-[31%]': views == 'jobs'}" class="floating_view external_job_view">
+         <ul class="floating_view__container">
+           <li>
+             <p class="heading">
+               <span>Location</span> 
+               <span [ngClass]="{'opacity-0': relevantData.whoIsViewing != 'Others'}">
+                 <img  class="edit_button" src="../../../assets/images/edit_button.svg" alt="">
+                 <small>Edit</small>
+               </span>
+             </p>
+             <p class="text"> {{ dataFromCreateJob?.location }} </p>
+           </li>
+           
+           <li class="">
+            <p class="heading">
+              <span>Grade</span> 
+            </p>
+            <p class="text">  {{ dataFromCreateJob?.grade }} </p>
+           </li>
+
+           <li class="">
+            <p class="heading">
+              <span>Employment Type</span> 
+            </p>
+            <p class="text">  {{ dataFromCreateJob?.type }} </p>
+           </li>
+           
+           <li class="">
+            <p class="heading">
+              <span>Department</span> 
+            </p>
+            <p class="text">  {{ dataFromCreateJob?.department }} </p>
+          </li>
+           <li class="">
+             <p class="heading">
+               <span>Deadline</span> 
+               
+             </p>
+             <p class="text">  {{ dataFromCreateJob?.deadline | date: 'mediumDate'}} </p>
+           </li>
+
+           <li class="">
+              <div class="apply_contents">
+                <button *ngIf="subView == 'preview' && views == 'preview'" (click)="subView = 'apply'" class="btn-red-custom cursor-pointer">
+                  Apply for this Job
+                </button>
+
+                <button #AsidePreviewButton *ngIf="subView == 'apply'" (click)="subView = 'preview'" class="btn-red-custom cursor-pointer">
+                  Preview
+                </button>
+
+                <div class="warning">
+                  <span><img src="../../../assets/images/exclamation_mark.png" alt=""></span>
+                  <span>Please note that within <strong>a six-month period</strong>, only <strong>one position</strong> may be applied for.</span>
+                </div>
+              </div>
+          </li>
+
+         </ul>
+       </aside>
       </div>
     </div>
     <app-footer></app-footer>

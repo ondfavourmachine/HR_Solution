@@ -1,0 +1,692 @@
+<main class="preview_application__container">
+    <header *ngIf="!isPreviewForExternalApplicant">
+        <div class="first_part gap-20">
+         Preview Application   
+        </div>
+        <div class="second_part" >
+         <span  [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen}" >
+            <img (click)="closeBtn()" src="../../../assets/images/close-icon.svg" alt=""></span>
+        </div>
+     </header>
+    <header *ngIf="checkIfApplicationHasApplicationStage && !checkIfChairPersonAssessed">
+        <div class="first_part gap-20">
+         Applicant Information   
+        </div>
+        <div class="second_part" >
+         <span  [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen}" ><img (click)="closeBtn()" src="../../../assets/images/close-icon.svg" alt=""></span>
+        </div>
+     </header>
+
+     <header *ngIf="data?.applicantData?.approverStatus == 'Pending' && !checkIfChairPersonAssessed && data?.applicantData?.hR_Status == 'Pending' && data?.applicantData?.applicationStage == 0">
+        <div class="first_part" [ngClass]="{'gap-20': !data?.applicantData?.hR_Admin, 'gap-5': data?.applicantData?.hR_Admin }">
+            Applicant Information
+            
+            <span class="status_container" [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen }">Status: 
+                <span class="status"
+                [ngClass]="
+                {'Pending': data?.applicantData?.hR_Status == 'Pending',
+                  'Waiting': data?.applicantData?.approverStatus == 'Awaiting', 
+                 'Approved': data?.applicantData?.hR_Status == 'Approve', 
+                'Rejected' : data?.applicantData?.hR_Status == 'Rejected' || data?.applicantData?.hR_Status == 'Returned'}" 
+                > {{ getApprovalToDisplay }} 
+              </span>
+            </span>
+            <span  class="status_container initiator" *ngIf="data?.applicantData?.hR_Admin &&  data?.applicantData?.hR_Status == 'Pending',">
+                    <span class="text-black">Initiator:</span> {{ data?.applicantData?.hR_Admin }}
+            </span>
+
+           
+    
+            <span class="status_container decision" *ngIf="data?.applicantData?.hR_Admin &&  data?.applicantData?.hR_Status == 'Pending',">
+                <span class="text-black">Decision: </span> {{ data?.applicantData?.hR_Comment }} 
+             </span>
+           </div>
+        <div class="second_part" >
+         <span  [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen}" ><img (click)="closeBtn()" src="../../../assets/images/close-icon.svg" alt=""></span>
+        </div>
+     </header>
+     <header *ngIf="checkIfChairPersonAssessed && data?.applicantData?.applicationStage == 2 && data?.applicantData?.interviewAssessed! < 2">
+        <div class="first_part" [ngClass]="{'gap-20': !data?.applicantData?.hR_Admin, 'gap-5': data?.applicantData?.hR_Admin }">
+            Applicant Interview Details
+            <span class="status_container" [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen }">Invitation: 
+                <span class="status"
+                [ngClass]="
+                {'Pending': data?.applicantData?.scheduleStatus == 'Pending', 
+                 'Approved': data?.applicantData?.scheduleStatus == 'Approve'}" 
+                > {{ data?.applicantData?.scheduleStatus == 'Approve' ? 'Sent' : 'Not Sent' }} 
+              </span>
+            </span>
+            <span class="status_container" [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen }">Status: 
+               <span class="status"
+               [ngClass]="
+               {'Pending': data?.applicantData?.hR_Status == 'Pending',
+                 'Waiting': data?.applicantData?.approverStatus == 'Awaiting', 
+                'Approved': data?.applicantData?.hR_Status == 'Approve', 
+               'Rejected' : data?.applicantData?.hR_Status == 'Rejected' || data?.applicantData?.hR_Status == 'Returned'}" 
+               > {{ data?.applicantData?.approverStatus }} 
+             </span>
+           </span>
+           </div>
+        <div class="second_part" >
+         <span  [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen}" ><img (click)="closeBtn()" src="../../../assets/images/close-icon.svg" alt=""></span>
+        </div>
+     </header>
+
+     <header *ngIf="(data?.applicantData?.applicationStage == 3 || data?.applicantData?.applicationStage == 4)  && role == 'HRAdmin' && data?.applicantData!.hR_Status == 'Pending'">
+        <div class="first_part" [ngClass]="{'gap-20': !data?.applicantData?.hR_Admin, 'gap-5': data?.applicantData?.hR_Admin }">
+            Applicant Interview Details
+            <span class="status_container" [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen }">Invitation: 
+                <span class="status"
+                [ngClass]="
+                {'Pending': data?.applicantData?.scheduleStatus == 'Pending', 
+                 'Approved': data?.applicantData?.scheduleStatus == 'Approve'}" 
+                > {{ data?.applicantData?.scheduleStatus == 'Approve' ? 'Sent' : 'Not Sent' }} 
+              </span>
+            </span>
+            <span class="status_container" [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen }">Status: 
+               <span class="status"
+               [ngClass]="
+               {'Pending': data?.applicantData?.hR_Status == 'Pending',
+                 'Waiting': data?.applicantData?.approverStatus == 'Awaiting', 
+                'Approved': data?.applicantData?.hR_Status == 'Approve', 
+               'Rejected' : data?.applicantData?.hR_Status == 'Rejected' || data?.applicantData?.hR_Status == 'Returned'}" 
+               > {{ data?.applicantData?.approverStatus }} 
+             </span>
+           </span>
+           </div>
+        <div class="second_part" >
+         <span  [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen}" ><img (click)="closeBtn()" src="../../../assets/images/close-icon.svg" alt=""></span>
+        </div>
+     </header>
+
+     <header *ngIf="(data?.applicantData?.applicationStage == 5 || data?.applicantData?.applicationStage == 6)  && role == 'HRAdmin' && data?.applicantData!.hR_Status == 'Pending'">
+        <div class="first_part" [ngClass]="{'gap-20': !data?.applicantData?.hR_Admin, 'gap-5': data?.applicantData?.hR_Admin }">
+            Applicant Information
+            <span class="status_container" [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen }">Invitation: 
+                <span class="status"
+                [ngClass]="
+                {'Pending': data?.applicantData?.invitationStatus == 'Not Sent', 
+                 'Approved': data?.applicantData?.invitationStatus == 'Sent'}" 
+                > {{ data?.applicantData?.invitationStatus}} 
+              </span>
+            </span>
+            <span class="status_container" [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen }">Status: 
+               <span class="status"
+               [ngClass]="
+               {'Pending': data?.applicantData?.hR_Status == 'Pending',
+                 'Waiting': data?.applicantData?.approverStatus == 'Awaiting', 
+                'Approved': data?.applicantData?.hR_Status == 'Approve', 
+               'Rejected' : data?.applicantData?.hR_Status == 'Rejected' || data?.applicantData?.hR_Status == 'Returned'}" 
+               > {{ data?.applicantData?.approverStatus }} 
+             </span>
+           </span>
+           </div>
+        <div class="second_part" >
+         <span  [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen}" ><img (click)="closeBtn()" src="../../../assets/images/close-icon.svg" alt=""></span>
+        </div>
+     </header>
+
+    <header *ngIf="data?.applicantData?.applicationStage! > 0 && data?.applicantData?.invitationStatus == 'Not Sent' && data?.applicantData?.approverStatus == 'Approve'">
+       <div class="first_part" [ngClass]="{'gap-20': !data?.applicantData?.hR_Admin, 'gap-5': data?.applicantData?.hR_Admin }">
+        Applicant Information 
+        <!-- testing -->
+        <span class="status_container" [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen }">Status: 
+            <span class="status"
+            [ngClass]="
+            {'Pending': data?.applicantData?.hR_Status == 'Pending',
+              'Waiting': data?.applicantData?.approverStatus == 'Awaiting', 
+             'Approved': data?.applicantData?.hR_Status == 'Approve', 
+            'Rejected' : data?.applicantData?.hR_Status == 'Rejected' || data?.applicantData?.hR_Status == 'Returned'}" 
+            > {{ getApprovalToDisplay }} 
+          </span>
+        </span>
+        <span  class="status_container initiator" *ngIf="data?.applicantData?.hR_Admin &&  data?.applicantData?.hR_Status == 'Pending',">
+                <span class="text-black">Initiator:</span> {{ data?.applicantData?.hR_Admin }}
+        </span>
+        <span class="status_container decision" *ngIf="data?.applicantData?.hR_Admin &&  data?.applicantData?.hR_Status == 'Pending'">
+            <span class="text-black">Decision: </span> {{ data?.applicantData?.hR_Comment }} 
+         </span>
+       </div>
+       <div class="second_part" >
+        <span  [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen}" ><img (click)="closeBtn()" src="../../../assets/images/close-icon.svg" alt=""></span>
+       </div>
+    </header>
+
+    <header *ngIf="data?.applicantData?.approverStatus! == 'Awaiting' && data?.applicantData?.hR_Status == 'Approve'">
+        <div class="first_part" [ngClass]="{'gap-20': !data?.applicantData?.hR_Admin, 'gap-5': data?.applicantData?.hR_Admin }">
+         Applicant Information
+         <span class="status_container" [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen }">Status: 
+             <span class="status"
+             [ngClass]="
+             {'Pending': data?.applicantData?.hR_Status == 'Pending',
+               'Waiting': data?.applicantData?.approverStatus == 'Awaiting', 
+              'Approved': data?.applicantData?.hR_Status == 'Approve', 
+             'Rejected' : data?.applicantData?.hR_Status == 'Rejected' || data?.applicantData?.hR_Status == 'Returned'}" 
+             > {{ getApprovalToDisplay }} 
+           </span>
+         </span>
+         <span  class="status_container initiator" *ngIf="data?.applicantData?.hR_Admin &&  data?.applicantData?.hR_Status == 'Approve',">
+                 <span class="text-black">Initiator:</span> {{ data?.applicantData?.hR_Admin }}
+         </span>
+         <span class="status_container decision" *ngIf="data?.applicantData?.hR_Admin &&  data?.applicantData?.hR_Status == 'Approve'">
+             <span class="text-black">Decision: </span> {{ data?.applicantData?.hR_Comment }} 
+          </span>
+        </div>
+        <div class="second_part" >
+         <span  [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen}" ><img (click)="closeBtn()" src="../../../assets/images/close-icon.svg" alt=""></span>
+        </div>
+     </header>
+
+      <header *ngIf="data?.applicantData?.applicationStage == 1 && data?.applicantData?.testAssessed == 2" >
+        <div class="first_part" [ngClass]="{'gap-20': !data?.applicantData?.hR_Admin, 'gap-5': data?.applicantData?.hR_Admin }">
+         Applicant Test Details   
+         <span class="status_container" [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen }">Invitation: 
+             <span class="status"
+             [ngClass]="
+             {'Pending': data?.applicantData?.invitationStatus == 'Not Sent', 
+              'Approved': data?.applicantData?.invitationStatus == 'Sent'}" 
+             > {{ data?.applicantData?.invitationStatus }} 
+           </span>
+         </span>
+         <span class="status_container" [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen }">Status: 
+            <span class="status"
+            [ngClass]="
+            {'Pending': data?.applicantData?.hR_Status == 'Pending',
+              'Waiting': data?.applicantData?.approverStatus == 'Awaiting', 
+             'Approved': data?.applicantData?.hR_Status == 'Approve', 
+            'Rejected' : data?.applicantData?.hR_Status == 'Rejected' || data?.applicantData?.hR_Status == 'Returned'}" 
+            > {{ data?.applicantData?.approverStatus }} 
+          </span>
+        </span>
+         <span class="status_container initiator" *ngIf="data?.applicantData?.hR_Admin">
+                 <span class="text-black">Initiator:</span> {{ data?.applicantData?.hR_Admin }}
+         </span>
+ 
+         <span class="status_container decision" *ngIf="data?.applicantData?.hR_Admin">
+             <span class="text-black">Decision: </span> {{ data?.applicantData?.hR_Comment }} 
+          </span>
+        </div>
+        <div class="second_part" >
+         <span  [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen}" >
+            <img (click)="closeBtn()" src="../../../assets/images/close-icon.svg" alt="">
+        </span>
+        </div>
+     </header>
+
+     <header *ngIf="data?.applicantData?.applicationStage == 1 && data?.applicantData?.testAssessed == 4" >
+        <div class="first_part gap-20">
+         Applicant Test Details   
+
+         <span class="status_container initiator" *ngIf="data?.applicantData?.hR_Status">
+            <span class="text-black">Test Status:</span> Completed
+         </span>
+
+            <span class="status_container decision" *ngIf="data?.applicantData?.hR_Admin">
+                <span class="text-black">Decision: </span> {{ data?.applicantData?.hR_Status }} 
+            </span>
+        </div>
+        <div class="second_part" >
+         <span  [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen}" ><img (click)="closeBtn()" src="../../../assets/images/close-icon.svg" alt=""></span>
+        </div>
+     </header>
+
+    <div class="application_container">
+        <app-applicant-image-cv-details
+         [data]="data"
+         ></app-applicant-image-cv-details>
+        <section>
+            <div class="main_content">
+                <div *ngIf="hrCommentIsPresent && data?.applicantData?.applicationStage! > 0" class="hr_comment">
+                    <h3>Comment</h3>
+                    <p>{{data?.applicantData?.hR_Comment}}</p>
+                </div>
+                <div class="application">
+                    <div class="personDetails">
+                        <div class="grid_item">
+                            <span class="heading">First Name</span>
+                            <span class="text">{{ data.applicantData?.firstName }}</span>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading">
+                                Middle Name
+                            </span>
+                            <span class="text">
+                                {{ data.applicantData?.middleName || 'Nil' }}
+                            </span>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading">
+                                Last Name
+                            </span>
+                            <span class="text">
+                                {{ data.applicantData?.lastName }}
+                            </span>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading">
+                                Email
+                            </span>
+                            <span class="text break-words">
+                                {{ data.applicantData?.email }}
+                            </span>
+                        </div>
+
+                        <div class="grid_item">
+                            <span class="heading">
+                                Date of Birth
+                            </span>
+                            <span class="text">
+                                {{ (data?.applicantData?.dob | date:'mediumDate') ||  data.applicantData?.dob  }}
+                            </span>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading">
+                                Age
+                            </span>
+                            <span class="text">
+                                {{ data.applicantData?.age }}
+                            </span>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading">
+                                Phone Number
+                            </span>
+                            <span class="text">
+                                {{ data.applicantData?.phone }}
+                            </span>
+                        </div>
+
+                        <div class="grid_item">
+                            <span class="heading">
+                                Secondary Number
+                            </span>
+                            <span class="text">
+                                {{ data.applicantData?.secondaryPhone || 'Nil' }}
+                            </span>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading">
+                                Gender
+                            </span>
+                            <span class="text">
+                                {{ data.applicantData?.gender }}
+                            </span>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading">
+                                Marital Status
+                            </span>
+                            <span class="text">
+                                {{ data.applicantData?.maritalStatus }}
+                            </span>
+                        </div>
+
+                        <div class="grid_item">
+                            <span class="heading">
+                                Residential State
+                            </span>
+                            <span class="text">
+                                {{ data.applicantData?.residential_State }}
+                            </span>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading">
+                                Residential Address
+                            </span>
+                            <span class="text">
+                                {{ data.applicantData?.residentialAddress }}
+                            </span>
+                        </div>
+                    </div>
+                    <div    
+                    class="others" *ngIf="data?.applicantData?.applicationStage! == 5">
+                    <div class="grid_item">
+                        <span class="heading">Hospital</span>
+                        <span class="text">{{ data?.applicantData?.hospitalName || 'Nil' }}</span>
+                    </div>
+                    <div class="grid_item">
+                        <span class="heading">Time for Medical Appointment</span>
+                        <span class="text">{{ (data?.applicantData?.dateTime | date:'medium') || 'Nil' }}</span>
+                    </div>
+                    <div class="grid_item">
+                        <span class="heading">Hospital Location</span>
+                        <span class="text">{{ data?.applicantData?.hospitalName || 'Nil' }}</span>
+                    </div>
+                    
+                </div>
+                    <div class="educationalDetails">
+                        <div class="grid_item">
+                            <span class="heading">University</span>
+                            <span class="text">{{  data?.applicantData?.universityBSc }}</span>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading">
+                                Degree
+                            </span>
+                            <span class="text">
+                                {{ data?.applicantData?.degree }}
+                            </span>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading">
+                                Class of Degree
+                            </span>
+                            <span class="text">
+                                {{ data?.applicantData?.classOfDegree }}
+                            </span>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading">
+                                Course of Study
+                            </span>
+                            <span class="text">
+                                {{ data?.applicantData?.courseofStudy }}
+                            </span>
+                        </div>
+
+                        <div class="grid_item">
+                            <span class="heading">
+                                Course
+                            </span>
+                            <span class="text">
+                                {{ data?.applicantData?.courseMsc || 'Nil' }}
+                            </span>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading">
+                                Completed NYSC
+                            </span>
+                            <span class="text">
+                                {{ data?.applicantData?.completedNYSC || 'Nil' }}
+                            </span>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading">
+                                Year of Completion
+                            </span>
+                            <span class="text">
+                                {{ data?.applicantData?.yearOfCompletion || 'Nil' }}
+                            </span>
+                        </div>
+                    </div>
+                    <div    
+                      class="others" *ngIf="checkIfChairPersonAssessed">
+                     <div class="grid_item">
+                         <span class="heading">Overall Interview Score</span>
+                         <span class="text">{{ data?.applicantData?.score || 'Nil' }}</span>
+                     </div>
+                     <div class="grid_item">
+                         <span class="heading">Assessment Score</span>
+                         <span class="text">{{ data?.applicantData?.totalScore || 'Nil' }}</span>
+                     </div>
+                     <div class="grid_item">
+                         <span class="heading">Salary Expectation</span>
+                         <span class="text">{{ data?.applicantData?.recommendation || 'Nil' }}</span>
+                     </div>
+                     <div class="grid_item gap-10 pr-12">
+                         <span class="heading">Interview Date</span>
+                         <span class="text">
+                            {{ data?.applicantData?.recommendation || 'Nil' }}
+                         </span>
+                     </div>
+                 </div>
+                    <div    
+                        class="others" *ngIf="checkIfChairPersonAssessed">
+                        <div class="grid_item">
+                            <span class="heading">Current Position</span>
+                            <span class="text">{{ data?.applicantData?.currentPosition || 'Nil' }}</span>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading">Notice Period</span>
+                            <span class="text">{{ data?.applicantData?.noticePeriod || 'Nil' }}</span>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading">Indebtedness</span>
+                            <span class="text">{{ data?.applicantData?.indebtness || 'Nil' }}</span>
+                        </div>
+                        <div class="grid_item gap-10 pr-12">
+                            <span class="heading">Current Expectation</span>
+                            <span class="text">
+                                {{ (data?.applicantData?.currentRenumeration | currency:'₦') || 'Nil' }}
+                            </span>
+                        </div>
+                    </div>
+
+                   
+
+                    <div    
+                        class="others" *ngIf="checkIfChairPersonAssessed">
+                        <div class="grid_item">
+                            <span class="heading">Financial Expectation</span>
+                            <span class="text">{{ (data?.applicantData?.financialExpectation  | currency: '₦') || 'Nil' }}</span>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading">Reasons for leaving previous employer</span>
+                            <span class="text">{{ data?.applicantData?.reasonLeaving || 'Nil' }}</span>
+                        </div>
+                        
+                    </div>
+                    <div class="others" *ngIf="data?.applicantData?.applicationStage == 0">
+                        <div class="grid_item">
+                            <span class="heading">University (Master)</span>
+                            <span class="text">{{  data?.applicantData?.universityMSc || 'Nil'  }}</span>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading">Professional Certificate</span>
+                            <span class="text">{{ data?.applicantData?.certification || 'Nil' }}</span>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading">
+                                Years of Experience
+                            </span>
+                            <span class="text">
+                                {{ data?.applicantData?.yearsOfExperience || 'Nil' }}
+                            </span>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading">
+                                Current Employer
+                            </span>
+                            <span class="text">
+                                {{ data?.applicantData?.currentEmployer || 'Nil' }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="others" *ngIf="data?.applicantData?.applicationStage == 1">
+                        <div class="grid_item">
+                            <span class="heading">Test Score</span>
+                            <span class="text">{{ (data?.applicantData?.score + '%') || 'Nil' }}</span>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading">
+                                Audit Approval
+                            </span>
+                            <span class="status Approved">
+                                {{ data?.applicantData?.audit_Status || 'Nil' }}
+                            </span>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading">
+                                Test Date
+                            </span>
+                            <span class="text">
+                                {{ '16th Dec, 2022' }}
+                            </span>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading">
+                                Test time
+                            </span>
+                            <span class="text">
+                                {{ '09:00AM' }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="others" *ngIf="data?.applicantData?.applicationStage == 1">
+                        <div class="grid_item">
+                            <span class="heading">Test Location</span>
+                            <span class="text">{{ data?.applicantData?.location || 'Nil' }}</span>
+                        </div>
+                        
+                    </div>
+
+
+                    <ng-container  *ngFor="let interviewer of data?.applicantData?.interviewersSummary; index as i;" >
+                        <div    
+                        (click)="triggerInterviewAssessmentScoreSheet(data?.applicantData!, interviewer)" 
+                          class="others interviewScores border-t border-hrms-read-notification cursor-pointer" *ngIf="checkIfChairPersonAssessed">
+                         <div class="grid_item">
+                             <span class="heading">Interview</span>
+                             <span class="text">{{ interviewer?.displayName || 'Nil' }}</span>
+                         </div>
+                         <div class="grid_item">
+                             <span class="heading">Assessment Score</span>
+                             <span class="text">{{ interviewer?.totalScore || 'Nil' }}</span>
+                         </div>
+                         <div class="grid_item">
+                             <span class="heading">Recommendation</span>
+                             <span class="text">{{ interviewer?.recommendation || 'Nil' }}</span>
+                         </div>
+                         <div class="grid_item gap-10 justify-end items-end pr-12">
+                             <span class="heading"></span>
+                             <span class="text"><img class="rotate-[270deg]" src="../../../assets/images/arrow_pointing_down.svg" alt=""></span>
+                         </div>
+                     </div>
+                    </ng-container>
+
+                   
+                </div>
+            </div>
+            <footer >
+                <div [ngClass]="{'!flex': !data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
+                    <a (click)="edit()">   
+                      <img  class="edit_button" src="../../../assets/images/edit_button.svg" alt="">   Edit
+                    </a>
+                    <button
+                     (click)="submit()" 
+                     class="btn-red-custom">
+                        Submit Application
+                    </button>
+                </div>
+
+                <div *ngIf="data?.applicantData?.approverStatus == 'Pending' && role == 'HRAdmin' && data?.applicantData?.hR_Comment == '' && 
+                   data?.applicantData?.testAssessed == 0 && data?.applicantData?.applicationStage! < 1" [ngClass]="{'!flex': data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
+                    <button
+                    (click)="triggerAcceptanceOrRejection(3)"
+                     class="btn-red-custom">
+                        Reject
+                    </button>
+                    <button
+                     (click)="triggerAcceptanceOrRejection(2)"
+                     class="btn-red-custom green">
+                        Accept
+                    </button>
+                </div>
+
+                <div *ngIf="data?.applicantData?.approverStatus == 'Awaiting' && role == 'Approver' && data?.applicantData?.testAssessed == 0" [ngClass]="{'!flex': data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
+                    <button
+                     class="btn-red-custom">
+                        Return
+                    </button>
+                    <button
+                     (click)="triggerAcceptanceOrRejection(2)"
+                     class="btn-red-custom green">
+                        Approve Decision
+                    </button>
+                </div>
+
+                <div *ngIf="data?.applicantData?.approverStatus == 'Pending' && data?.applicantData?.hR_Status == 'Approve' && role == 'Approver' && data?.applicantData?.applicationStage == 0" [ngClass]="{'!flex': data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
+                    <button
+                     class="btn-red-custom">
+                        Return
+                    </button>
+                    <button
+                     (click)="triggerAcceptanceOrRejection(2)"
+                     class="btn-red-custom green">
+                        Approve Decision
+                    </button>
+                </div>
+
+                <div *ngIf="data?.applicantData?.testAssessed == 3 && role == 'Approver' && data?.applicantData?.applicationStage == 1" [ngClass]="{'!flex': data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
+                    <button
+                     class="btn-red-custom">
+                        Return
+                    </button>
+                    <button
+                     (click)="triggerAcceptanceOrRejection(2)"
+                     class="btn-red-custom green">
+                        Approve Decision
+                    </button>
+                </div>
+
+                <div *ngIf="data?.applicantData?.testAssessed == 2 && role == 'HRAdmin'" [ngClass]="{'!flex': data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
+                    <button
+                     class="btn-red-custom">
+                        Fail
+                    </button>
+                    <button
+                     (click)="triggerAcceptanceOrRejection(5)"
+                     class="btn-red-custom green">
+                        Pass
+                    </button>
+                </div>
+
+                <div *ngIf="checkIfChairPersonAssessed && data?.applicantData?.interviewAssessed == 1 && role == 'HRAdmin'" [ngClass]="{'!flex': data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
+                    <button
+                     class="btn-red-custom">
+                        Fail
+                    </button>
+                    <button
+                     (click)="triggerAcceptanceOrRejection(5)"
+                     class="btn-red-custom green">
+                        Pass
+                    </button>
+                </div>
+
+                <div *ngIf="checkIfChairPersonAssessed && data?.applicantData?.interviewAssessed == 2  && role == 'Approver'" [ngClass]="{'!flex': data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
+                    <button
+                     class="btn-red-custom">
+                        Return
+                    </button>
+                    <button
+                     (click)="triggerAcceptanceOrRejection(2)"
+                     class="btn-red-custom green">
+                        Approve Decision
+                    </button>
+                </div>
+
+                <div *ngIf="(data?.applicantData?.applicationStage == 3 || data?.applicantData?.applicationStage == 4) && role == 'HRAdmin' && data?.applicantData!.hR_Status == 'Pending'" [ngClass]="{'!flex': data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
+                    <button
+                     class="btn-red-custom">
+                        Fail
+                    </button>
+                    <button
+                     (click)="triggerAcceptanceOrRejection(5)"
+                     class="btn-red-custom green">
+                        Pass
+                    </button>
+                </div>
+
+
+                <div *ngIf="(data?.applicantData?.applicationStage == 5 || data?.applicantData?.applicationStage == 6) && role == 'HRAdmin' && data?.applicantData!.hR_Status == 'Pending'" [ngClass]="{'!flex': data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
+                    <button
+                     class="btn-red-custom">
+                        Fail
+                    </button>
+                    <button
+                     (click)="triggerAcceptanceOrRejection(5)"
+                     class="btn-red-custom green">
+                        Pass
+                    </button>
+                </div>
+                
+            </footer>
+        </section>
+
+    </div>
+</main>
+
+
+
+

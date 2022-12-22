@@ -1,0 +1,69 @@
+
+
+.creat_job_container{
+    @apply w-full h-full relative overflow-visible;
+
+    & h5{
+        @apply font-hrmsCamptonMedium font-semibold text-hrms-genBlueColor-1;
+    }
+
+    & .title_section{
+        @apply px-10 bg-white z-20 flex items-center py-4 justify-between sticky -top-4 left-0 right-0 h-28 border-b-2 border-b-hrms-border-line-dull;
+
+        & h5{
+            font-size: 1.15em;
+        }
+
+        & div:hover{
+            box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+            @apply cursor-pointer bg-hrms-links-selected rounded-full;
+        }
+    }
+
+    & .body_content{
+        @apply px-10 mt-3 overflow-y-scroll h-[76%];
+
+          &::-webkit-scrollbar {
+            width: .5em;
+          }
+           
+          &::-webkit-scrollbar-track {}
+           
+          &::-webkit-scrollbar-thumb {
+            @apply bg-hrms-gray-bg;
+          }
+        & h5{
+            font-size: .9em;
+            @apply pt-5 pb-3 border-b-2 border-b-hrms-text-light;
+        }
+
+        & .form-group{
+            @apply mt-10;
+        }
+
+        & .form_container .parent_input_control, .form_container .parent_input_control:focus-within{
+            @apply rounded-md;
+        }
+
+        & input[type="date"]{
+            line-height: 2;
+        }
+
+        & select{
+            font-size: 1.15em;
+            line-height: 2;
+            @apply pt-5
+        }
+    }
+
+    & .footer_section{
+        @apply absolute flex justify-end bg-white z-20 -bottom-5 left-0 right-0 h-auto items-center border-t-2 border-t-hrms-border-line-dull;
+         
+        & div{
+            @apply py-7 px-4;
+        }
+        & .btn-red-custom{
+            @apply py-2 px-10 mb-0;
+        }
+    }
+}

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="25.796" height="21.5" viewBox="0 0 25.796 21.5">
+  <g id="moneys" transform="translate(-0.96 -2.77)">
+    <path id="Path_639130" data-name="Path 639130" d="M22.465,8.712v6.077c0,3.634-2.077,5.192-5.192,5.192H6.9a6.9,6.9,0,0,1-1.51-.153,4.588,4.588,0,0,1-.838-.224c-1.77-.661-2.844-2.195-2.844-4.814V8.712C1.71,5.077,3.787,3.52,6.9,3.52H17.273c2.643,0,4.543,1.121,5.05,3.681A8.533,8.533,0,0,1,22.465,8.712Z" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+    <path id="Path_639131" data-name="Path 639131" d="M25.445,11.69v6.077c0,3.634-2.077,5.192-5.192,5.192H9.881a6.626,6.626,0,0,1-2.348-.378,4.141,4.141,0,0,1-2.7-3.316,6.9,6.9,0,0,0,1.51.153H16.713c3.115,0,5.192-1.558,5.192-5.192V8.15a7.467,7.467,0,0,0-.142-1.51C24.005,7.112,25.445,8.693,25.445,11.69Z" transform="translate(0.562 0.561)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+    <path id="Path_639132" data-name="Path 639132" d="M10.973,14.09a3.115,3.115,0,1,0-3.115-3.115A3.115,3.115,0,0,0,10.973,14.09Z" transform="translate(1.106 0.781)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+    <path id="Path_639133" data-name="Path 639133" d="M4.78,8.3v5.192" transform="translate(0.552 0.86)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+    <path id="Path_639134" data-name="Path 639134" d="M16.222,8.3v5.192" transform="translate(2.611 0.86)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+  </g>
+</svg>

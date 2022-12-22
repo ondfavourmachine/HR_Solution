@@ -1,0 +1,256 @@
+
+
+.application_container{
+    & section{
+        @apply pl-0
+    }
+
+    & .main_content{
+        height: 47.15rem !important;
+        @apply border-b border-hrms-border-line-dull flex flex-col overflow-hidden;
+
+        & .applicant_details{
+            @apply h-auto border-b w-full px-6 border-hrms-border-line-dull flex flex-col gap-7 py-3 overflow-visible;
+
+            & .typical_details, .professional_certificates, .test_location{
+                @apply w-full flex gap-3 flex-wrap justify-between overflow-visible;
+
+                & .a_typical_detail{
+                    @apply flex flex-col;
+
+                    & span:first-child{
+                        font-size: .825em;
+                        @apply text-hrms-read-notification
+                    }
+
+                    & span:last-child{
+                        font-size: 1em;
+                        @apply text-hrms-genBlueColor-1 font-semibold;
+                    }
+                }
+            }
+
+            & .professional_certificates{
+                @apply justify-start gap-10 flex-row;
+            }
+
+            & .professional_certificates .a_typical_detail > div{
+                @apply  text-hrms-read-notification;
+            }
+
+            & .professional_certificates .a_typical_detail{
+                @apply  gap-3;
+            }
+
+            & .professional_certificates .a_typical_detail div:last-child{
+                @apply flex gap-4;
+            }
+
+            & .professional_certificates .a_typical_detail div span{
+                font-size: .845em;
+                @apply bg-hrms-banner-1 rounded-3xl px-4 py-2 text-hrms-genBlueColor-1 font-semibold;
+            }
+        }
+
+        & .performance_assessment, .interview_form_questionaire{
+            @apply h-auto px-5  mt-3 py-3 overflow-y-scroll;
+
+            &::-webkit-scrollbar {
+                width: .2em;
+              }
+               
+              &::-webkit-scrollbar-track {}
+               
+              &::-webkit-scrollbar-thumb {
+                @apply bg-hrms-gray-bg;
+              }
+
+            & h5{
+                font-size: 1em;
+                @apply text-hrms-read-notification font-hrmsCamptonLight;
+              }
+
+            & .performance_assessment_container{
+                @apply flex gap-6 flex-col overflow-visible;
+
+                & .parent_input_control{
+                    @apply rounded-2xl;
+                }
+
+                &  .parent_input_control{
+                    @apply rounded-lg mt-6 border border-hrms-day-text-color focus-within:outline-none focus-within:outline-hrms-day-text-color; 
+    
+                    & select, input{
+                        @apply border-0 border-transparent mt-3;
+                    }
+    
+                    & select:focus, input:focus{
+                       @apply ring-transparent shadow-transparent outline-0 outline-offset-0 ring-0 outline-transparent ring-offset-0;
+                    }
+    
+                    & select:not(:focus), input:not(:focus){
+                        font-size: 0.899em;
+                    }
+                }
+    
+                & .parent_input_control:focus-within input:focus{
+                    @apply border-l-0 border-transparent #{!important};
+                }
+                
+                & .upload_test_record_container{
+                    @apply w-full border border-hrms-read-notification px-3 py-3 flex gap-3 rounded-xl;
+    
+                    & .test_record_contents{
+                        @apply w-full; 
+    
+                        & h5{
+                            font-size: .899em;
+                            @apply text-hrms-read-notification font-bold;
+                        }
+    
+                        & .parent_input_control{
+                            @apply mt-3
+                        }
+    
+                        p{
+                            @apply py-5 flex gap-3 items-center;
+                        }
+    
+                        & span.trigger{
+                            font-size: .819em;
+                            @apply rounded-3xl border border-hrms-read-notification bg-hrms-dashboard-bg text-hrms-read-notification px-4 py-2;
+                        }
+    
+                        & span.text{
+                            font-size: .829em;
+                            @apply text-hrms-read-notification;
+                        }
+                    }
+    
+                    & .image_container{
+                        @apply w-auto px-3 flex items-center;
+    
+                        & span{
+                            @apply w-44 rounded-lg border h-full border-[#E2ECF5] bg-[#E2ECF5] inline-flex justify-center items-center py-2 px-3;
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+        & .cancelBtn_container{
+            @apply inline-flex justify-end items-end overflow-visible;
+        }
+        
+        & .cancelBtn{
+            @apply relative w-7 -top-1 overflow-visible cursor-pointer;
+
+            &::after, &::before{
+                content: '';
+                @apply absolute inset-0 bg-hrms-slightRed h-[2px];
+            }
+
+            &::after{
+                @apply  rotate-45;
+            }
+
+            &::before{
+                @apply -rotate-45;
+            }
+        }
+
+
+        & .interview_form_questionaire{
+        }
+
+        & .performance_dimension_rating, .performance_dimension_question{
+            @apply w-full overflow-visible mt-36;
+
+            &__heading{
+                @apply w-full h-auto overflow-visible flex border-t border-l border-hrms-border-line-dull;
+
+                & .dimension, .rating{
+                    @apply w-1/2 py-5 px-3 border-b border-r border-hrms-border-line-dull text-hrms-genBlueColor-1 font-semibold font-hrmsCamptonMedium;
+                }
+            }
+        }
+
+        & .performance_dimension_question{
+            @apply mt-0;
+
+            &__heading{
+                @apply w-full h-auto overflow-visible flex border-t border-l border-hrms-border-line-dull;
+
+                & .dimension{
+                    font-size: 1em;
+                    @apply  text-hrms-read-notification  font-medium font-hrmsCamptonMedium;
+                }
+
+                & .rating{
+                    @apply  flex gap-5
+                }
+
+                & .answer_button{
+                    @apply relative inline-block;
+                    & .answer_input{
+                        @apply h-16 w-16  rounded-xl border border-hrms-border-line-dull ring-transparent shadow-transparent outline-0 outline-offset-0 ring-0 outline-transparent ring-offset-0 #{!important};
+
+                        // &:focus{}
+                    }
+
+                    & .label_for_input{
+                        @apply absolute inset-0 font-normal flex justify-center items-center pointer-events-none z-10 text-hrms-border-line-dull;
+                    }
+                }
+
+
+                & .overall_assessment_score{
+                    @apply w-3/12 h-24 rounded-2xl bg-[#F4F5FA] border border-hrms-read-notification;
+                }
+            }
+        }
+    }
+
+
+}
+
+
+.download::after{
+    content: '';
+    @apply transition-all -inset-3  absolute bg-[#efeeee] border border-hrms-border-line-dull rounded-full -z-[1] opacity-0;
+}
+
+
+.download:hover::after{
+    @apply opacity-100
+}
+
+
+.extra_bits {
+    
+    & .rating, .dimension{
+        @apply border-l-0 border-b-0 #{!important};
+
+        & input.long_input{
+            @apply  bg-transparent h-20 w-4/6 #{!important};
+        }
+    }
+
+    & .rating.radio_buttons .form_fields_with_radios {
+        @apply flex gap-4 items-center #{!important} ;
+
+        & .input_group_radio{
+            @apply gap-2 #{!important};
+           
+            & input{
+                @apply ring-transparent shadow-transparent outline-0 outline-offset-0 ring-0 outline-transparent ring-offset-0 #{!important};
+            }
+
+        }
+        & label{
+            @apply text-hrms-text-dark font-normal text-[.875em] font-hrmsCamptonLight self-center;
+        }
+    }
+}

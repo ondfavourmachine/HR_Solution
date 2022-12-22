@@ -1,0 +1,23 @@
+<main class="multi_select_container">
+
+    <div class="form-group parent_input_control">
+        <label for="supervise" class="form-labels font-hrmsCamptonMedium"> {{ labelName }} </label>
+        <input #searchFieldForApplicant type="text" [id]="labelName" [placeholder]="placeholder" 
+        class=" form-control ">
+
+        <div class="search_dropDown" [ngClass]="{'show': searchedPersons! && searchedPersons.length > 0}">
+            <ul class="list_of_names_container">
+                 <li (click)="selectAnApplicant($event, person)" 
+                   *ngFor="let person of searchedPersons; index as i trackBy: trackSearchedPerson" class="name_field">
+                    <span>{{ person?.firstName == undefined ? person?.displayName  : person.firstName + ' ' + person?.lastName }} </span> 
+                    <input [title]="'Click to select ' + name(person)" type="checkbox">
+                 </li>
+            </ul>
+        </div>
+        <button (click)="sendUpListOfSelecteedApplicantsToParent()" 
+           [disabled]="selectedApplicants.size < 1" class="addition_button" [ngClass]="{'!flex': showAdditionButton}">
+            <img src="../../../assets/images/add_white_version.svg" alt=""> Add
+        </button>
+    </div>
+
+</main>

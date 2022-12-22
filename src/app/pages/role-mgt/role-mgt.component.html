@@ -1,0 +1,45 @@
+
+<div class="w-[80vw] h-[80vh] overflow-hidden flex justify-start items-stretch">
+    <div class="w-2/5">
+        <div class=" g-auto w-full bg-white">
+            <div class="loginCustom loginForm">
+                <h4 class="login-title text-hrms-genBlueColor-1">Assign Role to a Staff </h4>
+                <!-- <span class="text-hrms-black-text sub-title">Please enter your Globus Bank Credentials </span> -->
+                
+                
+               <form >
+                <div class="mt-7 mb-14 relative">
+                    <div class="form-group parent_input_control relative">
+                        <label for="staff_username" class="form-labels">Staff Username </label>
+                        <input (change)="getGlobusStaffDetails($event)" [(ngModel)]="globusUsername" name="globusUsername" type="text" placeholder="Enter Staff Username" 
+                        class="form-control" id="staff_username">
+                        <div class="absolute right-0 top-2" *ngIf="searching">
+                         <app-loading-spinner ></app-loading-spinner>
+                        </div>  
+                    </div>
+                    <div class="form-group parent_input_control">
+                        <label for="staff_name" class="form-labels">Staff Name </label>
+                        <input disabled [(ngModel)]="globusIdentifier" name="globusEmail" type="text" placeholder="Enter name" 
+                        class="form-control" id="staff_name">
+                    </div>
+                    <div class="form-group parent_input_control">
+                        <label for="password" class="form-labels">Role</label>
+                        <select [(ngModel)]="roleToBeAssigned" name="roleToBeAssigned" id="" class="w-full h-32 pl-9 rounded-br-md rounded-bl-md ">
+                            <option selected>Select A Role</option>
+                            <option [value]="role.roleName" *ngFor="let role of (roles$ | async)?.result">
+                                {{ role?.roleName}}
+                            </option>
+                        </select>
+
+                    </div>
+                </div>
+                
+                <button (click)="changeUserRole($event)" type="button" class="btn-red-custom flex  justify-center items-center">
+                    Assign Role
+
+                </button>
+               </form>
+            </div>
+        </div>
+    </div>
+</div>

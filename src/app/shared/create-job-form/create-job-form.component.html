@@ -1,0 +1,234 @@
+<main class="creat_job_container">
+    <div class="title_section">
+        <h5>Create Job</h5> <div (click)="closeDialog()"><img src="../../../assets/images/close-icon.svg" alt=""></div>
+    </div>
+    <section class="body_content">
+        <h5 class="job_heading mt-30">
+            Job Details
+        </h5>
+        <div class="form_container overflow-visible">
+            <div class="form-group parent_input_control">
+                <label for="jobTitle" class="form-labels font-hrmsCamptonMedium">Job Title</label>
+                <input [(ngModel)]="otherJobDetails.jobTitle"  name="jobtitle" type="email" id="jobTitle" placeholder="Enter job detail here" 
+                class="form-control ">
+            </div>
+
+            <div class="form-group ngxEditor_custom_container">
+                <label for="username" class="form-labels">Job Objectives</label>
+              <div class="ngxEditor_content">
+                <ngx-editor-menu [editor]="editorBindings['jobObjectives'].editor" [toolbar]="editorBindings['jobObjectives'].editorToolbar"> </ngx-editor-menu>
+                <ngx-editor [editor]="editorBindings['jobObjectives'].editor" [(ngModel)]="editorBindings['jobObjectives'].html" name="someHtml" [placeholder]="'Enter details here'"></ngx-editor>
+              </div>
+                
+            </div>
+
+            <div class="form-group ngxEditor_custom_container">
+                <label for="username" class="form-labels">Accountabilities</label>
+              <div class="ngxEditor_content">
+                <ngx-editor-menu [editor]="editorBindings['accountabilities'].editor" [toolbar]="editorBindings['accountabilities'].editorToolbar"> </ngx-editor-menu>
+                <ngx-editor [editor]="editorBindings['accountabilities'].editor" [(ngModel)]="editorBindings['accountabilities'].html" [placeholder]="'Enter details here'"></ngx-editor>
+              </div>
+                
+            </div>
+
+            <div class="form-group ngxEditor_custom_container">
+                <label for="username" class="form-labels">Professional Competencies</label>
+              <div class="ngxEditor_content">
+                <ngx-editor-menu [editor]="editorBindings['professionalCompetencies'].editor" [toolbar]="editorBindings['professionalCompetencies'].editorToolbar"> </ngx-editor-menu>
+                <ngx-editor [editor]="editorBindings['professionalCompetencies'].editor" [(ngModel)]="editorBindings['professionalCompetencies'].html" [placeholder]="'Enter details here'"></ngx-editor>
+              </div>
+                
+            </div>
+
+            <div class="form-group ngxEditor_custom_container">
+                <label for="username" class="form-labels">Behavioral Competencies</label>
+              <div class="ngxEditor_content">
+                <ngx-editor-menu [editor]="editorBindings['behavioralCompetencies'].editor" [toolbar]="editorBindings['behavioralCompetencies'].editorToolbar"> </ngx-editor-menu>
+                <ngx-editor [editor]="editorBindings['behavioralCompetencies'].editor" [(ngModel)]="editorBindings['behavioralCompetencies'].html" [placeholder]="'Enter details here'"></ngx-editor>
+              </div>
+                
+            </div>
+
+            <div class="form-group ngxEditor_custom_container">
+                <label for="username" class="form-labels">Organizational Competencies</label>
+              <div class="ngxEditor_content">
+                <ngx-editor-menu [editor]="editorBindings['organisationalCompetencies'].editor" [toolbar]="editorBindings['organisationalCompetencies'].editorToolbar"> </ngx-editor-menu>
+                <ngx-editor [editor]="editorBindings['organisationalCompetencies'].editor" [(ngModel)]="editorBindings['organisationalCompetencies'].html" [placeholder]="'Enter details here'"></ngx-editor>
+              </div>
+                
+            </div>
+
+            <div class="form-group ngxEditor_custom_container">
+                <label for="username" class="form-labels">Person Specification/Job Profile</label>
+              <div class="ngxEditor_content">
+                <ngx-editor-menu [editor]="editorBindings['personSpecification'].editor" [toolbar]="editorBindings['personSpecification'].editorToolbar"> </ngx-editor-menu>
+                <ngx-editor [editor]="editorBindings['personSpecification'].editor" [(ngModel)]="editorBindings['personSpecification'].html" [placeholder]="'Enter details here'"></ngx-editor>
+              </div>
+                
+            </div>
+
+
+            <div class="form-group ngxEditor_custom_container">
+                <label for="username" class="form-labels">Educational Qualification</label>
+              <div class="ngxEditor_content">
+                <ngx-editor-menu [editor]="editorBindings['educationalQualifications'].editor" [toolbar]="editorBindings['educationalQualifications'].editorToolbar"> </ngx-editor-menu>
+                <ngx-editor [editor]="editorBindings['educationalQualifications'].editor" [(ngModel)]="editorBindings['educationalQualifications'].html" [placeholder]="'Enter details here'"></ngx-editor>
+              </div>
+                
+            </div>
+
+            <div class="form-group ngxEditor_custom_container">
+                <label for="username" class="form-labels">Experience</label>
+              <div class="ngxEditor_content">
+                <ngx-editor-menu [editor]="editorBindings['experience'].editor" [toolbar]="editorBindings['experience'].editorToolbar"> </ngx-editor-menu>
+                <ngx-editor [editor]="editorBindings['experience'].editor" [(ngModel)]="editorBindings['experience'].html" [placeholder]="'Enter details here'"></ngx-editor>
+              </div>   
+            </div>
+        </div>
+
+        <h5 class="job_heading">
+            Other Details
+        </h5>
+
+        <div class="form_container overflow-visible">
+
+            <div class="form-group parent_input_control">
+                <label for="reportTo" class="form-labels font-hrmsCamptonMedium">Report To</label>
+                <input [(ngModel)]="otherJobDetails.reportTo" name="reportto" type="text" id="reportTo" placeholder="Enter job detail here" 
+                class=" form-control ">
+            </div>
+
+            <div class="form-group parent_input_control">
+                <label for="supervise" class="form-labels font-hrmsCamptonMedium">Supervises(Optional)</label>
+                <input [(ngModel)]="otherJobDetails.supervise" name="supervise" type="text" id="supervise" placeholder="Enter job detail here" 
+                class=" form-control ">
+            </div>
+
+            <div class="form-group parent_input_control">
+                <label for="grade" class="form-labels">Grade</label>
+                <select [(ngModel)]="otherJobDetails.grade" name="grade" id="grade" class="form-control">
+                    <option selected> Select Grade</option>
+                    <option [value]="grade" *ngFor="let grade of sharedService.convertGradesToArray()">  {{ grade }} </option>
+                </select>
+                
+            </div>
+            <div class="form-group parent_input_control">
+                <label for="type" class="form-labels">Type</label>
+                <select [(ngModel)]="otherJobDetails.type" name="type" name="" id="type" class="form-control">
+                    <option selected> Select Type</option>
+                    <option [value]="type" *ngFor="let type of sharedService.convertJobTypesToArray()"> {{type}} </option>
+                </select>
+                
+            </div>
+            <div class="form-group parent_input_control">
+                <label for="category" class="form-labels">Category</label>
+                <select [(ngModel)]="otherJobDetails.category" name="category" name="" id="category" class="form-control">
+                    <option selected> Select Job Category</option>
+                    <option *ngFor="let catergory of sharedService.convertJobCategoryToArray(); index as i"> {{ catergory }}</option>
+                </select>
+                
+            </div>
+
+            <div class="form-group parent_input_control relative">
+                <label for="department" class="form-labels">Department</label>
+                <select (change)="fetchUnitOfDepartment($event)" [(ngModel)]="otherJobDetails.department" name="department" name="" id="department" class="form-control">
+                    <option selected> Select Department</option>
+                    <option [value]="dept.name" *ngFor="let dept of deptInGlobus; index as i"> {{dept?.name}} </option>
+                </select> 
+                <div *ngIf="fetchingUnits" class="absolute right-0 top-2">
+                  <app-loading-spinner ></app-loading-spinner>    
+                </div>
+            </div>
+
+            <div class="form-group parent_input_control">
+                <label for="unit" class="form-labels font-hrmsCamptonMedium">Unit(Optional)</label>
+
+                <select [(ngModel)]="otherJobDetails.unit" name="unit"  id="unit" class="form-control">
+                  <option selected> Select Unit</option>
+                  <option [value]="unit.unitId" *ngFor="let unit of unitsInGlobus; index as i"> {{unit?.name }} </option>
+              </select>
+            </div>
+
+            
+            <div class="form-group parent_input_control">
+                <label for="location" class="form-labels font-hrmsCamptonMedium">Location</label>
+                <select [(ngModel)]="otherJobDetails.location" name="location"  id="location" class="form-control">
+                  <option selected> Select Unit</option>
+                  <option [value]="branch.id" *ngFor="let branch of branchesInGlobus; index as i"> {{branch?.branchName}} </option>
+              </select>
+            </div>
+            
+            <div class="form-group radio_selection_group">
+              <span class="question">is Test Required?</span>  <div class="radio_group">
+                <input [(ngModel)]="otherJobDetails.testIsRequired" name="testIsRequired" id="testIsRequired" value="yes" type="radio">
+                <label class="form-labels" for="testIsRequired">Yes</label>
+              </div>
+              <div class="radio_group">
+                <input [(ngModel)]="otherJobDetails.testIsRequired" name="testIsRequired" id="testIsRequired" value="no" type="radio">
+                <label class="form-labels" for="testIsNotRequired">No</label>
+                
+              </div>
+            </div>
+
+            <div class="form-group radio_selection_group">
+              <span class="question">is Interview Required?</span>  <div class="radio_group">
+                <input [(ngModel)]="otherJobDetails.interviewIsRequired" name="interviewIsRequired"  id="interviewIsRequired" value="yes" type="radio">
+                <label class="form-labels" for="testIsRequired">Yes</label>
+              </div>
+              <div class="radio_group">
+                <input [(ngModel)]="otherJobDetails.interviewIsRequired" name="interviewIsRequired" id="interviewIsRequired" value="no" type="radio">
+                <label class="form-labels" for="testIsNotRequired">No</label>
+                
+              </div>
+            </div>
+
+            <div class="form-group parent_input_control">
+              <label for="deadline" class="form-labels font-hrmsCamptonMedium">Deadline</label>
+              <input [(ngModel)]="otherJobDetails.deadline" name="deadline" type="date" id="deadline" placeholder="Enter job detail here" 
+              class=" form-control ">
+            </div>
+
+
+        </div>
+
+        
+        <h5 class="job_heading">
+          System Filter Criteria
+        </h5>
+
+        <div class="form_container overflow-visible">
+          <div class="form-group parent_input_control">
+              <label for="classOfDegree" class="form-labels">Class of Degree (Optional)</label>
+              <select [(ngModel)]="otherJobDetails.classOfDegree" name="classOfDegree" name="" id="classOfDegree" class="form-control">
+                  <option selected> Select Class of Degree</option>
+                  <option *ngFor="let classOfDegree of sharedService.convertClassOfDegreeToArray()">  {{ classOfDegree }} </option>
+              </select>
+              
+          </div>
+          
+          
+          <div class="form-group parent_input_control">
+              <label for="age" class="form-labels font-hrmsCamptonMedium">Age(Optional)</label>
+              <input [(ngModel)]="otherJobDetails.age" name="age" type="tel" id="age" placeholder="Enter age" 
+              class=" form-control ">
+          </div>
+
+
+          <div class="form-group parent_input_control mb-10">
+            <label for="nysc" class="form-labels">NYSC Completion or Exemption Letter(Optional)</label>
+            <select [(ngModel)]="otherJobDetails.nysc" name="nysc" name="" id="nysc" class="form-control">
+                <option selected> Select NYSC Criteria</option>
+                <option *ngFor="let nyscString of sharedService.convertNyscStringsToArray(); index as i"> {{ nyscString }} </option>
+            </select>
+            
+        </div>
+      </div>
+    </section>
+    <div class="footer_section">
+      <div>
+        <button class="btn-red-custom" (click)="showPreview()">
+          Preview Job
+        </button>
+      </div>
+    </div>
+</main>

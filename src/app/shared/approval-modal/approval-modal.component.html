@@ -1,0 +1,16 @@
+<main class="main_container approve_job">
+    <div class="header">
+        <span> {{ data?.header }} </span>
+        <!-- <span><img src="../../../assets/images/centered_globus_logo.svg" alt=""></span> -->
+        <span (click)="close()"  class="cursor-pointer"><img src="../../../assets/images/close-icon.svg" alt=""></span>
+    </div>
+    <div class="body">
+        <textarea name="comment" [(ngModel)]="comment" placeholder="Enter some comment"  id="" cols="30" rows="10"></textarea>
+    </div>  
+
+    <div class="footer">
+        <button (click)="close(comment)" class="">
+            {{ data?.button }}
+        </button>
+    </div>
+</main>

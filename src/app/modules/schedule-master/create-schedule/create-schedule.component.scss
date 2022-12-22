@@ -1,0 +1,110 @@
+
+.create_schedule__container{
+    @apply h-full relative;
+    header{
+        font-size: 1.3em;
+        @apply flex justify-between items-center pl-8 pr-7 pt-6 pb-7 text-hrms-genBlueColor-1 font-bold font-hrmsCamptonMedium border-b-2 border-hrms-border-line-dull;
+
+        & .second_part{
+            @apply cursor-pointer;
+        }
+    }
+
+    .main_body{
+        @apply  w-full h-[53vh] overflow-y-scroll pl-8 pr-7;
+
+        &__content{
+            @apply  w-full h-auto ;
+
+            & .toggle_container{
+                @apply px-7 py-5 rounded-lg border border-hrms-day-text-color mt-7;
+
+                p{
+                    font-size: .875em;
+                    @apply font-bold font-hrmsCamptonBook leading-normal mb-4 text-hrms-text-dark;
+                }
+
+                & .toggle_group{
+                    @apply flex w-full gap-8 items-center;
+                }
+
+                & .input_group_radio{
+                    @apply h-auto overflow-visible items-center cursor-pointer;
+
+                    & input, label{@apply cursor-pointer}
+
+                    & .an_input:checked, .an_input:focus{
+                        @apply ring-transparent shadow-transparent outline-0 outline-offset-0 ring-0 outline-transparent ring-offset-0;
+
+                        & + label{
+                            @apply font-semibold font-hrmsCamptonBook;
+                        }
+                    }
+
+                }
+            }
+
+            & .parent_input_control{
+                @apply rounded-lg mt-6 border border-hrms-day-text-color focus-within:outline-none focus-within:outline-hrms-day-text-color; 
+
+                & select, input, textarea{
+                    @apply border-0 border-transparent mt-3;
+                }
+
+                & select:focus, input:focus, textarea:focus{
+                   @apply ring-transparent shadow-transparent outline-0 outline-offset-0 ring-0 outline-transparent ring-offset-0;
+                }
+
+                & select:not(:focus), input:not(:focus), textarea:not(:focus){
+                    font-size: 0.899em;
+                }
+            }
+
+            & .parent_input_control:focus-within input:focus{
+                @apply border-l-0 border-transparent #{!important};
+            }
+
+            & .multi_select_wrapper:last-child{
+                @apply mb-10;
+            }
+
+            & .applicant_display{
+                @apply my-6 w-full;
+
+                &__container{
+                    @apply py-2 h-auto;
+
+                    & .applicant {
+                        @apply py-4 px-3 flex items-center gap-4 hover:bg-[rgba(211,214,230,0.3)] cursor-pointer;
+
+                        & div:first-child{
+                            @apply  flex items-center gap-7 ;
+
+                            & span{
+                                @apply leading-loose;
+                            }
+
+                            & span img{
+                                @apply -mt-2 cursor-pointer;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+
+    footer{
+        @apply py-7 flex justify-end items-center pr-7 border-t-2 border-hrms-border-line-dull absolute left-0 right-0 bottom-0;
+
+        & button{
+            @apply w-max mb-0 py-4 px-7;
+        }
+    }
+}
+
+textarea{
+    @apply w-full h-52 pt-10 pl-7;
+}

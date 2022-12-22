@@ -1,0 +1,292 @@
+<main class="assessment_applicant__container">
+  <header>
+     <div class="first_part" [ngClass]="{'gap-20': true}">
+      Assessment Sheet   
+      <span class="status_container" >Interviewer: 
+          <span  class="" > {{ this.data.extraInfo?.extras?.displayName }} </span>
+      </span>
+     </div>
+     <div class="second_part" >
+      <span (click)="closeBtn()"  ><img  src="../../../assets/images/close-icon.svg" alt=""></span>
+     </div>
+  </header>
+
+  <div class="application_container">
+      <section>
+          <div class="main_content">
+              <div  class="interview_form_questionaire">
+                  <div class="performance_dimension_rating">
+                    <div class="performance_dimension_rating__heading">
+                        <div class="dimension"><span>Performance Dimension</span></div>
+                        <div class="rating"><span>Rating</span></div>
+                    </div>
+                  </div>
+
+                  <div class="performance_dimension_question">
+                    <div class="performance_dimension_question__heading">
+                        <div class="dimension"><span>Authenticity</span></div>
+                        
+                        <div class="rating">
+                          <!-- answers -->
+                           <div class="answer_button" *ngFor="let answer of [1,2,3,4,5]; index as i">
+                             <input [(ngModel)]="answers.authenticity" [name]="answers.authenticity" 
+                                type="radio" [id]="'authenticity'+'_input_'+ answer" 
+                                 [value]="'authenticity'+'_input_'+ answer"
+                                 class="answer_input">
+                             <label [for]="'authenticity'+'_input_'+ i" class="label_for_input"> {{answer}} </label>
+                           </div>
+                           <!-- ends here -->
+                        </div>
+              
+                    </div>
+                  </div>
+
+                  <div class="performance_dimension_question">
+                    <div class="performance_dimension_question__heading">
+                        <div class="dimension"><span>Integrity</span></div>
+                        <div class="rating">
+                          <div class="answer_button" *ngFor="let answer of [1,2,3,4,5]; index as i">
+                            <input [(ngModel)]="answers.intergrity" [name]="answers.intergrity" 
+                               type="radio" [id]="'intergrity'+'_input_'+ answer" 
+                                [value]="'intergrity'+'_input_'+ answer"
+                                class="answer_input">
+                            <label [for]="'intergrity'+'_input_'+ i" class="label_for_input"> {{answer}} </label>
+                          </div>
+                          
+                        </div>
+                    </div>
+                  </div>
+
+                  <div class="performance_dimension_question">
+                    <div class="performance_dimension_question__heading">
+                        <div class="dimension"><span>Focus</span></div>
+                        <div class="rating">
+                          <div class="answer_button" *ngFor="let answer of [1,2,3,4,5]; index as i">
+                            <input [(ngModel)]="answers.focus" [name]="answers.focus" 
+                               type="radio" [id]="'focus'+'_input_'+ answer" 
+                                [value]="'focus'+'_input_'+ answer"
+                                class="answer_input">
+                            <label [for]="'focus'+'_input_'+ i" class="label_for_input"> {{answer}} </label>
+                          </div>
+                          
+                        </div>
+                    </div>
+                  </div>
+
+                  <div class="performance_dimension_question">
+                    <div class="performance_dimension_question__heading">
+                        <div class="dimension"><span>Drive</span></div>
+                        <div class="rating">
+                          <div class="answer_button" *ngFor="let answer of [1,2,3,4,5]; index as i">
+                            <input [(ngModel)]="answers.drive" [name]="answers.drive" 
+                               type="radio" [id]="'drive'+'_input_'+ answer" 
+                                [value]="'drive'+'_input_'+ answer"
+                                class="answer_input">
+                            <label [for]="'drive'+'_input_'+ i" class="label_for_input"> {{answer}} </label>
+                          </div>
+                          
+                        </div>
+                    </div>
+                  </div>
+
+                  <div class="performance_dimension_question">
+                    <div class="performance_dimension_question__heading">
+                        <div class="dimension"><span>Intelligence</span></div>
+                        <div class="rating">
+                          <div class="answer_button" *ngFor="let answer of [1,2,3,4,5]; index as i">
+                            <input [(ngModel)]="answers.intelligence" [name]="answers.intelligence" 
+                               type="radio" [id]="'intelligence'+'_input_'+ answer" 
+                                [value]="'intelligence'+'_input_'+ answer"
+                                class="answer_input">
+                            <label [for]="'intelligence'+'_input_'+ i" class="label_for_input"> {{answer}} </label>
+                          </div>
+                          
+                        </div>
+                    </div>
+                  </div>
+
+                  <div class="performance_dimension_question">
+                    <div class="performance_dimension_question__heading">
+                        <div class="dimension"><span>Communication</span></div>
+                        <div class="rating">
+                          <div class="answer_button" *ngFor="let answer of [1,2,3,4,5]; index as i">
+                            <input [(ngModel)]="answers.communication" [name]="answers.communication" 
+                               type="radio" [id]="'communication'+'_input_'+ answer" 
+                                [value]="'communication'+'_input_'+ answer"
+                                class="answer_input">
+                            <label [for]="'communication'+'_input_'+ i" class="label_for_input"> {{answer}} </label>
+                          </div>
+                          
+                        </div>
+                    </div>
+                  </div>
+
+                  <div class="performance_dimension_question">
+                    <div class="performance_dimension_question__heading">
+                        <div class="dimension"><span>Competence</span></div>
+                        <div class="rating">
+                          <div class="answer_button" *ngFor="let answer of [1,2,3,4,5]; index as i">
+                            <input [(ngModel)]="answers.competence" [name]="answers.competence" 
+                               type="radio" [id]="'competence'+'_input_'+ answer" 
+                                [value]="'competence'+'_input_'+ answer"
+                                class="answer_input">
+                            <label [for]="'competence'+'_input_'+ i" class="label_for_input"> {{answer}} </label>
+                          </div>
+                          
+                        </div>
+                    </div>
+                  </div>
+
+                  <div class="performance_dimension_question">
+                    <div class="performance_dimension_question__heading">
+                        <div class="dimension"><span>Experience</span></div>
+                        <div class="rating">
+                          <div class="answer_button" *ngFor="let answer of [1,2,3,4,5]; index as i">
+                            <input [(ngModel)]="answers.experience" [name]="answers.experience" 
+                               type="radio" [id]="'experience'+'_input_'+ answer" 
+                                [value]="'experience'+'_input_'+ answer"
+                                class="answer_input">
+                            <label [for]="'experience'+'_input_'+ i" class="label_for_input"> {{answer}} </label>
+                          </div>
+                          
+                        </div>
+                    </div>
+                  </div>
+
+                  <div class="performance_dimension_question">
+                    <div class="performance_dimension_question__heading">
+                        <div class="dimension"><span>Performance Track Record</span></div>
+                        <div class="rating">
+                          <div class="answer_button" *ngFor="let answer of [1,2,3,4,5]; index as i">
+                            <input [(ngModel)]="answers.performanceTrackRecord" [name]="answers.performanceTrackRecord" 
+                               type="radio" [id]="'performanceTrackRecord'+'_input_'+ answer" 
+                                [value]="'performanceTrackRecord'+'_input_'+ answer"
+                                class="answer_input">
+                            <label [for]="'performanceTrackRecord'+'_input_'+ i" class="label_for_input"> {{answer}} </label>
+                          </div>
+                          
+                        </div>
+                    </div>
+                  </div>
+
+                  <div class="performance_dimension_question">
+                    <div class="performance_dimension_question__heading">
+                        <div class="dimension"><span>Interpersonal Skilss</span></div>
+                        <div class="rating">
+                          <div class="answer_button" *ngFor="let answer of [1,2,3,4,5]; index as i">
+                            <input [(ngModel)]="answers.interPersonalSkill" [name]="answers.interPersonalSkill" 
+                               type="radio" [id]="'interPersonalSkill'+'_input_'+ answer" 
+                                [value]="'interPersonalSkill'+'_input_'+ answer"
+                                class="answer_input">
+                            <label [for]="'interPersonalSkill'+'_input_'+ i" class="label_for_input"> {{answer}} </label>
+                          </div>
+                          
+                        </div>
+                    </div>
+                  </div>
+
+                  <div class="performance_dimension_question">
+                    <div class="performance_dimension_question__heading">
+                        <div class="dimension"><span>Leadership/Organisational skills</span></div>
+                        <div class="rating">
+                          <div class="answer_button" *ngFor="let answer of [1,2,3,4,5]; index as i">
+                            <input [(ngModel)]="answers.leadershipSkill" [name]="answers.leadershipSkill" 
+                               type="radio" [id]="'leadershipSkill'+'_input_'+ answer" 
+                                [value]="'leadershipSkill'+'_input_'+ answer"
+                                class="answer_input">
+                            <label [for]="'leadershipSkill'+'_input_'+ i" class="label_for_input"> {{answer}} </label>
+                          </div>
+                          
+                        </div>
+                    </div>
+                  </div>
+
+                  <div class="performance_dimension_question">
+                    <div class="performance_dimension_question__heading">
+                        <div class="dimension"><span>Job Fit</span></div>
+                        <div class="rating">
+                          <div class="answer_button" *ngFor="let answer of [1,2,3,4,5]; index as i">
+                            <input [(ngModel)]="answers.jobFit" [name]="answers.jobFit" 
+                               type="radio" [id]="'jobFit'+'_input_'+ answer" 
+                                [value]="'jobFit'+'_input_'+ answer"
+                                class="answer_input">
+                            <label [for]="'jobFit'+'_input_'+ i" class="label_for_input"> {{answer}} </label>
+                          </div>
+                          
+                        </div>
+                    </div>
+                  </div>
+
+                  <div class="performance_dimension_question extra_bits">
+                    <div class="performance_dimension_question__heading py-3">
+                        <div class="dimension flex flex-col gap-2">
+                          <span class="text-hrms-genBlueColor-1 font-bold">Overall Assessment Score</span>
+                          <small class="text-[0.8em] text-hrms-black-text-2">Computed performance dimension</small>
+                        </div>
+                        <div class="rating">
+                          
+                            <input [(ngModel)]="answers.totalScore" name="totalScore" disabled
+                                type="tel"
+                                class="overall_assessment_score text-[1.15em]"> 
+                        </div>
+                    </div>
+                  </div>
+
+                  <div class="performance_dimension_question extra_bits">
+                    <div class="performance_dimension_question__heading py-3">
+                        <div class="dimension flex flex-col gap-2">
+                          <span class="text-hrms-genBlueColor-1 font-bold">Target</span>
+                          <small class="text-[0.8em] text-hrms-black-text-2">(Optional) </small>
+                        </div>
+                        <div class="rating"> 
+                            <input  
+                                type="tel"
+                                class="overall_assessment_score long_input"> 
+                        </div>
+                    </div>
+                  </div>
+
+                  <div class="performance_dimension_question extra_bits">
+                    <div class="performance_dimension_question__heading py-3">
+                        <div class="dimension flex flex-col gap-2">
+                          <span class="text-hrms-genBlueColor-1 font-bold">Comment</span>
+                          <small class="text-[0.8em] text-hrms-black-text-2">(Optional) </small>
+                        </div>
+                        <div class="rating"> 
+                            <input  
+                                type="tel"
+                                class="overall_assessment_score long_input"> 
+                        </div>
+                    </div>
+                  </div>
+
+                  <div class="performance_dimension_question extra_bits">
+                    <div class="performance_dimension_question__heading py-3">
+                        <div class="dimension flex flex-col gap-2">
+                          <span class="text-hrms-genBlueColor-1 font-bold">Recommendation</span>
+                          <small class="text-[0.8em] text-hrms-black-text-2">Give your recommendation </small>
+                        </div>
+                        <div class="rating radio_buttons"> 
+                          <div class="form_fields_with_radios">
+                            <div class="input_group_radio">                    
+                             <input  [(ngModel)]="recommendation"  name="passed" value="Pass" type="radio" class="an_input half" id="sheet_pass" >
+                             <label for="sheet_pass">Passed</label>
+                           </div>
+         
+                           <div class="input_group_radio">                    
+                             <input  [(ngModel)]="recommendation"  name="failed" value="Fail" type="radio" class="an_input half" id="sheet_fail">
+                             <label for="sheet_fail">Failed</label>
+                           </div>
+                         </div>
+                        </div>
+                    </div>
+                  </div>
+              </div>
+
+              
+          </div>  
+      </section>
+
+  </div>
+ 
+</main>

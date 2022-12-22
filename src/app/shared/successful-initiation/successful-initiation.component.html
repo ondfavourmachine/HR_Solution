@@ -1,0 +1,21 @@
+<main class="main_container">
+    <div class="header">
+        <span>Notice</span>
+        <span><img src="../../../assets/images/centered_globus_logo.svg" alt=""></span>
+        <span (click)="close()"  class="cursor-pointer"><img src="../../../assets/images/close-icon.svg" alt=""></span>
+    </div>
+    <div class="body">
+        <div class="image_content">
+            <img src="../../../assets/images/success_check_mark.svg" alt="">
+        </div>
+        <p>
+            {{data.message}}
+        </p>
+    </div>  
+
+    <div class="footer">
+        <button (click)="close()" class="btn-red-custom">
+           {{ data?.button ||  'Continue to Job Management'}}
+        </button>
+    </div>
+</main>

@@ -1,0 +1,116 @@
+<main class="px-4">
+<div class="body_content w-full ">
+
+      <section class="tab_container">
+        <app-general-use-tabs
+         [tabArray]="tabList"
+         [tabGroupName]="''"
+         (changeRoute)="gotoAnotherRoute($event)"
+         ></app-general-use-tabs>
+      </section>
+
+      <section class="search_bar">
+        <div class="search_bar__container"> 
+            <app-general-search-bar
+             [quartersToUse]="quartersToUse"
+             [agesToUse]="agesToUse"
+             [globusBranches]="globusBranches"
+             
+            ></app-general-search-bar>
+        </div>
+
+        <div class="statistics_container">
+            <div class="statistics_text_and_image">
+                <span class="text">Statistics</span>
+                <span><img src="../../../assets/images/arrow_pointing_up.svg" alt=""></span>
+            </div>
+        </div>
+
+        <div class="sliding_container">
+            <ngx-slick-carousel class="carousel" 
+                            #slickModal="slick-carousel" 
+                            [config]="slideConfig" 
+                            (init)="slickInit($event)"
+                            (breakpoint)="breakpoint($event)"
+                            (afterChange)="afterChange($event)"
+                            (beforeChange)="beforeChange($event)">
+               <div ngxSlickItem  class="slide my_slide_container" >  
+                    <div class="information">
+                        <span class="figure">
+                            {{ statistics?.all}}
+                        </span>
+                        <span class="heading_text">
+                            {{ slides[0] }}
+                        </span>
+                        
+                    </div>
+              </div>
+              <div ngxSlickItem  class="slide my_slide_container">
+                <div class="information">
+                    <span class="figure">
+                        {{ statistics?.pending}}
+                    </span>
+                    <span class="heading_text">
+                        {{ slides[1] }}
+                    </span>
+                    
+                </div>
+             </div>
+    
+             <div ngxSlickItem  class="slide my_slide_container">
+                <div class="information">
+                    <span class="figure">
+                        {{ statistics?.accepted}}
+                    </span>
+                    <span class="heading_text">
+                        {{ slides[2] }}
+                    </span>
+                    
+                </div>
+             </div>
+    
+             <div ngxSlickItem  class="slide my_slide_container" > 
+                <div class="information">
+                    <span class="figure">
+                        {{ statistics?.rejected }}
+                    </span>
+                    <span class="heading_text">
+                        {{ slides[3] }}
+                    </span>
+                    
+                </div>
+             </div>
+    
+             <div ngxSlickItem  class="slide my_slide_container" > 
+                <div class="information">
+                    <span class="figure">
+                        {{ statistics?.awaiting }}
+                    </span>
+                    <span class="heading_text">
+                        {{ slides[4] }}
+                    </span>
+                    
+                </div>
+             </div>
+    
+             <div ngxSlickItem  class="slide my_slide_container" >   
+                <div class="information">
+                    <span class="figure">
+                        {{ statistics?.returned }}
+                    </span>
+                    <span class="heading_text">
+                        {{ slides[5] }}
+                    </span>
+                    
+                </div>
+             </div>
+             
+            </ngx-slick-carousel>
+           <!-- <span class="next_icon" (click)="nextSlide()"><img src="../../../assets/images/right_icon.svg" alt=""></span> -->
+        </div>
+      </section>
+        
+      <router-outlet></router-outlet>
+
+</div>
+</main>

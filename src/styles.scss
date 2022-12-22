@@ -9,10 +9,6 @@
 // html, body { height: 100%; }
 // body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-:root{}
-// html, body { height: 100%; }
-// body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-
 @font-face {
     font-family: 'Campton Book';
     src: url('./assets/fonts/Campton-Book.eot');
@@ -235,6 +231,7 @@
 :root{
     --general-padding: 10rem;
     --subtitle-text: 2.5em;
+    --general_box_shadow: 0px 0px 8px 2px #F4F5FA;  
 }
 
 *, 
@@ -279,12 +276,17 @@ h6{
 
 
 .header_wrapper{
-    box-shadow:  0px 0px 8px 2px #F4F5FA;  
-    @apply w-full h-28 flex items-center py-2 sticky top-0 bg-white ;
+    box-shadow:  var(--general_box_shadow); 
+    z-index: 900; 
+    @apply w-full h-28 flex items-center py-2 sticky top-0 bg-white overflow-visible;
+
+    &.applied_job_header{
+        @apply overflow-visible;
+    }
 
     & .header_content_container{
         padding-inline: var(--general-padding);
-        @apply flex justify-between items-center w-full h-full ;
+        @apply flex justify-between items-center w-full h-full overflow-visible;
 
         & .globus_logo{
             @apply w-[18rem];
@@ -292,12 +294,40 @@ h6{
     }
 
     & .button_wrapper{
-      @apply  flex gap-6;
+      @apply  flex gap-6 overflow-x-visible;
+    }
+
+    & .profile_display_wrapper{
+        @apply flex gap-7 overflow-visible;
+        & .profile_icon_container{
+            @apply flex gap-4 relative overflow-visible cursor-pointer;
+   
+            & .drop_down_container{
+                font-size: .8675em;
+                @apply hidden absolute top-24 z-[1000] left-0 w-[10rem] rounded-lg right-0 bg-white font-hrmsCamptonBook font-medium px-4 py-2 justify-start shadow-lg;
+            }
+
+        }
+
+        
+
+        & .profile_text{
+            @apply flex flex-col;
+
+            & .logged_in_username{
+                @apply self-end font-hrmsCamptonBook font-semibold text-hrms-genBlueColor-1;
+            }
+
+            & .logged_in_useremail{
+                font-size: .795em;
+                @apply text-hrms-read-notification;
+            }
+        }
     }
 }
 
 
- .generic_button{
+.generic_button{
     font-size: 0.825em;
     @apply transition-all border-2 cursor-pointer border-hrms-slightRed font-hrmsCamptonMedium px-6 flex justify-center items-center py-2 rounded-md hover:shadow-lg hover:-translate-y-1;
   }
@@ -443,15 +473,21 @@ h6{
 }
 
 
-.core_values{
-    
+.core_values{  
+    --hue: 359°; 
+    --saturation: 100%;
+    --lightness: 0%;
+    @apply overflow-visible;
+    &::-webkit-scrollbar {
+        width: 0em;
+      }
     &__content{
       padding-inline: var(--general-padding);
       display: grid;
       grid-template-columns: 40% 60%;
       grid-template-rows: 100%;
       grid-gap: .2em;
-      @apply w-full h-auto my-16;
+      @apply w-full h-auto my-16 overflow-visible;
     }
 
     &__text_content{
@@ -460,7 +496,7 @@ h6{
         @apply  flex flex-col gap-4;
         & p{
             max-width: 45ch;
-            @apply font-medium text-hrms-text-dark leading-normal
+            @apply font-medium text-hrms-text-dark leading-normal overflow-visible;
         }
     }
 
@@ -470,10 +506,16 @@ h6{
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(12vw, 1fr));
         grid-gap: 1em;
-        @apply  p-2;
+        @apply  p-2 overflow-visible;
 
-        & .box{
-            @apply border h-auto border-black row-span-1 rounded-md;
+        & .box_container{
+            transition: border-color 300ms ease-in-out 200ms;
+            border-color: hsl(var(--hue), var(--saturation), var(--lightness));
+            @apply border h-auto relative row-span-1 rounded-md  cursor-pointer overflow-visible isolate;
+            & .box{
+                transition: opacity 400ms ease-in-out 200ms;
+                @apply opacity-100;
+            }
 
             & .innards{
                 @apply flex justify-between items-center p-3;
@@ -485,6 +527,24 @@ h6{
 
             &:last-child .innards{
                 @apply mb-6;
+            }
+
+            & .hover_container{
+                transition: height 400ms ease-in-out 250ms, z-index 400ms ease-in-out 150ms, opacity 400ms ease-in-out 220ms;
+                @apply absolute left-0 right-0 h-[0rem] bottom-0 border z-0 border-black opacity-0 rounded-md bg-white;
+            }
+
+            &:hover{
+                border-color: hsl(0°, 0%, 100%);
+                & .box{
+                    @apply opacity-0;
+                }
+
+                & .hover_container{
+                    z-index: 850;
+                    @apply scale-100 opacity-100 h-[28rem];
+                }
+                
             }
         }
     }
@@ -528,7 +588,7 @@ h6{
 }
 
 footer{
-    @apply my-2;
+    @apply my-2 backdrop-blur-sm;
     & .footer_with_socialLinks{
         padding-inline: var(--general-padding);
         @apply w-full;
@@ -599,8 +659,11 @@ footer{
 
 .jobs_wrapper{
     padding-inline: var(--general-padding);
-    @apply  w-full h-auto mt-20;
-
+    @apply  w-full h-auto mt-20 hidden;
+    
+    &.default{
+        @apply block;
+    }
     &__container{
         @apply flex flex-col gap-8;
 
@@ -616,14 +679,34 @@ footer{
         & .jobs_section{
             & .jobs{
                 display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(24vw, 1fr));
+                grid-template-columns: repeat(auto-fit, minmax(26vw, 1fr));
                 grid-gap: 1.5em;
                 @apply pt-5 px-2;
+
+                &.one{
+                    grid-template-columns: 45%; 
+                }
+
+                 &.pending.plenty{
+                    grid-template-columns: repeat(auto-fit, minmax(27vw, 1fr));
+                  }
+
+                  &.pending.one{
+                    grid-template-columns: 45%;
+                  }
         
                 & .job{
                     transform: translateY(0px) scale(0.99);
                     transition: transform .35s ease-in;
-                    @apply flex flex-col gap-8 cursor-pointer border border-hrms-read-notification p-8 rounded-md;
+                    @apply hidden flex-col gap-8 cursor-pointer border border-hrms-read-notification p-8 rounded-md;
+
+                    &.approvedJobs{
+                        @apply flex;
+                    }
+
+                    &.pendingJobs{
+                        @apply flex;
+                    }
 
                     &:hover{
                         transform: translateY(-5px) scale(1.015);
@@ -635,14 +718,16 @@ footer{
                 & .job_title{
                     @apply flex gap-16 items-center relative; 
 
-                    &::after{
-                        content: '';
-                        @apply absolute h-4/6 w-[1px] bg-hrms-text-light left-1/2; 
-                    }
                     & span:first-child{
                         font-size: 1.275em;
-                        @apply font-hrmsCamptonBook font-semibold;
+                        @apply font-hrmsCamptonBook font-semibold relative overflow-visible;
                     }
+
+                    & span:first-child::after{
+                        content: '';
+                        @apply absolute h-4/6 w-[1px] top-2 bg-hrms-text-light -right-6; 
+                    }
+                    
 
                     & span:last-child{
                         font-size: .875em;
@@ -657,7 +742,7 @@ footer{
                         @apply font-hrmsCamptonBook font-semibold text-hrms-black-text self-end pb-2;
                     }
 
-                    & span:last-child{
+                    & span:not(span:first-child){
                         @apply  font-hrmsCamptonBook border border-hrms-read-notification text-hrms-read-notification px-3 py-2 rounded-[28px];
                     }
                 }
@@ -669,9 +754,1386 @@ footer{
                         @apply font-hrmsCamptonBook text-hrms-read-notification;
                     }
                 }
+
+                & .underneath_deadline{
+                    font-size: .775em;
+                    @apply w-full flex gap-8 items-center;
+                }
+
+                & .pending_job_actions, .approved_jobs_actions{
+                    font-size: .875em;
+                    @apply border-t border-hrms-black-text py-2 flex justify-between items-center; 
+
+                    & span:last-child{
+                        @apply text-[#F89946] font-hrmsCamptonExtraLight font-semibold cursor-pointer;
+
+                        &:hover{
+                            @apply transition-all px-3 border border-[#F89946] rounded-2xl shadow-md;
+                        }
+                    }
+                }
+
+                & .approved_jobs_actions span:last-child{
+                    @apply text-hrms-green font-hrmsCamptonExtraLight font-semibold cursor-pointer;
+                }
+            }
+        }
+    }
+}
+
+.parent_input_control{
+    @apply  w-full relative;
+
+    & .form-labels{
+       @apply transition-all absolute top-4 left-7 font-hrmsCamptonMedium;
+    }
+
+    & .form-control{
+        @apply transition-all rounded-b-md placeholder:text-hrms-text-light placeholder:text-xl pl-7 w-full h-32;
+    }
+    & input{
+        font-size: 1.125em;
+        @apply pt-5 ;
+    }
+
+    .form-control#login_email{
+        border: 1px solid black ;
+        border-bottom-left-radius: 0px ;
+        border-bottom-right-radius: 0px ;
+        @apply rounded-t-md;
+     }
+     
+     .form-control#login_password{
+         border-bottom: 1px solid black ;
+         border-top: none;
+         border-left: 1px solid black;
+         border-right: 1px solid black;
+     }
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #6b7280 !important;
+    font-size: 1.15em;
+    line-height: 2;
+    @apply pl-8 pt-7;
+}
+
+.parent_input_control:focus-within {
+    & input:focus {
+        border-left: 4px solid  #003366 !important;
+        @apply pt-4;
+    }
+
+    & label{
+        @apply top-2;
+    }
+    
+}
+
+.btn-red-custom{
+    @apply transition-all cursor-pointer w-full font-hrmsCamptonExtraLight font-medium px-16 py-7 bg-hrms-border-red mb-11 rounded text-white hover:bg-red-500;
+
+    &.no_bottom_margin{
+        @apply mb-0;
+    }
+
+    &.green{
+        @apply bg-hrms-green;
+    }
+}
+
+.dropInFromRight{
+    transform: translateX(700px);
+    transform-origin: top right;
+    opacity: 0;
+    animation: animatedDropInFromRight 200ms forwards cubic-bezier(0.68,-0.55,0.27,1.55) 200ms;
+}
+
+.dropInFromTop{
+    transform: translateY(-700px);
+    transform-origin: top;
+    opacity: 0;
+    animation: animatedDropInFromTop 700ms forwards cubic-bezier(0.68,-0.55,0.27,1.55) 500ms;
+}
+
+.fadeIn{
+    opacity: 0;
+    animation: becomeVisibleGently 700ms forwards linear 1s;
+}
+
+// sideBar styles starts here
+
+.side_bar{
+    @apply w-1/12 sm:w-2/12 md:w-[19%] bg-white h-full
+}
+
+.virtual_teller_img_box{
+    position: relative;
+    & .text_box{
+        position: absolute;
+        inset: 0 0 0 22%;
+        background-color: white;
+        @apply pt-1 flex justify-start items-center;
+        & .text:first-child{
+            font-size: 1.95rem;
+            line-height: 0;
+            @apply text-hrms-genBlueColor-1 font-hrmsCamptonLight font-semibold capitalize;
+        }
+        & .text:last-child{
+            
+            font-size: 2rem;
+            line-height: 0;
+            @apply text-hrms-genBlueColor-1 capitalize font-hrmsCamptonBold;
+        }
+    } 
+    
+    &.omni_holder{
+        & .text_box{
+            inset: 0 0 0 20%;
+            & .text:first-child{
+                font-size: 1.55rem;
+                @apply pt-1;
+            }
+            & .text:last-child{ 
+                font-size: 1.7rem;
+                @apply pt-1;
+            }
+        }    
+    }
+}
+
+
+.sidebarBg{
+    background: url(./assets/images/blue-pattern-bg.svg) 0% 0% no-repeat;
+}
+
+
+// ends here;
+
+//nav-bar styles starts here
+
+// ends here;
+
+
+
+.createJob mat-dialog-container {
+    padding: 8px;
+    overflow-y:hidden;
+}
+
+.cdk-overlay-pane.InviteApproval{
+    overflow: visible;
+}
+
+.successfulInitiationComponent mat-dialog-container, .ApprovalModal mat-dialog-container, .InviteApproval mat-dialog-container{
+    padding: 8px;
+    overflow: visible;
+}
+
+.create_a_schedule mat-dialog-container{
+    padding: 1px;
+    overflow: visible;
+}
+
+.cdk-overlay-pane.successfulInitiationComponent, .cdk-overlay-pane.ApprovalModal{
+    overflow: visible;
+}
+
+// styles for ngx editor
+
+.NgxEditor{
+    border: none !important;
+    & .ProseMirror.NgxEditor__Content ul{
+        list-style: disc !important;
+        padding-left: 40px !important;
+
+        & li{
+            overflow: visible;
+        }
+    }
+}
+
+.NgxEditor__MenuBar{
+    margin-top: 1.55em;
+    margin-left: .5em;
+}
+
+
+.ngxEditor_custom_container{
+    border: 1px solid #979797;
+    transition: transform 350ms ease-in-out, height 350ms ease-in-out 300ms;
+    @apply h-[16rem] rounded-md relative overflow-y-scroll;
+
+     &::-webkit-scrollbar {
+        width: .2em;
+      }
+       
+      &::-webkit-scrollbar-track {}
+       
+      &::-webkit-scrollbar-thumb {
+        @apply bg-hrms-gray-bg;
+      }
+
+    & .form-labels{
+        @apply transition-all absolute top-4 left-7 font-hrmsCamptonMedium; 
+    }
+
+    & .ngxEditor_content .NgxEditor .NgxEditor__Placeholder::before{
+        left: 1.25em
+    }
+
+    &:focus-within{
+        backdrop-filter: blur(4px);
+        transform-style: preserve-3d;
+        height: 20rem;
+        max-height: 21rem;
+        transform: perspective(500px) scaleY(1.1) translate(2px, -20px) translateZ(10px);
+    }
+}
+
+// styles for radio_selection_group
+.radio_selection_group{
+    @apply w-full  h-auto pt-2 pb-3 flex items-center gap-20;
+
+    & .question{
+        font-size: 1.05em;
+        @apply font-hrmsCamptonMedium;
+    }
+
+    & .radio_group{
+        @apply flex gap-2 items-center font-hrmsCamptonMedium;
+
+        & .form-labels{
+            font-size: 1.05em;
+            @apply pt-2;
+        }
+
+        & input[type='radio']{
+            @apply h-9 w-9;
+
+            &:focus{
+                @apply ring-0 ring-transparent outline-none outline-transparent;
             }
         }
     }
 }
 
 
+// snackbars
+.mat-simple-snackbar{
+    @apply font-hrmsCamptonMedium overflow-hidden;
+
+    &::before{
+        overflow: visible !important;
+    }
+}
+
+.mat-snack-bar-container.error-snackBar{
+    background: #914752 !important; 
+}
+.error-snackbar, .success-snackbar{
+    // background-color: #9c4251;
+    color: #3d5f40;
+  
+    .mat-simple-snackbar > span{
+      position: relative;
+      overflow: visible;
+    
+    }
+  
+    .mat-simple-snackbar > span::before{
+      position: absolute;
+      content: '';
+      width: 3px;
+      background-color: #3d5f40;
+      left: -17px;
+      bottom: 0;
+      top: 0;
+      transform: scaleY(2.4);
+      width: 6px;  
+      z-index: 2000;
+      display: block;
+    //   border-radius: 4px;
+      transition: all 300ms ease-in-out;
+    //   animation: expandingHeight infinite linear alternate 1s;
+  
+    }
+  }
+
+  .error-snackBar{
+    color: white !important;
+    background: #9c4251 !important;
+  }
+  
+  .success-snackbar{
+    background-color: white  !important;
+  }
+
+  .mat-simple-snackbar{
+    overflow: visible !important;
+  }
+
+  snack-bar-container > div{
+    overflow: visible !important;
+  }
+
+  snack-bar-container > div > div{
+    overflow: visible !important;
+  }
+
+
+  
+
+
+  //successful Initiation modal styles here
+  
+.main_container{
+    @apply w-full h-full overflow-visible relative flex flex-col gap-1;
+
+    &::before{
+        content: '';
+        transform: scaleX(1.04);
+        @apply absolute left-0 right-0 h-[2px] bg-hrms-border-line-dull top-16;
+    }
+
+
+    & .header{
+        font-size: 1.015em;
+        // box-shadow: 0px 2px 1px 0px #BECCDC;
+        @apply w-full flex h-auto overflow-visible justify-between px-3 py-3 relative font-hrmsCamptonMedium;
+
+        // & span:nth-child(3n-1){
+        //     content: '';
+        //     z-index: 1000;
+        //     @apply absolute -top-9 left-[43%] p-4 bg-white rounded-full;
+        // }
+
+        & span:last-child{
+            @apply w-10;
+        }
+    }
+
+    & .body{
+        @apply flex-auto flex gap-2 flex-col justify-center items-center px-4;
+
+       & p{
+        line-height: 1.5;
+        font-size: .955em;
+        @apply font-hrmsCamptonLight text-center;
+        }
+
+        & textarea{
+            @apply w-full h-44 rounded-md border border-hrms-black-text-2 px-3;
+        }
+    }
+
+    & .footer{
+        
+        @apply border-t-2 border-[#BECCDC] w-full flex h-auto overflow-visible justify-center px-10 py-3 font-hrmsCamptonMedium;
+        
+        & button{
+            @apply py-2 mb-0;
+        }
+    }
+
+    &.approve_job {
+        & .footer{
+            @apply justify-end pl-10 pr-2;
+
+            & button{
+                @apply px-4 py-3 text-white bg-hrms-slightRed font-hrmsCamptonLight rounded-md;
+            }
+        }
+    }
+}
+
+  //ends here
+
+
+  // dashboard styles
+  
+.dashboard_view, .preview_page{
+    @apply overflow-y-visible h-[92vh] px-7 hidden;
+
+    &.default{
+        @apply block;
+    }
+
+    &.external_job_view{
+        padding-inline: var(--general-padding);
+        
+        &::-webkit-scrollbar {
+            width: .2em;
+          }
+           
+          &::-webkit-scrollbar-track {}
+           
+          &::-webkit-scrollbar-thumb {
+            @apply bg-hrms-gray-bg;
+          }
+    }
+
+    & .history{
+        font-size: .875em;
+        @apply font-hrmsCamptonBook pt-8 text-hrms-black-text cursor-pointer flex gap-3;
+    } 
+
+    & .main_view{
+        --heading-text: 1.25em;
+        --smaller-text: .925em;
+        --pTextSize1: .898em;
+        --pTextSize2: .978em;
+        @apply w-[68%] my-5;
+
+        & h5{
+            @apply font-semibold text-hrms-genBlueColor-1;
+        }
+
+        &__content{
+            @apply border border-hrms-text-dark rounded-md relative;
+        }
+
+        & .heading_content{
+            @apply flex gap-3 items-center p-4 border-b border-hrms-text-dark;
+            & .text{
+                @apply flex-auto flex gap-32 justify-start items-center;
+
+                & .bigger_text{
+                    font-size: var(--heading-text);
+                    @apply font-hrmsCamptonMedium font-semibold opacity-80 relative overflow-visible;
+
+
+                    &::after{
+                        content: '';
+                        @apply absolute -right-16 h-full w-[1px] bg-hrms-text-light ;
+                    }
+                }   
+
+                & .smaller_text{
+                    font-size: var(--smaller-text);
+                    @apply text-hrms-text-light;
+                }
+
+                
+            }
+            & .edit_container span{
+                    font-size: var(--smaller-text);
+                    @apply text-hrms-genBlueColor-1 flex items-center cursor-pointer;
+            }
+          }
+
+        & .reportTo_supervises, .job_objectives, .accountabilities, .professional_competencies,
+         .behavioralCompetencies_organisationalCompetencies, .person_specifications{
+            @apply w-full flex gap-32 p-4;
+            & span{
+                font-size: var(--pTextSize1);
+                @apply font-hrmsCamptonMedium opacity-90;
+            }
+            & p{
+                font-size: var(--pTextSize2)    
+            }
+            & .behavioralCompetencies ul, .organisationalCompetencies ul{
+                list-style-type: '-';
+                list-style-position: inside;
+                & li::marker{
+                    font-size: .777em;
+                }
+            }
+        }
+
+        & .job_objectives, .accountabilities, .professional_competencies,
+          .person_specifications{
+            @apply block;
+        }
+
+        & .accountabilities ul, .job_objectives ul, .professional_competencies ul, .person_specifications ul{
+            list-style-type: decimal !important;
+            list-style-position: inside;
+
+            & li::marker{
+                font-size: .777em;
+            }
+            @apply px-0;
+
+            & p{
+                line-height: 2;
+                font-size: var(--pTextSize2);
+                @apply inline;
+            }
+        }   
+
+        & .person_specifications ul, .job_objectives ul{
+            list-style-type: disc !important;
+        }
+        
+    }
+
+    & .floating_view{
+        @apply fixed right-10 h-[80vh] top-[12%] w-[21%] rounded-md p-3 flex justify-between flex-col; 
+
+        &.external_job_view{
+            transition: top 250ms ease-in-out 1.5s;
+            @apply min-h-[65vh]  right-[11.5rem];
+        }
+
+           &__container{
+            @apply w-full px-4 pt-3 pb-2 border border-hrms-text-dark rounded-lg;
+
+            & li{
+                @apply px-3;
+            }
+
+            & .heading{
+                font-size: 1em;
+                @apply text-hrms-text-light flex justify-between items-center font-hrmsCamptonBook;
+
+                & span:first-child{
+                 @apply flex-auto;
+                }
+
+                & span:last-child{
+                    font-size: .899em;
+                    @apply text-hrms-genBlueColor-1 flex items-center cursor-pointer;
+                }
+            }
+
+            & li + li{
+                @apply border-b border-dashed my-5;
+
+                & span:first-child{
+                font-size: 1em;
+                @apply text-hrms-text-light;
+                }
+            }
+             }
+
+        & .btn-red-custom{
+            @apply py-3 mb-0;
+        }
+    }
+}
+
+// ends here
+
+
+// Application form designs
+
+ .input_group_radio{
+    @apply flex gap-8;
+
+    & label{
+        @apply items-center;
+    }
+
+    & .an_input{
+        @apply h-14 w-14 rounded-full
+    }
+}
+
+.for_application{
+    @apply px-5;
+
+    & form{
+        @apply hidden;
+    }
+
+    & .stage_indicators{
+        @apply px-5 my-4 flex w-full;
+
+        & .a_stage{
+            @apply flex-auto h-auto flex gap-3 flex-col items-start justify-center;
+
+            & .active_parts{
+                @apply h-auto flex items-center w-full overflow-visible;
+
+                & .stage_number{
+                    @apply flex justify-center items-center h-20 w-20 rounded-full border border-hrms-text-dark font-semibold;
+    
+                    &.current{
+                        @apply bg-hrms-hoverBlue-1 text-white;
+                    }
+
+                    &.completed{
+                        @apply border-transparent;
+                        &::after{
+                            content: '';
+                            background: url(./assets/images/big_check_mark.svg);
+                            background-position: center;
+                            background-size: cover;
+                            @apply absolute inset-0;
+                        }
+                    }
+                    
+                    
+                }
+                & .stage_bar{
+                    @apply flex-auto relative overflow-visible; 
+
+                    &::after{
+                        content: '';
+                        @apply absolute inset-0 bg-hrms-text-dark h-[2px];
+                    }
+                 
+                }
+            }
+        }
+
+
+        & .a_stage:last-child{
+            @apply w-auto flex-grow-0 overflow-hidden;
+
+            & .stage_text{
+                // margin-left: -4px;
+            }
+
+            & .stage_bar::after{
+                @apply flex-grow-0 w-0;
+            }
+        }
+    }
+
+    & .form_fields, .form_fields_with_radios, .file_container{
+        
+        @apply flex justify-between items-center;
+
+        & .input_group{
+            @apply flex gap-10 items-center flex-wrap my-4 flex-auto;
+        }
+
+        & label{
+            @apply font-semibold self-start pt-4 font-hrmsCamptonBook min-w-[17rem] max-w-max mr-4;
+        }
+        & .input_sub_group{
+            @apply flex gap-4 items-center w-full;
+        }
+        & .an_input, .a_select, .a_textarea{
+            font-size: 1em;
+            @apply h-20 border border-hrms-read-notification rounded-md placeholder:text-hrms-read-notification placeholder:opacity-40 placeholder:font-hrmsCamptonExtraLight placeholder:font-semibold;
+
+            &.full{
+                @apply w-full;
+            }
+            &.half{
+                @apply w-1/2
+            }
+            &.three_quarters{
+                @apply w-3/4;
+            }
+
+            &.one_quarter{
+                @apply w-1/4;
+            }
+
+            &:focus{
+                @apply ring-0 ring-transparent outline-0 outline-transparent pl-3 pt-1;
+            }
+        }
+
+        & .a_textarea{
+            @apply h-32;
+        }
+
+        & .passport_label{
+            @apply flex flex-wrap flex-col gap-1;
+
+            & small{ @apply text-left}
+        }
+
+        & .passport_input, .curriculum_vitae{
+            @apply relative isolate w-full min-h-[13rem];
+
+            & .front_facing, .back_facing{
+                @apply absolute;
+            }
+
+            & .front_facing{
+                @apply z-[1]  flex justify-center items-center px-5 h-52 w-48 border border-hrms-read-notification rounded-xl bg-white pointer-events-none cursor-pointer;
+
+            }
+
+            & .back_facing{
+                @apply -z-[1] opacity-0;
+   
+            }
+        }
+
+        & .curriculum_vitae {
+            @apply min-h-[6rem];
+           & .front_facing{
+              @apply w-full border-0 h-auto justify-start flex gap-16;
+
+              & .choose_file{
+                font-size: 1.1em;
+                @apply border-dashed border-2 text-hrms-border-dull-blue font-semibold border-hrms-border-dull-blue py-4 px-20 rounded-md;
+              }
+
+              & .file_selection_container{
+                @apply flex gap-4 items-center font-hrmsCamptonBook text-hrms-read-notification;
+              }
+           }
+        }
+
+        & small{
+            font-size: .735em;
+            @apply font-medium font-hrmsCamptonLight inline-block text-center;
+        }
+
+        & .addition_panel{
+            @apply w-full flex gap-3 font-medium text-hrms-read-notification items-center;
+        }
+    }
+
+    & .form_fields_with_radios{
+        @apply justify-start my-7;
+
+
+       & .input_group_radio{
+            @apply flex gap-8;
+        
+            & label{
+                @apply items-center;
+            }
+        
+            & .an_input{
+                @apply h-14 w-14 rounded-full
+            }
+        }
+    }
+}
+
+
+.button_fields{
+    @apply w-full flex justify-end gap-10 items-center mb-5;
+
+    & a{
+        @apply font-semibold border-b-2 border-dashed border-hrms-genBlueColor-1 text-hrms-genBlueColor-1 cursor-pointer;
+      }
+
+    & .btn-red-custom{
+        @apply px-10 w-52 py-4 mb-0;
+    }
+}
+
+// preview -application -container
+.preview_application .mat-dialog-container, .interview_summary_comp .mat-dialog-container, .testInviteDescriptionView .mat-dialog-container{
+    @apply p-0 transition-all;
+}
+
+.interview_summary_comp.shrinkUp .mat-dialog-container{
+    transform: scale(0.1) !important;
+}
+
+.testInviteDescriptionView .mat-dialog-container{
+    @apply rounded-3xl;
+}
+
+
+// tab-container styles
+.tab_container{
+    @apply mt-4 my-2;
+
+    & .tabs{
+        @apply flex gap-8 h-16 items-center;
+
+        & .tab{
+            font-size: .9em;
+            @apply transition-all cursor-pointer font-hrmsCamptonLight;
+        }
+
+        & .tab:not(.selected){
+            @apply  text-hrms-text-light py-2 px-4;
+        }
+
+        & .tab.selected{
+            font-size: .815em;
+            box-shadow: 0px 3px 3px 0px rgb(7 93 178 / .35);
+            @apply  border border-hrms-tab-color-selected bg-hrms-tab-color-selected text-white rounded-[28px] py-2 px-4 opacity-95;
+        }
+    }
+}
+// ends here
+// search bar styles here
+
+.search_bar{
+    @apply px-2 h-auto relative;
+
+   & .select_container{
+        @apply flex;
+    }
+
+   & select, input{
+        @apply w-full h-16;
+    }
+}
+
+.search_bar__container{
+    @apply flex justify-between gap-20 w-full ;
+}
+
+.width-80{
+    width: 80%;
+}
+
+
+.create_button{
+    @apply flex-auto w-[20rem] pr-16;
+    .btn-red-custom{
+        @apply w-max px-10 py-[0.5em] mb-0 flex gap-6 items-center;
+    }
+}
+// ends here
+
+//sliding container
+.sliding_container{
+    @apply rounded-t-md h-auto mt-3 pl-1 relative w-full;
+
+    & .next_icon{
+        @apply rotate-[265deg] absolute -right-8 top-4 h-7 cursor-pointer;
+        & img{
+            @apply max-w-[80%]
+        }
+    }
+
+    & .slick-track{
+        @apply flex gap-5;
+    }
+
+    & .my_slide_container{
+       @apply transition-all w-[20rem] h-28 flex gap-2 hover:scale-90 rounded-r-md rounded-l-sm py-2 pl-3 pr-2  border border-black cursor-pointer relative overflow-visible;
+
+       &::before{
+         content: '';
+         @apply absolute bg-black -left-[1px] -bottom-[1px] -top-[1px] w-[.6rem];
+       }
+    }
+    
+    & .my_slide_container:nth-child(2)::before{
+          background-color: #F89946 !important;
+    }
+
+    & .my_slide_container:nth-child(3)::before{
+        background-color: #15A372 !important;
+    }
+
+    & .my_slide_container:nth-child(4)::before{
+        background-color: #E00025 !important;
+    }
+
+    & .my_slide_container:nth-child(5)::before{
+        background-color: #003366 !important;
+    }
+
+    & .my_slide_container:nth-child(6)::before{
+        background-color: #707070 !important;
+    }
+
+    & .information{
+       font-family: 'Campton Light';
+       @apply flex flex-col gap-1 pl-4;
+       & .figure{
+          font-size: 1.3em;
+          @apply capitalize font-hrmsCamptonMedium font-semibold mb-1 mt-1 text-black ;
+       }
+
+       & .heading_text{
+           font-size: .88em;
+           line-height: 1.5;
+           @apply capitalize font-semibold mb-1 mt-1 text-black opacity-80;
+       } 
+
+       & .totalCount_totalMoney{
+          @apply flex gap-1; 
+          line-height: 1;
+       }
+
+       & .totalCount{
+           font-size: 1.2rem; 
+           @apply text-hrms-black-text pr-3 font-semibold relative;
+       }
+
+       & .totalMoney{
+        font-family: 'Campton Medium';
+        font-size: 1.2rem;
+        @apply text-hrms-hoverBlue-1 pl-2 pr-2 font-semibold;
+     }
+    }
+}
+
+// ends here
+
+
+// mat form field && mat-calender styles
+.mat-form-field-appearance-fill .mat-form-field-flex{
+    @apply bg-white border border-hrms-read-notification overflow-visible;
+}
+
+.cdk-overlay-pane.mat-datepicker-popup{
+    @apply overflow-hidden shadow-2xl;
+}
+
+//ends here
+
+// table styles
+
+table{
+    & .thead_trow{
+        
+        @apply py-5 pl-6 font-hrmsCamptonMedium pr-1 text-xs font-medium tracking-wider text-left text-hrms-black-text capitalize; 
+    }
+
+    & .individual_table_header{
+        
+        font-size: 1em;
+        @apply py-3 px-6  font-hrmsCamptonMedium tracking-normal bg-hrms-dashboardSection-color font-medium text-center text-hrms-genBlueColor-1 capitalize;
+    }
+
+    & .individual_tableCell_data{
+        font-size: 1.2ch;
+        @apply py-6 px-6 text-[#3C3C3C] text-center whitespace-nowrap;
+
+        &.reducePadding{
+            @apply px-1 w-[6rem];
+        }
+        & a{
+            @apply text-hrms-genBlueColor-1 border-b border-hrms-genBlueColor-1 border-dashed;
+        }
+
+        & .activities{
+            @apply w-full flex justify-center items-center capitalize opacity-70 cursor-pointer;
+        }
+
+        & .initials_name{
+            @apply w-full flex gap-2 justify-center items-center;
+        }
+
+        & .customer_initials{
+            font-size: 1rem;
+            @apply font-semibold relative w-8 h-8 rounded-full grid place-items-center bg-hrms-genBlueColor-1 text-white;
+
+            &::after{
+                position: absolute;
+                content: '';
+                @apply h-2 w-2 rounded-full right-0 bottom-[2px] bg-hrms-slightRed border border-white;
+            }
+        }
+    }
+
+    & .status{
+        @apply px-5 py-2 rounded-[2rem] cursor-pointer;
+
+        &.Pending{
+            @apply  bg-[#FFF8E5] text-[#F89946];
+        }
+
+        &.Rejected{
+            @apply  bg-[#FFEBEF] text-[#E00025];
+        }
+
+        &.Approved{
+            @apply text-[#15A372] bg-[#E6F5EF];
+        }
+
+        &.Waiting{
+            @apply text-hrms-genBlueColor-1 bg-[#E2ECF5];
+        }
+
+        &.NotAssessed{
+            @apply text-hrms-black-text bg-[#EAEAEA];
+        }
+        &.Assessed{
+            @apply text-[#15A372] bg-[#E6F5EF];
+        }
+    }
+}
+// ends here
+
+
+// pagination controls
+.pagination_count{
+    font-size: 1em;
+    @apply pr-5 flex gap-4 justify-between items-center w-full border border-red-500 h-[3.5rem] overflow-visible;
+
+    & > *{
+        @apply overflow-visible;
+    }
+
+    & .a_page_number{
+        font-size: 1em;
+        @apply transition-all scale-90 text-[#8F8F8F] cursor-pointer hover:scale-110 underline ;
+    }
+}
+
+// ends here
+
+// preview applications styles starts here
+
+
+
+// to be reused
+// reusable images and applicant count
+
+.applicant{
+    --zindex: 10;
+    @apply flex gap-7 items-center mb-6 overflow-visible;
+    
+    &__passport_container{
+        @apply h-[2.25ch] w-auto flex overflow-visible ;
+
+        & img.passport{
+            @apply relative top-1;
+        }
+
+        & img.passport:nth-child(n+1){
+            z-index: calc(var(--zindex) + 1);
+            left: -3px;
+        }
+        & img.passport:first-child{
+            z-index: 9;
+            left: 4px;
+        }
+        & img.passport:last-child{
+            z-index: calc(var(--zindex) + 2);
+            left: -8px;
+        }
+    }
+
+    &__number{
+        font-size: .89em;
+        line-height: 1;
+        @apply font-bold font-hrmsCamptonExtraLight text-hrms-day-text-color flex-auto self-end overflow-visible;
+    }
+}
+
+// styles for applicant selection table and assessment
+
+.applicant_selection_table{
+    @apply border-[1px] border-hrms-dull shadow-2xl h-auto  rounded-lg mt-10;
+
+    & .table_search_container{
+        @apply px-6 pt-5 h-auto ;
+
+        & input{
+            @apply h-20
+        }
+    }
+
+    & .search_bar__container{
+        @apply flex gap-10;
+    }
+
+    & .download_icons{
+        font-size: .876em;
+        @apply w-3/12 px-4 justify-end flex gap-10 items-center text-hrms-slightRed ;
+
+        & span{
+            @apply flex gap-1 items-center relative cursor-pointer isolate overflow-visible;
+
+            &::before{
+                content: '';
+                @apply -z-[1] absolute -inset-3 border border-hrms-gray-bg hidden;
+            }
+
+            &:hover::before{
+                @apply block bg-hrms-gray-bg;
+            }
+        }
+    }
+
+    & .form_parent{
+        @apply  h-auto;
+
+        & .date_picker_container{
+            @apply flex-none;
+        }
+
+        & .btn-red-custom{
+            @apply w-auto py-4 cursor-pointer flex justify-center items-center;
+        }
+    }
+
+
+    & .svg_container{
+        @apply h-8 top-[15px];
+    }
+
+    & .date_picker_container{
+        @apply relative w-auto;
+
+        & .fake_date_picker{
+            @apply relative z-10 flex w-max gap-8 pl-5  pr-7  h-20 items-center border border-hrms-read-notification rounded-md;
+
+            & .real_date_picker_trigger{
+                @apply relative isolate overflow-visible cursor-pointer;
+
+                &::before{
+                    content: '';
+                    @apply hidden  -z-[1] absolute -inset-4 rounded-full border border-hrms-gray-bg;
+                }
+
+                &:hover::before{@apply block bg-hrms-gray-bg}
+            }
+        }
+
+        & .date_placeholders.dull{
+            @apply text-hrms-dull
+        }
+
+        & .real_date_picker{
+            @apply absolute -z-[1]  inset-0;
+        }
+    }
+
+    & .table-contents{
+        @apply mt-10;
+
+        & .name_display{
+            @apply text-ellipsis w-44;
+        }
+
+        & .thumbnail {
+            @apply overflow-visible w-10 h-10;
+// check here later incase changing the overflow here causes some issue in other places
+           & img{
+                height: 2.5rem;
+                width: 2.5rem;
+                @apply  p-[.11rem] relative bottom-1 object-cover border border-hrms-dull cursor-pointer rounded-full;
+            }
+        }
+    }
+}
+
+// preview application styles here and assessment
+.preview_application__container, .assessment_applicant__container{
+    @apply w-[84vw] h-[74.5vh] bg-white overflow-hidden;
+
+    & header{
+        font-size: 1.2em;
+        @apply justify-between  font-hrmsCamptonMedium text-hrms-genBlueColor-1 font-semibold pl-10 pr-5 py-5 border-b-2 items-center border-b-[#DADADA] flex overflow-visible;
+
+        & .status_container{
+            font-size: .795em;
+            @apply font-hrmsCamptonExtraLight font-semibold overflow-visible pl-8 flex gap-7 items-center;
+
+            & .status{
+                @apply px-12 py-[6px] rounded-3xl bg-hrms-pending-color text-hrms-pending-text-color;
+            }
+
+            & .status{
+                @apply px-5 py-2 rounded-[2rem] cursor-pointer;
+            
+                &.Pending{
+                    @apply  bg-[#FFF8E5] text-[#F89946];
+                }
+            
+                &.Rejected{
+                    @apply  bg-[#FFEBEF] text-[#E00025];
+                }
+            
+                &.Approved{
+                    @apply text-[#15A372] bg-[#E6F5EF];
+                }
+
+                &.Waiting{
+                    @apply text-hrms-genBlueColor-1 bg-[#E2ECF5];
+                }
+            }
+        }
+
+        & .first_part{
+            @apply flex;
+        }
+
+        & .second_part{
+            @apply flex items-center;
+            & img{
+                @apply cursor-pointer;
+            }
+        }
+    }
+
+    & .application_container{
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        grid-template-rows: 100%;
+        @apply w-full h-[66.5vh];
+
+
+        & aside{
+            // grid-column: 1/2;
+            // grid-row: 1/1;
+            @apply  pl-10 px-8 py-5 items-center flex gap-8 flex-col border-r-2 border-r-[#DADADA];
+
+            & .passport_container{
+                @apply h-[60%] w-full rounded-md max-h-[60%] overflow-hidden;
+
+                & img{
+                    aspect-ratio: 4/3; 
+                    @apply object-cover;
+                }
+            }
+
+            & .cv_container{
+                @apply min-h-[23%]  w-full  flex flex-col rounded-md px-1 py-1; 
+
+                & h5{
+                    font-size: .925em;
+                    @apply font-hrmsCamptonBook font-semibold flex-shrink-0;
+                }
+                & .cv{
+                    @apply border w-full border-hrms-read-notification rounded-lg flex px-6 gap-7 py-2 items-center text-hrms-text-dark;
+                    & img{
+                        @apply min-w-[20%];
+                    }
+                }
+
+                & .cv_related_buttons_container{
+                    @apply py-1 flex flex-col gap-3 mt-1;
+
+                    & .cv_related_buttons{
+                        @apply flex justify-center font-hrmsCamptonBook gap-1 rounded-3xl border p-[6px] cursor-pointer;
+
+                        &.purple_text{
+                            @apply  border-hrms-hoverBlue-1 text-hrms-hoverBlue-1 bg-white hover:bg-slate-100 hover:font-semibold;
+                        }
+
+                        &.red_text{
+                            @apply border-hrms-slightRed text-hrms-slightRed bg-white hover:bg-red-100 hover:font-semibold;
+                        }
+                    }
+                }
+            }
+        }
+        & section{
+            grid-column: 2/3;
+            grid-row: 1/1;
+            @apply  relative overflow-y-hidden pl-7;
+
+            & .main_content{
+                @apply  h-[39.5rem] overflow-y-scroll;
+
+                &::-webkit-scrollbar {
+                    width: .5em;
+                  }
+                   
+                  &::-webkit-scrollbar-track {
+                    @apply px-1;
+                  }
+                   
+                  &::-webkit-scrollbar-thumb {
+                    @apply bg-hrms-gray-bg rounded-md;
+                  }
+
+
+                & .hr_comment{
+                    @apply h-36 w-11/12 bg-hrms-banner-1 border border-hrms-day-text-color my-5 rounded-lg py-4 px-4 flex flex-col gap-2;
+
+                    & h3{
+                        font-size: .95em;
+                        @apply font-hrmsCamptonBook font-semibold;
+                    }
+
+                    & p{
+                        font-size: .9em;
+                        @apply text-hrms-read-notification leading-normal;
+                    }
+                }
+
+                & .application{
+                    @apply h-auto w-full  flex flex-col gap-6;
+
+                    & .personDetails, .educationalDetails, .others{
+                        min-height: 9rem;
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(11vw, 1fr));
+                        grid-auto-rows: max-content;
+                        @apply py-8 border-b border-hrms-read-notification w-full gap-y-8 gap-x-4 overflow-visible;
+
+                        & .grid_item{
+                            @apply py-2 flex gap-1 flex-col  overflow-hidden;
+
+                            & .heading{
+                                font-size: .875em;
+                                @apply text-hrms-read-notification font-hrmsCamptonExtraLight font-medium overflow-hidden;
+                            }
+
+                            & .text{
+                                font-size: 1.1em;
+                                @apply text-hrms-genBlueColor-1 font-hrmsCamptonMedium h-auto font-medium overflow-hidden;
+                            }
+                        }
+                    }
+                    & .others{
+                        @apply border-b-0
+                    }
+                }
+
+            }
+        }
+    }
+
+    & footer{
+        @apply py-2 pr-8 border-t border-hrms-read-notification flex absolute bottom-0 left-0 right-0;
+
+        .button_fields{
+            @apply hidden;
+        }
+
+        button{
+            @apply min-w-max;
+        }
+
+        a {
+            font-size: .775em;
+            @apply min-w-max flex;
+        }
+    }
+}
+
+.assessment_applicant__container{
+    @apply h-[83.5vh]
+}
+
+.preview_application.shrinkUp .mat-dialog-container{
+    transform: scale(0.1) !important;
+}
+
+// .assessment_applicant__container.shrinkUp .mat-dialog-container{
+//     transform: scale(0.1) !important;
+// }
+
+
+// assessment sheet
+
+
+
+
+@keyframes animatedDropInFromRight{
+    from {
+        opacity: 0;
+        transform: translateX(700px);
+    }
+    to{
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes animatedDropInFromTop {
+    from {
+        opacity: 0;
+        transform: translateY(-700px);
+    }
+    to{
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes becomeVisibleGently {
+    from {
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
+}

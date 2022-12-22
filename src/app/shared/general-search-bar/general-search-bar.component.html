@@ -1,0 +1,57 @@
+
+    <form class="form_parent applicant_search_params">   
+      <div class="relative input_container ">
+          <input type="search" id="job_search" class="" placeholder="Search by Job name" required="">
+          <div class="svg_container  ">
+            <svg aria-hidden="true" class="w-10 h-10 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z">
+              </path>
+            </svg>
+        </div>
+      </div>
+        <div class="relative select_container">
+          <select id="" class="width-80">
+            <option selected="">All Location</option>
+            <option [value]="location.branchName" *ngFor="let location of globusBranches">
+                {{ location?.branchName }}
+            </option>
+          </select>
+
+        </div>
+
+        <div class="relative select_container">
+          <select id="" class="width-80">
+            <option selected="">All Job Category</option>
+            <option value="US" *ngFor="let cat of sharedService.convertJobCategoryToArray()">
+                {{ cat }}
+            </option>
+          </select>
+
+        </div>
+
+        <div class="relative select_container">
+            <select id="" class="width-80">
+              <option selected="">Class of Degree</option>
+              <option [value]="" *ngFor="let classOfDegree of sharedService.convertClassOfDegreeToArray()">
+                {{ classOfDegree }}
+              </option>
+            </select>
+          </div>
+
+          <div class="relative select_container">
+            <select id="" class="width-80">
+              <option selected="">Age</option>
+              <option [value]="age" *ngFor="let age of agesToUse"> {{ age }} </option>
+            </select>
+          </div>
+
+          <div class="relative select_container">
+            <select [ngModel]="selectedQuarter" name="selectedQuarter" id="" class="width-80">
+              <option selected>Choose a Quarter</option>
+                <option [value]="i" *ngFor="let quarter of quartersToUse; index as i">
+                    {{ quarter?.humanNameForQuarter + ' ' + 'Quarter' }}
+                </option>
+            </select>
+          </div>
+    </form>
+    

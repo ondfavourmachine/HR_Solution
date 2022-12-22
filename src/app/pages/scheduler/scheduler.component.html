@@ -1,0 +1,138 @@
+<main class="">
+
+    <section class="tab_container">
+        <app-general-use-tabs
+         [tabArray]="tabList"
+         [tabGroupName]="''"
+          (changeTab)="handleChangeOfTab($event)"
+         ></app-general-use-tabs>
+      </section>
+
+      <section class="invite_summary_wrapper">
+        <div class="invite_summary__container">
+            <div class="an_invite_summary">
+                <span><img src="../../../assets/images/all_invites.svg" alt=""></span>
+                <p class="figure_of_summary">
+                    <span>{{storeOfSummaries?.allInvite?.total}}</span>
+                    <span>All Invites</span>
+                </p>
+            </div>
+            <div class="an_invite_summary">
+                <span><img src="../../../assets/images/interview_invite.svg" alt=""></span>
+                <p class="figure_of_summary">
+                    <span>{{ storeOfSummaries?.interview_Invite?.total }}</span>
+                    <span>Interview Invites</span>
+                </p>
+            </div>
+            <div class="an_invite_summary">
+                <span><img src="../../../assets/images/test_invite.svg" alt=""></span>
+                <p class="figure_of_summary">
+                    <span>{{ storeOfSummaries?.test_Invite?.total}}</span>
+                    <span>Tests Invites</span>
+                </p>
+            </div>
+            <div class="an_invite_summary">
+                <span><img src="../../../assets/images/medicals.svg" alt=""></span>
+                <p class="figure_of_summary">
+                    <span>{{ storeOfSummaries?.medical_Invite?.total }}</span>
+                    <span>Medical Invites</span>
+                </p>
+            </div>
+            <div class="an_invite_summary">
+                <span><img src="../../../assets/images/offer_letter.svg" alt=""></span>
+                <p class="figure_of_summary">
+                    <span>{{ storeOfSummaries?.offer_Letter_Invite?.total }}</span>
+                    <span>Offer Letter Invites</span>
+                </p>
+            </div>
+        </div>
+        <div class="figures">
+            <span>
+                Pending Approval
+                <small class="text-hrms-slightRed">{{ storeOfSummaries?.allInvite?.pending }}</small>
+            </span>
+
+            <span>
+                Approved
+                <small class="text-hrms-genBlueColor-1">{{ storeOfSummaries?.allInvite?.approved }}</small>
+            </span>
+        </div>
+      </section>
+
+    <div class="month_createBuutton">
+        <div class="calender_container_text">
+            <div class="select_container">
+                <select [(ngModel)]="currentMonth" name="currentMonth" id="generic_select_type" class="">
+                  <option selected="">Caledar Months</option>
+                  <option [value]="month" *ngFor="let month of calendarMonths; index as i">
+                    {{ month }}
+                  </option>
+                </select>
+              </div>
+
+              <small class="text">Showing 5day work week</small>
+        </div>
+
+        <button (click)="triggerAdditionOfSchedule()" class="btn-red-custom !mb-0 !py-2 text-2xl !px-5 flex gap-4 items-center !w-max">
+          <img src="../../../assets/images/add_white_version.svg" alt="">  Create New Invite
+        </button>
+
+    </div>
+
+    <div class="scheduler_wrapper">
+        <div class="scheduler_container">
+            <div class="scheduler_topbar">
+                <div class="weekdays">
+                    <div class="weekday" [ngClass]="{'current_date': dayHeader.isCurrentDay}"  *ngFor="let dayHeader of dayHeaderNames; index as i">
+                        <div class="contents">
+                            <div class="day">
+                                <span class="day__figure">
+                                    {{ dayHeader?.number }}
+                                </span>
+                                <span class="day__word">
+                                    {{ dayHeader?.name }}
+                                </span>
+                            </div>
+                            <div class="isCurrentDay" *ngIf="dayHeader.isCurrentDay">
+                                <span>Today</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="week_switcher_container">
+                    <div class="left_week_switch" (click)="showPrevWeekDays()">
+                      <svg class="arrow left" viewBox="0 0 75 75">
+                        <rect  width="30" height="5" fill="white" class="line top"x =18 y =28 rx = 5></rect>
+                        <rect  width="30" height="5" fill="white" class="line bottom"  y=38 x=20 rx=5></rect>
+                      </svg>
+                    </div>
+                    <div class="right_week_switch" (click)="showNextWeekDays()">
+                        <svg class="arrow right" viewBox="0 0 75 75">
+                            <rect  width="30" height="5" fill="white" class="line top"x =18 y =28 rx = 5></rect>
+                            <rect  width="30" height="5" fill="white" class="line bottom"  y=38 x=20 rx=5></rect>
+                          </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="scheduler_sidebar">
+                <span class="times_of_day" [id]="hour" *ngFor="let hour of businessHours; index as i">
+                    <span> {{ hour }} </span>
+                </span>
+                
+            </div>
+            <div class="scheduler_grid_container">
+                <div class="grid_box_for_schedule" (click)="unitTrigger($event)" [id]="date.startOfBusinessHour" *ngFor="let date of businessDates;  index as i; trackBy:trackByDate">
+                    <div  class="aSchedule_container">
+                        <app-an-individual-schedule
+                          *ngIf="date.showScheduleBox"
+                          [schedule]="date?.schedule"
+                          (sendUpApprovedSchedule)="triggerSuccessModal($event)"
+                         ></app-an-individual-schedule>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+</main>

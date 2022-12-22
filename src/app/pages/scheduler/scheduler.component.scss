@@ -1,0 +1,242 @@
+
+
+main{
+    @apply  px-6 h-[92vh] overflow-y-visible;
+
+    .month_createBuutton{
+        @apply my-5 w-full flex justify-between;
+
+        & .calender_container_text{
+            @apply flex gap-16 items-center flex-grow;
+        }
+
+        & .text{
+            font-size: .795em;
+            @apply font-hrmsCamptonBook font-semibold text-hrms-dull;
+        }
+    }
+
+    .invite_summary_wrapper{
+        @apply w-full pt-3 px-2 rounded-3xl border  border-hrms-day-text-color h-56;
+
+        & .invite_summary__container{
+            @apply w-full h-36 flex gap-5 py-2 px-4;
+
+            & .an_invite_summary{
+                @apply min-w-[15%] min-h-[75%] border border-hrms-border-line-dull rounded-3xl bg-[#F9F9F9] p-4 flex gap-6 items-center  overflow-visible;
+
+                & .figure_of_summary {
+                    @apply flex flex-col overflow-visible;
+            
+                    & span:first-child{
+                        font-size: .875em;
+                        @apply font-semibold font-hrmsCamptonMedium;
+                    }
+            
+                    & span:last-child{
+                        font-size: .825em;
+                        @apply text-hrms-day-text-color;
+                    }
+                 }
+            }
+        }
+
+         
+    }
+
+    .figures{
+        @apply py-3 px-4 flex gap-6;
+
+        & span{
+            font-size: .89em;
+            @apply flex gap-2 text-hrms-day-text-color;
+
+            & small{
+                font-size: .925em;
+                @apply font-bold ;
+            }
+        }
+    }
+    .scheduler_wrapper{
+        height: 145rem;
+        @apply overflow-y-hidden my-5;
+
+        & .scheduler_container{
+            height: 100%;
+            display: grid;
+            grid-template-columns: 80px repeat(5, 1fr);
+            grid-template-rows: 74px repeat(5, 1fr);
+            @apply border border-hrms-border-line-dull rounded-xl ;
+
+
+            & .scheduler_sidebar{
+                grid-column: 1/2;
+                grid-row: 1/-1;
+                display: grid;
+                grid-template-columns: 100%;
+                grid-template-rows: 75px repeat(9, 1fr);
+                @apply border-r border-hrms-border-line-dull bg-hrms-calender-blue;
+
+
+                & .times_of_day{
+                    @apply relative overflow-hidden;
+                }
+
+                & .times_of_day span{
+                    @apply absolute -bottom-3 left-0 right-0 flex justify-center;
+                }
+
+                & .times_of_day:first-child{
+                    grid-column: 1/-1;
+                    grid-row: 1/2;
+                    @apply border-b border-hrms-border-line-dull;
+
+                    & span{
+                        @apply hidden;
+                    }
+                }
+
+                & .times_of_day:not(:first-child){
+                    grid-column: 1/-1;
+                    grid-row: span 1;
+                }
+
+                & .times_of_day:last-child{
+                    @apply border-none border-0;  
+                }
+            }
+
+            & .scheduler_topbar{
+                grid-column: 2/-1;
+                grid-row: 1/2;
+                position: relative;
+                & .weekdays{
+                    height: 100%;
+                    display: grid;
+                    grid-template-columns: repeat(5, 1fr);
+                    grid-template-rows: 100%;
+                    @apply w-full bg-hrms-calender-blue;
+
+                    & .weekday{
+                        @apply border-r border-hrms-border-line-dull p-4 w-full;
+
+                        &.current_date{
+                            @apply bg-hrms-genBlueColor-1;
+                        }
+
+                        & .contents{
+                            height: 100%;
+                            @apply bg-transparent  flex gap-2;
+                            
+
+                            & .day{
+                                @apply flex-grow flex flex-col items-start overflow-visible gap-2 text-hrms-day-text-color; 
+
+                                &__figure{
+                                    font-size: 1em;
+                                    @apply  font-hrmsCamptonMedium font-semibold;
+                                }
+                                &__word{
+                                    font-size: .89em;
+                                    @apply font-hrmsCamptonLight font-semibold overflow-visible;
+                                }
+                            }
+
+                            & .isCurrentDay{
+                                @apply p-2 self-end;
+
+                                & span{
+                                    font-size: .7em;
+                                    @apply bg-hrms-hoverBlue-1 px-3 py-1 rounded-lg font-semibold font-hrmsCamptonExtraLight text-white;
+                                }
+                            }
+                        }
+
+                        &.current_date .day .day__figure, &.current_date .day .day__word{
+                            @apply text-white;
+                        }
+                    }
+                    & .weekday:last-child{
+                        @apply border-none border-0;
+                    }
+                }
+
+                & .week_switcher_container{
+                    @apply absolute w-44 h-14 top-1/4 right-2 flex justify-end gap-1 px-1 py-1;
+
+                    & .left_week_switch, .right_week_switch{
+                        @apply w-[3rem] h-full rounded-full bg-hrms-hoverBlue-1 hover:bg-hrms-genBlueColor-1 flex justify-center;
+
+                        & svg.arrow{
+                            @apply w-[95%] h-full p-[1px] rounded-full cursor-pointer;
+
+                            & .line{
+                                @apply transition-all origin-center;
+                            }
+
+                            & .top{
+                                rotate: 25deg;
+                            }
+
+                            & .bottom{
+                                rotate: -25deg;
+                            }
+
+                            &.left{
+                                rotate: .5turn;
+                                transform: translate(1px, 2px);
+                            }
+                        }
+                    }
+                }
+            }
+
+            & .scheduler_grid_container{
+                grid-column: 2/-1;
+                grid-row: 2/-1;
+                display: grid;
+                grid-template-columns: repeat(5, 1fr);
+                // grid-auto-rows: 75px;
+                @apply border-t border-hrms-border-line-dull;
+
+                // & .weekdays{
+                //     @apply w-full border border-blue-300;
+                // }
+
+                & .grid_box_for_schedule{
+                    grid-column: span 1;
+                    grid-row: span 1;
+                    @apply border border-hrms-dull cursor-pointer relative;
+
+                    &::after{
+                        content: '';
+                        @apply absolute left-0 right-0 h-[1px] bottom-1/2 bg-[#F0F0F0];
+                    }
+
+                    .aSchedule_container{
+                        height: 13ch;
+                        @apply w-full;
+                    }
+                }
+            }
+            
+        }
+    }
+}
+
+.select_container{
+    @apply w-[22rem] border border-hrms-read-notification rounded-md p-2;
+
+    & #generic_select_type{
+        font-size: 1em;
+        @apply w-full font-hrmsCamptonBook text-hrms-read-notification border border-transparent;
+
+        &:focus{
+            line-height: 1;
+            @apply py-2 px-2
+        }
+    }
+}
+
+
+

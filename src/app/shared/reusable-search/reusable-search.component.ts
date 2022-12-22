@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { SharedService } from 'src/app/services/sharedServices';
 
 @Component({
   selector: 'app-reusable-search',
@@ -6,10 +8,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./reusable-search.component.scss']
 })
 export class ReusableSearchComponent implements OnInit {
-
-  constructor() { }
+  globusBankBranchLocations$!: Observable<any>
+  constructor(public sharedService: SharedService) { }
 
   ngOnInit(): void {
+    this.getLocations();
   }
 
+
+  getLocations(){
+    this.globusBankBranchLocations$ = this.sharedService.getBranchesInGlobus();
+  }
 }

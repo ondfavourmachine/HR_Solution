@@ -1,0 +1,160 @@
+
+
+.interview_summary__container{
+    // --line-color: #DADADA;
+    @apply w-auto h-[74.5vh] border bg-white overflow-hidden;
+
+    & header{
+        font-size: 1.2em;
+        @apply justify-between  font-hrmsCamptonMedium text-hrms-genBlueColor-1 font-semibold pl-10 pr-5 py-5 border-b-2 items-center border-hrms-border-line-dull flex overflow-visible;
+
+        & .status_container{
+            font-size: .795em;
+            @apply font-hrmsCamptonExtraLight font-semibold overflow-visible pl-8 flex gap-7 items-center;
+
+            & .status{
+                @apply px-12 py-[6px] rounded-3xl bg-hrms-pending-color text-hrms-pending-text-color;
+            }
+
+            & .status{
+                @apply px-5 py-2 rounded-[2rem] cursor-pointer;
+            
+                &.Pending{
+                    @apply  bg-[#FFF8E5] text-[#F89946];
+                }
+            
+                &.Rejected{
+                    @apply  bg-[#FFEBEF] text-[#E00025];
+                }
+            
+                &.Approved{
+                    @apply text-[#15A372] bg-[#E6F5EF];
+                }
+
+                &.Waiting{
+                    @apply text-hrms-genBlueColor-1 bg-[#E2ECF5];
+                }
+            }
+        }
+
+        & .first_part{
+            @apply flex;
+        }
+
+        & .second_part{
+            @apply flex items-center;
+            & img{
+                @apply cursor-pointer;
+            }
+        }
+    }
+
+    & .heading{
+        font-size: .9em;
+        @apply mb-3 text-hrms-inactive-color;
+    }
+
+    & .info{
+        font-size: 1.15em;
+        @apply font-hrmsCamptonBook text-hrms-genBlueColor-1;
+    }
+
+    & .content{
+        @apply h-[39.75rem] overflow-y-scroll;
+    }
+
+    & .invite_information{
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(15vw, 1fr));
+        grid-gap: 1.15em;
+        @apply w-full border-b px-10 py-2 h-auto border-b-hrms-border-line-dull bg-white;
+
+        & .an_invite_info{
+            @apply p-2 overflow-visible;
+        }
+    }
+
+    & .interview_applicant_section{
+        @apply w-full flex  bg-white pt-9;
+
+        & .interview_half{
+            @apply  w-6/12 border-r border-r-hrms-border-line-dull pl-10 pr-2 flex gap-2 flex-col;
+        }
+
+        & .personality{
+            @apply flex gap-2 w-3/5;
+
+            & img{
+                height: 25px;
+            }
+            & .name{font-size: .85em;  @apply font-hrmsCamptonBook font-semibold whitespace-nowrap ;}
+        }
+
+        & .other_interviewers, .other_applicants{
+            @apply pr-10 pl-2 my-2 border-t border-hrms-border-line-dull;
+
+            & ul{
+                @apply w-full;
+            }
+
+            & li{
+                @apply py-4 flex gap-3 items-center;
+                
+                & .name{ @apply self-center}
+            }
+
+            & span{
+                @apply text-[#3C3C3C];
+            }
+        }
+
+        .other_applicants {
+           @apply pr-1;
+           & li{
+                @apply justify-between;
+            }
+        }
+
+
+        & .interviewer{
+            @apply flex gap-3 justify-between;
+               
+            & .position_in_bank{
+                @apply flex flex-col items-end gap-1 w-2/5;
+
+                & .position{
+                    font-size: .85em;
+                    @apply font-hrmsCamptonBook font-semibold self-start; 
+                }
+            }
+        }
+
+
+        & .applicant_half{
+            @apply w-6/12  pl-6;
+
+            & .other_applicants{
+                @apply border-none border-transparent;
+            }
+        }
+
+    }
+
+    & footer{
+        @apply py-2 pr-8 border-t border-hrms-border-line-dull flex absolute bottom-0 left-0 right-0;
+
+        .button_fields{
+            // @apply ;
+        }
+
+        button{
+            @apply min-w-max;
+        }
+
+        a {
+            font-size: .775em;
+            @apply min-w-max flex;
+        }
+    }
+
+}

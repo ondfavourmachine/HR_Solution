@@ -1,0 +1,11 @@
+
+
+.search_bar{
+    @apply px-36 bg-white h-20;
+
+    &.sticky_bar{
+        position: sticky !important;
+        top: 9%;
+        @apply h-40 flex items-end;
+    }
+}

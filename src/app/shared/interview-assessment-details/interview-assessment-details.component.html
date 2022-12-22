@@ -1,0 +1,271 @@
+<main class="assessment_applicant__container">
+    <header>
+       <div class="first_part" [ngClass]="{'gap-20': true}">
+        Assessment Details   
+        <span class="status_container">Assessment status: 
+            <span [ngClass]="{'Approved': true}" > Completed</span>
+        </span>
+       </div>
+       <div class="second_part" >
+        <span  (click)="closeBtn()"><img  src="../../../assets/images/close-icon.svg" alt=""></span>
+       </div>
+    </header>
+
+    <div class="application_container">
+        <aside>
+            <div class="assessment_core_details">
+                <div class="details">
+                    <div class="typical_details">
+                      <div class="a_typical_detail">
+                        <span>
+                            Assessment ID
+                        </span>
+                        <span>
+                            {{ data?.scheduleId  || 'Not Available'}}
+                        </span>
+                      </div>
+                        <div class="a_typical_detail">
+                          <span>
+                            Job Title
+                          </span>
+                          <span>
+                            {{ data?.applicants![0].position}}
+                          </span>
+                        </div>
+
+                        <div class="a_typical_detail">
+                            <span>
+                                Department
+                            </span>
+                            <span>
+                                {{  data?.departmentName  }}
+                            </span>
+                          </div>
+
+                          <div class="a_typical_detail">
+                            <span>
+                                Date & Time
+                            </span>
+                            <span>
+                                {{ data?.dateTime | date: 'medium' }}
+                            </span>
+                          </div>
+
+                    </div>
+                    <div class="applicant relative !mb-0 top-7">
+                        <div class="title">Applicants</div>
+                        <div class="applicant__passport_container pl-3">
+                            <img  *ngFor="let applicant of data?.applicants; index as i" class="passport" src="../../../../assets/images/place_holder_img.svg" alt="">
+                            
+                            
+                        </div>
+                        <div class="applicant__number !text-hrms-genBlueColor-1 !font-bold">  {{ data?.applicants!.length }} </div>
+                    </div>
+                </div>
+            </div>
+            <div class="assessment_interviewers">
+                <div class="interviewers_count ">
+                    <span>Interviewers</span> <span>{{ data?.interviewers!.length }}</span>
+                </div>
+                <ul>
+                    <li class="item" *ngFor="let interviewer of data?.interviewers; index as i">
+                        <img src="../../../assets/images/place_holder_img.svg" alt="">
+                        <span>{{ interviewer?.displayName}} </span>
+                    </li>
+                    
+                </ul>
+            </div>
+        </aside>
+        <section>
+            <div class="main_content">
+                <div class="relative mt-10 mb-2 overflow-visible">
+                    <h5 class="text-[1.25em] text-hrms-black-text">Applicants Information</h5>
+                    <div class="information_icon">
+                        <img src="../../../assets/images/information_icon.svg" alt="">
+                        <span class="flex gap-1 flex-col hidden_text">
+                            <strong class="">Kindly click on the applicant name </strong>
+                            <span>to input assessment score</span>
+                        </span>
+                     </div>
+                </div>
+                <div class="search_bar__container overflow-visible"> 
+                    <form class="form_parent applicant_search_params overflow-visible relative">
+                        <div  class="relative input_container">
+                            <input  type="search" id="job_search" placeholder="Search by Job name" required="">
+                               <div class="svg_container">
+                                <svg  aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-gray-800">
+                                    <path  stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                               </div>
+                         </div>
+                         
+                    </form>
+                </div>
+                
+                <div class="table-contents overflow-hidden border rounded-lg">
+                    <div class="flex flex-col">
+                        <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+                            <div class="inline-block min-w-full sm:px-6 lg:px-8">
+                                <div class="overflow-hidden">
+                                    <table class="min-w-full table-fixed">
+                                        <thead class="bg-transparent border-b">
+                                            <tr>
+                                                
+                                                <th scope="col" class="individual_table_header">
+                                                    Applicant Name
+                                                </th>
+                                                <th scope="col"   class="individual_table_header !min-w-[10rem]">
+                                                    Course Studied
+                                                </th>
+                                                <th scope="col" class="individual_table_header">
+                                                    Experience
+                                                </th>
+                                                <th scope="col" class="individual_table_header">
+                                                    Score
+                                                </th>
+                
+                                                <th scope="col" class="individual_table_header">
+                                                    Assessment Status 
+                                                </th>
+                
+                                                <th scope="col" class="individual_table_header">
+                                                    View
+                                                </th>
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                
+                                            <tr *ngIf="isLoading">
+                                            
+                                                <td class="px-4"> 
+                                                    <ng-container >
+                                                        <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                                      </ng-container>
+                                      
+                                                  
+                                                </td>
+                                                <td class="px-4">
+                                                    <ng-container >
+                                                        <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                                      </ng-container>
+                                      
+                                                </td>
+                                                <td class="px-4">
+                                                    <ng-container >
+                                                        <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                                      </ng-container>
+                                      
+                                                
+                                                </td>
+                                                <td class="px-4">
+                                                    <ng-container >
+                                                        <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                                      </ng-container>
+                                      
+                                                  
+                                                </td>
+                                                <td class="px-4">
+                                                    <ng-container >
+                                                        <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                                      </ng-container>
+                                      
+                                                 
+                                                </td>
+                                                <td class="px-4"> 
+                                                
+                                                    <ng-container >
+                                                        <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                                      </ng-container>
+                                      
+                                                </td>
+                                                <td class="px-4" > 
+                                                    <ng-container >
+                                                        <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                                      </ng-container>
+                                                </td>
+                                                
+                                            </tr>
+                                            <ng-container *ngFor="let applicant of data?.applicants; index as i">
+                                                <tr  class="bg-white cursor-pointer border-b">
+                                                    <td class="individual_tableCell_data !text-ro-black-text flex gap-1 items-center justify-center !opacity-90 font-semibold">
+                                                        <span class="thumbnail">
+                                                            <img  src="../../../../assets/images/place_holder_img.svg" alt="">
+                                                          </span> 
+                                                           <span class="name_display"> {{ applicant?.firstName + ' ' + applicant?.lastName }}  </span>
+                                                    </td>
+                                                    <td class="individual_tableCell_data !text-ro-black-text  !opacity-90 font-semibold">
+                                                         {{ applicant?.courseofStudy }} 
+                                                    </td>
+                                                    <td  class="individual_tableCell_data !text-ro-black-text !opacity-90 font-semibold">
+                                                        {{ applicant?.yearsOfExperience }} 
+                                                    </td>
+                                                    <td class="individual_tableCell_data !text-ro-black-text !opacity-90 font-semibold">
+                                                        {{applicant?.overallScore! > 0 ? applicant?.overallScore + '%' : applicant.overallScore }}
+                                                    </td>
+                                                    
+                                                     
+                                                     <td class="individual_tableCell_data">
+                                                        <span [ngClass]="
+                                                        { 'Approved': applicant?.interviewerStatus == 'Started' || applicant?.interviewerStatus == 'Completed', 
+                                                          'NotAssessed': applicant?.interviewerStatus == 'Not Started', 
+                                                          'Pending':  applicant?.interviewerStatus == 'Ongoing' }" 
+                                                        class="status">
+                                                           {{applicant?.interviewerStatus }}
+                                                      </span>
+                                                     </td>
+                                                     
+                                                    <td class="individual_tableCell_data align-middle">
+                                                        <img (click)="showOneAssessment(applicant)"  class="inline-flex"  src="../../../assets/images/eye_view.svg" alt="">
+                                                    </td>    
+                                                </tr>  
+                                            </ng-container>   
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>  
+                    
+                    <!-- <div class="pagination_count !hidden">
+                        <div class="form-group w-auto flex gap-3 px-1">
+                            <input
+                             
+                             
+                             name="records"
+                             type="number" class="w-12 pb-0 border-t-0 border-l-0 border-r-0 border-b border-b-ro-hoverBlue-1 h-6 mb-3">
+                            <small class="self-center text-[#8F8F8F]">Records</small>
+                        </div>
+                        <div class="flex-grow flex items-center justify-end  border border-black">
+                            <div
+                         
+                         
+                         class="prev transition-all justify-center items-center cursor-pointer hover:shadow-md hover:px-1">
+                            <span class="h-5 flex items-center"><img class="max-w-[80%]" src="../../../assets/images/chevron_left.svg" alt=""></span>
+                        </div>
+                         
+                        <div class="pages flex gap-4">
+                            <span 
+                            class="a_page_number">
+                            1
+                           </span>
+                        </div>
+                        <div 
+                         
+                         class="next transition-all flex justify-center items-center cursor-pointer hover:shadow-md hover:px-1">
+                            <span class="h-5 flex items-center"><img class="max-w-[80%]" src="../../../assets/images/chevron_right.svg" alt="">
+                            </span>
+                        </div>
+                        </div>
+                    </div> -->
+                </div>
+            </div>  
+        </section>
+
+    </div>
+    
+</main>
+
+
+
+

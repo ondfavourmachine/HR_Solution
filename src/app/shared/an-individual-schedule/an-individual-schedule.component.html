@@ -1,0 +1,29 @@
+<main class="body_of_schedule" (click)="displayInterviewDetails()">
+    <div class="side_bar" [ngClass]="{
+      '!bg-hrms-pending-text-color !border-r !border-r-hrms-pending-text-color': this.schedule?.inviteType == 1, 
+      '!bg-hrms-black-text !border-r !border-r-hrms-black-text': (this.schedule?.inviteType == 2 || this.schedule?.inviteType == 3 || this.schedule?.inviteType == 4),
+       '!bg-[#d34da7]': this.schedule?.inviteType == 5}">
+
+    </div>
+    <div class="schedule_content overflow-visible">
+        <div class="typeOfInvite">
+            <span> {{schedule?.inviteTypeName}} </span>
+            <!-- <img src="../../../assets/images/pending_circle.svg" alt=""> -->
+            <img *ngIf="pending" class="" src="../../../assets/images/pending_circle.svg" alt="">
+            <img *ngIf="approve" class="" src="../../../assets/images/pending_green.svg" alt="">
+        </div>
+        <div class="job_position">
+            {{ schedule?.jobTitle}}
+        </div>
+        <div class="applicant">
+            <div class="applicant__passport_container">
+                <img *ngFor="let image of schedule?.applicants; index as i" [ngClass]="{'!-left-[2px]': schedule?.applicants!.length == 1}" class="passport" src="../../../assets/images/person_2.png" alt="">
+            </div>
+            <div class="applicant__number"> {{ schedule?.applicants!.length + ' applicant'}}</div>
+        </div>
+        <div class="time_display">
+            <img class="self-center" src="../../../assets/images/dull_calender.svg" alt="">
+            <span class="time"> {{ schedule?.dateTime | date:'medium' }} </span>
+        </div>
+    </div>
+</main>

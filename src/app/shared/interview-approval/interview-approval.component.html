@@ -1,0 +1,26 @@
+<main class="main_container overflow-visible px-6">
+        <span class="!w-28 !h-28 bg-white rounded-full left-[45%] absolute -top-16 p-7"><img src="../../../assets/images/big_globus_card_logo.svg" alt=""></span>
+
+    <p class="text-hrms-black-text leading-loose text-[1.5em] mt-5"> {{data?.headingText || 'Approve Test Invite' }}  </p>
+
+    <form action="" class="w-full rounded-xl mb-11 border focus-within:outline-none focus-within:outline-hrms-genBlueColor-1 border-hrms-day-text-color relative">
+        <textarea [(ngModel)]="comment" name="comment" class="
+          transition-all h-60 w-full placeholder:pl-3
+          focus:placeholder:pl-0
+          pt-12 focus:pt-12 pl-8 placeholder:text-hrms-day-text-color
+          border-none focus:outline-0 focus:ring-0 focus:ring-offset-0 
+          focus:ring-transparent focus:border-none text-3xl" 
+          placeholder="Enter your reasons for approval" id="comment_for_approval" cols="30" rows="10"></textarea>
+        <label for="comment_for_approval" class="absolute top-2 left-6 text-hrms-genBlueColor-1 font-hrmsCamptonMedium">Give  A Comment</label>
+    </form>
+     
+
+    <div class="w-full py-2 mt-2 flex justify-end gap-7">
+        <button (click)="close()" class="btn-red-custom !py-3 !px-9 !mb-0 !w-max border !bg-transparent !border-hrms-day-text-color !text-hrms-day-text-color">
+            Go Back
+        </button>
+        <button (click)="close(comment)" class="btn-red-custom !py-3 !px-9 !mb-0 !w-max">
+            {{data?.buttonText || 'Approve Test Invite'}}
+         </button>
+    </div>
+</main>

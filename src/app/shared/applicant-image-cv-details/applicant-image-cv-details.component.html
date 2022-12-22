@@ -1,0 +1,23 @@
+<aside>
+    <div class="passport_container" [ngClass]="{'!h-64 !max-h-[60%]' : data?.extraInfo?.applicantSelectionScreen}">
+        <img #ImagePort src="" alt="">
+    </div>
+    <div class="cv_container" [ngClass]="{'!h-auto !mt-7' : data?.extraInfo?.applicantSelectionScreen, '!max-h-[26%]': !data?.extraInfo?.applicantSelectionScreen}">
+        <h5 class="">Curriculum Vitae</h5>
+        <div class="cv" [ngClass]="{'!py-2' : data?.extraInfo?.applicantSelectionScreen}">
+            <img src="../../../assets/images/word_doc_icon.svg" alt="">
+            <span #CVPort class="break-words">GideoDisola.doc</span>
+        </div>
+        <div [ngClass]="{'!hidden' : !data?.extraInfo?.applicantSelectionScreen}" class="cv_related_buttons_container">
+          <span  class="cv_related_buttons purple_text">
+            <img src="../../../assets/images/eye_view.svg" alt=""> Preview CV
+          </span> 
+          <span (click)="sharedService.downloadFile(data?.applicantData!.cV_URL)" class="cv_related_buttons red_text">
+            <img src="../../../assets/images/eye_view.svg" alt=""> Download CV
+          </span> 
+          <span class="cv_related_buttons purple_text">
+            <img src="../../../assets/images/eye_view.svg" alt=""> View Job Details
+          </span> 
+        </div>
+    </div>
+</aside>

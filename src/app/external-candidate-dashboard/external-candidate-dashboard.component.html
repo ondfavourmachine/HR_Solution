@@ -1,0 +1,303 @@
+<div class="main">
+    <app-navigation-bar
+     [showApplicantNavigation]="showApplicantNavigation"></app-navigation-bar>
+
+     <section class="applicant_job_section">
+        <!-- [ngClass]="{'default': views == 'jobs'}" -->
+    <div class="jobs_wrapper" [ngClass]="{'default': views == 'jobs'}" >
+      <div class="jobs_wrapper__container">
+        <!-- <a class="history pl-2"><img src="../../../assets/images/go_back.svg" alt=""> Go back</a> -->
+        <div class="jobs_section">
+          <h2 class="pl-2">Your Job Applications</h2>
+          <span class="pl-2">Click on the card to track your job application</span>
+          <div  class="jobs mb-20" [ngClass]="{'plenty': jobsAppliedTo!.length > 1, 'one': jobsAppliedTo!.length == 1}">
+            <ng-container *ngFor="let job of jobsAppliedTo; index as i">
+              <app-job
+               [AnApprovedJob]="job"
+                [showApplicantJob]="true"
+                (displayJobDetails)="handleClick($event)"></app-job>
+            </ng-container>
+
+            <ng-container *ngIf="jobsAppliedTo!.length < 1">
+              <ngx-skeleton  borderRadius="12px" height="30vh" margin="15px 0 8px 0" width="100%">
+                <div class="job" >
+                  <div class="job_title">
+                    <span>  </span>
+                    <span>   </span>
+                  </div>
+              
+                  <div class="job_location">
+                    <span> </span>
+                    <span> </span>
+                  </div>
+              
+                  <div class="job_dead_line">
+                    <span></span>
+                    <span>   </span>
+                  </div>
+              
+                  <div class="approved_jobs_actions" >
+                    <span></span> <span>  </span>
+                  </div>
+                </div>
+              </ngx-skeleton>
+
+              <ngx-skeleton  borderRadius="12px" height="30vh" margin="15px 0 8px 0" width="100%">
+                <div class="job" >
+                  <div class="job_title">
+                    <span>  </span>
+                    <span>   </span>
+                  </div>
+              
+                  <div class="job_location">
+                    <span> </span>
+                    <span> </span>
+                  </div>
+              
+                  <div class="job_dead_line">
+                    <span></span>
+                    <span>   </span>
+                  </div>
+              
+                  <div class="approved_jobs_actions" >
+                    <span></span> <span>  </span>
+                  </div>
+                </div>
+              </ngx-skeleton>
+            </ng-container>
+
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div [ngClass]="{'default': views == 'preview'}" class="preview_page external_job_view">
+      <div class="body_content w-full ">
+       <a (click)="views = 'jobs'" class="history"><img src="../../../assets/images/go_back.svg" alt=""> Go back</a>
+       
+        <section class="main_view">
+          <!-- <h5 *ngIf="views == 'preview' && subView == 'preview'">Preview the Job Details Before Submitting for Approval</h5> -->
+          <div class="scroll_enabled ">
+            <div class="top_display">
+                <a [ngClass]="{'selected': subView == 'preview'}"(click)="subView = 'preview'" class="button ">Job Details</a>
+                <a [ngClass]="{'selected': subView == 'track application'}" (click)="subView = 'track application'" class="button">Track Application</a>
+            </div>
+            <div class="main_view__content">
+              <div [ngClass]="{'block': subView == 'preview', '!hidden': subView == 'track application' }" class="preview_details_container">
+                <div class="reportTo_supervises">
+                  <div class="reportTo">
+                    <span>Report To</span>
+                    <p> {{ oneApplication?.reportTo }} </p>
+                  </div>
+                  <div class="supervises">
+                    <span>Supervises</span>
+                    <p> {{ oneApplication?.supervises }} </p>
+                  </div>
+               </div>
+   
+   
+               <div class="job_objectives" >
+                 <span>Job Objective</span> 
+                 <ul #JobObjectivesFour>
+                  
+                 </ul>
+               </div>
+   
+               <div class="accountabilities">
+                <span>Accountabilities</span>
+                 <ul class="holder" #AccountabilityFour>
+   
+                 </ul>
+              </div>
+   
+              <div class="professional_competencies" >
+                <span>Professional Competencies</span>
+                <ul class="holder" #ProfessionalCompetenciesFour>
+                  
+                </ul>
+              </div>
+   
+              <div class="behavioralCompetencies_organisationalCompetencies">
+                <div class="behavioralCompetencies" >
+                  <span>Behavioral Competencies</span>
+                  <ul class="holder" #BehavioralCompetenciesFour>
+   
+                  </ul>
+                </div>
+                <div class="organisationalCompetencies" >
+                  <span>Organisational Competencies</span>
+                  <ul class="holder" #OrganisationalCompetenciesFour>
+   
+                  </ul>
+                </div>
+               </div>
+   
+               <div class="person_specifications">
+                <span>Person Specification/Job Profile</span>
+                <ul class="holder" #PersonSpecificationsFour>
+                   
+                </ul> 
+                 
+              </div>
+                
+              <div class="job_objectives" >
+                <span>Educational Qualification</span>
+                 <ul class="holder" #EducationalQualificationsFour>
+   
+                 </ul>
+              </div>
+   
+              <div class="job_objectives">
+                <span>Experience</span>
+                 <ul class="holder" #ExperienceFour>
+   
+                 </ul>
+              </div>
+              </div>
+              <div [ngClass]="{'block': subView == 'track application', '!hidden': subView == 'preview'}" class="preview_details_container">
+                 <ol class="application_levels">
+                  <li [ngClass]="{'completed': applications![0]?.applicationStage! > 0 && applications![0]?.approverStatus == 'Approve', 'current_stage': applications![0]?.applicationStage! == 0 && applications![0]?.approverStatus == 'Pending'}" 
+                      class="a_level">
+                    <div class="content">
+                      <span><a > {{ applications![0]?.approverStatus == 'Approve' ?  'Application': 'Application'}} </a> 
+                        <small class="date_submitted"> {{ today | date:'mediumDate' }} </small></span>
+                      <small class="last_text">{{ applications![0]?.applicationStage! < 1 ? 'Your Application has been submitted and it is Pending Review' : 'Your Application has been reviewed and has been moved to test stage'  }} </small>
+                    </div>
+                  </li>
+
+                  <li [ngClass]="{'completed': applications![0]?.applicationStage! >= 1 && applications![0]?.approverStatus == 'Approve',
+                    'current_stage': applications![0]?.applicationStage! == 1 && applications![0]?.approverStatus == 'Pending' }" class="a_level">
+                    <div class="content">
+                      <span><a >Test Stage</a></span>
+                      <small *ngIf="!applications[0]?.isMailSent" class="last_text">
+                        {{ applications[0]?.applicationStage! == 1 ? 'A test invite will be sent to you soon.': applications![0]?.applicationStage! < 1 ? 'No Description yet' : 'A test invite has been sent'}}
+                        
+                      </small>
+                      <small *ngIf="applications[0]?.applicationStage! >= 1" class="last_text">
+                        A test invite has been sent
+                        <small (click)="showTestDetails($event)" class="font-bold cursor-pointer hover:border-b hover:border-b-hrms-hoverBlue-1 !text-hrms-hoverBlue-1 !text-xl !font-hrmsCamptonMedium"> View details</small>
+                      </small>
+                    </div>
+                  </li>
+
+                  <li [ngClass]="{
+                    'completed': applications![0]?.applicationStage! >= 2 && applications![0]?.approverStatus == 'Approve',
+                    'current_stage': applications![0]?.applicationStage! >= 2 && applications![0]?.approverStatus == 'Pending' }" class="a_level">
+                    <div class="content">
+                      <span><a >Interview 01</a></span>
+                      <small class="last_text">{{ applications![0]?.applicationStage! >= 2 && applications![0]?.approverStatus == 'Approve' ? 'Invite has been sent' : 'No Description yet'}}</small>
+                    </div>
+                  </li>
+                  <li [ngClass]="{
+                    'completed': applications![0]?.applicationStage! >= 3 && applications![0]?.approverStatus == 'Approve',
+                    'current_stage': applications![0]?.applicationStage! >= 3 && applications![0]?.approverStatus == 'Pending' }" class="a_level">
+                    <div class="content">
+                      <span><a >Interview 02</a></span>
+                      <small class="last_text">{{ applications![0]?.applicationStage! >= 3 && applications![0]?.approverStatus == 'Approve' ? 'Invite has been sent' : 'No Description yet'}}</small>
+                    </div>
+                  </li>
+
+                  <li [ngClass]="{
+                    'completed': applications![0]?.applicationStage! >= 4 && applications![0]?.approverStatus == 'Approve',
+                    'current_stage': applications![0]?.applicationStage! >= 4 && applications![0]?.approverStatus == 'Pending'}" class="a_level">
+                    <div class="content">
+                      <span><a >Interview 03</a></span>
+                      <small class="last_text">{{ applications![0]?.applicationStage! >= 4 && applications![0]?.approverStatus == 'Approve' ? 'Invite has been sent' : 'No Description yet'}}</small>
+                    </div>
+                  </li>
+
+                  <li [ngClass]="{
+                    'completed': applications![0]?.applicationStage! >= 5 && applications![0]?.approverStatus == 'Approve',
+                    'current_stage': applications![0]?.applicationStage! >= 5 && applications![0]?.approverStatus == 'Pending' }" class="a_level">
+                    <div class="content">
+                      <span><a >Medical Test</a></span>
+                      <small class="last_text">{{ applications![0]?.applicationStage! >= 5 && applications![0]?.approverStatus == 'Approve' ? 'Invite has been sent' : 'No Description yet'}}</small>
+                    </div>
+                  </li>
+
+                  <li class="a_level">
+                    <div class="content">
+                      <span><a >Offer Letter</a></span>
+                      <small class="last_text">No Description yet</small>
+                    </div>
+                  </li>
+
+                  <li class="a_level last">
+                    <div class="content">
+                      <span><a >Post Acceptance</a></span>
+                      <small class="last_text">No Description yet</small>
+                    </div>
+                  </li>
+                 </ol>
+              </div>
+           </div>
+          </div>
+          
+        </section>
+      
+       
+       <aside class="floating_view external_job_view">
+         <ul class="floating_view__container">
+           <li>
+             <p class="heading">
+               <span>Location</span> 
+               <!-- <span [ngClass]="{'opacity-0': relevantData.whoIsViewing != 'Others'}">
+                 <img  class="edit_button" src="../../../assets/images/edit_button.svg" alt="">
+                 <small>Edit</small>
+               </span> -->
+             </p>
+             <p class="text"> {{ oneApplication?.location }} </p>
+           </li>
+           
+           <li class="">
+            <p class="heading">
+              <span>Grade</span> 
+            </p>
+            <p class="text">  {{ oneApplication?.grade }} </p>
+           </li>
+
+           <li class="">
+            <p class="heading">
+              <span>Employment Type</span> 
+            </p>
+            <p class="text">  {{ oneApplication?.type }} </p>
+           </li>
+           
+           <li class="">
+            <p class="heading">
+              <span>Department</span> 
+            </p>
+            <p class="text">  {{ oneApplication?.department }} </p>
+          </li>
+           <li class="">
+             <p class="heading">
+               <span>Deadline</span>     
+             </p>
+             <p class="text">  {{ oneApplication?.deadline | date: 'mediumDate'}} </p>
+           </li>
+
+           <!-- <li class="">
+              <div class="apply_contents">
+                <button *ngIf="subView == 'preview' && views == 'preview'" (click)="subView = 'apply'" class="btn-red-custom cursor-pointer">
+                  Apply for this Job
+                </button>
+
+                <button #AsidePreviewButton *ngIf="subView == 'apply'" (click)="subView = 'preview'" class="btn-red-custom cursor-pointer">
+                  Preview
+                </button>
+
+                <div class="warning">
+                  <span><img src="../../../assets/images/exclamation_mark.png" alt=""></span>
+                  <span>Please note that within <strong>a six-month period</strong>, only <strong>one position</strong> may be applied for.</span>
+                </div>
+              </div>
+          </li> -->
+
+         </ul>
+       </aside>
+      </div>
+    </div>
+     </section>
+    <app-footer></app-footer>
+</div>

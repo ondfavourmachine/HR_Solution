@@ -6,10 +6,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./landing-page.component.scss']
 })
 export class LandingPageComponent implements OnInit {
-
-  constructor() { }
+  constructor(
+  ) { }
 
   ngOnInit(): void {
+
   }
+  
 
 }

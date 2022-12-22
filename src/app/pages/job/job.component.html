@@ -1,0 +1,73 @@
+<div class="job" [ngClass]="{'approvedJobs': !showPending && !showApplicantJob}" (click)="triggerApprovalProcess()">
+    <div class="job_title">
+      <span> {{ AnApprovedJob?.position }} </span>
+      <span>  {{ AnApprovedJob?.departmentName }} </span>
+    </div>
+
+    <div class="job_location">
+      <span> {{ AnApprovedJob?.locationName}} </span>
+      <span> {{ AnApprovedJob?.grade}} </span>
+    </div>
+
+    <div class="job_dead_line">
+      <span>Deadline:</span>
+      <span>Deadline:  {{ AnApprovedJob?.deadline | date:'mediumDate'}} </span>
+    </div>
+
+    <div class="approved_jobs_actions" *ngIf="otherRelevantData && otherRelevantData.category == 'Internal' && otherRelevantData.whoIsViewing == 'Others'">
+      <span>No of Applications: 0</span> <span>  {{AnApprovedJob?.status == 'Approve' ? 'Open' : 'Closed' }} </span>
+    </div>
+  </div>
+
+
+  <div  (click)="triggerApprovalProcess()" class="job" [ngClass]="{'pendingJobs': showPending && !showApplicantJob}">
+    <div class="job_title">
+      <span> {{ APendingJob?.position }} </span>
+      <span>  {{ APendingJob?.departmentName }} </span>
+    </div>
+
+    <div class="job_location">
+      <span> {{ APendingJob?.locationName}} </span>
+      <span> {{ APendingJob?.grade}} </span>
+      <span>{{ APendingJob?.category}}</span>
+    </div>
+
+    <div class="job_dead_line">
+      <div class="underneath_deadline">
+        <span>Posted on: {{ APendingJob?.createdDate | date: 'mediumDate'}} </span>
+        <span>Deadline:  {{ APendingJob?.deadline | date:'mediumDate'}} </span>
+      </div>
+    </div>
+
+    <div class="pending_job_actions">
+      <span>No of Applications: 0</span> <span>  {{APendingJob?.status + ' Approval'}} </span>
+    </div>
+  </div>
+
+  <div class="job" [ngClass]="{'approvedJobs': showApplicantJob}" (click)="triggerApprovalProcess()">
+    <div class="job_title">
+      <span> {{ AnApprovedJob?.position }} </span>
+      <span>  {{ AnApprovedJob?.departmentName }} </span>
+    </div>
+
+    <div class="job_location">
+      <span> {{ AnApprovedJob?.locationName}} </span>
+      <span> {{ AnApprovedJob?.grade}} </span>
+    </div>
+
+    <div class="job_dead_line">
+      <span>Deadline:</span>
+      <span>Deadline:  {{ AnApprovedJob?.deadline | date:'mediumDate'}} </span>
+    </div>
+
+    <div class="approved_jobs_actions" *ngIf="otherRelevantData && otherRelevantData.category == 'Internal' && otherRelevantData.whoIsViewing == 'Others'">
+      <span>No of Applications: 0</span> <span>  {{AnApprovedJob?.status == 'Approve' ? 'Open' : 'Closed' }} </span>
+    </div>
+  </div>
+
+
+
+
+
+  
+  

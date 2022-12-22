@@ -1,0 +1,193 @@
+<div class="table_search_container">
+    <div class="search_bar__container">
+        <app-table-search-params-with-download-icons
+                [quartersToUse]="quartersToUse"
+                 ></app-table-search-params-with-download-icons>
+        <div class="download_icons">
+            <span><img src="../../../assets/images/excel_icon.svg" alt="">Excel</span>
+            <span><img src="../../../assets/images/pdf_icon.svg" alt="">Pdf</span>
+        </div>
+    </div>
+</div>
+<div class="table-contents overflow-hidden">
+    <div class="flex flex-col">
+        <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="inline-block min-w-full sm:px-6 lg:px-8">
+                <div class="overflow-hidden">
+                    <table class="min-w-full table-fixed">
+                        <thead class="bg-transparent border-b">
+                            <tr>
+                                <th scope="col" class="individual_table_header">
+                                    S/N
+                                </th>
+                                <th scope="col" class="individual_table_header">
+                                    Job Title
+                                </th>
+                                <th scope="col"   class="individual_table_header !min-w-[10rem]">
+                                    Department
+                                </th>
+                                <th scope="col" class="individual_table_header">
+                                    Date & Time
+                                </th>
+                                <th scope="col" class="individual_table_header">
+                                  Applicants
+                                </th>
+
+                                <th scope="col" class="individual_table_header">
+                                    Interviewers 
+                                </th>
+
+                                <th scope="col" class="individual_table_header">
+                                    Interviewer Status
+                                </th>
+
+                                <th scope="col" class="individual_table_header">
+                                    View
+                                </th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr *ngIf="isLoading">
+                                <td  class="px-4">   
+                                    <ng-container >
+                                        <ngx-skeleton  borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                      </ng-container>
+                      
+                                   
+                                </td>
+                                <td class="px-4"> 
+                                    <ng-container >
+                                        <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                      </ng-container>
+                      
+                                  
+                                </td>
+                                <td class="px-4">
+                                    <ng-container >
+                                        <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                      </ng-container>
+                      
+                                </td>
+                                <td class="px-4">
+                                    <ng-container >
+                                        <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                      </ng-container>
+                      
+                                
+                                </td>
+                                <td class="px-4">
+                                    <ng-container >
+                                        <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                      </ng-container>
+                      
+                                  
+                                </td>
+                                <td class="px-4">
+                                    <ng-container >
+                                        <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                      </ng-container>
+                      
+                                 
+                                </td>
+                                <td class="px-4"> 
+                                
+                                    <ng-container >
+                                        <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                      </ng-container>
+                      
+                                </td>
+                                <td class="px-4" > 
+                                    <ng-container >
+                                        <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                      </ng-container>
+                                </td>
+                                
+                            </tr>
+                            <ng-container *ngFor="let assessment of assessments; index as i">
+                                <tr  class="bg-white cursor-pointer border-b">
+                                    <td class="individual_tableCell_data !text-ro-black-text !opacity-90 font-semibold">
+                                        01
+                                    </td>
+                                    <td class="individual_tableCell_data !text-ro-black-text  !opacity-90 font-semibold">
+                                         {{ assessment?.applicants![0].position }} 
+                                    </td>
+                                    <td  class="individual_tableCell_data !text-ro-black-text !opacity-90 font-semibold">
+                                        <span class="w-40 text-ellipsis"> {{ assessment?.departmentName }} </span>
+                                    </td>
+                                    <td class="individual_tableCell_data !text-ro-black-text !opacity-90 font-semibold">
+                                         {{ assessment?.dateTime | date:'medium' }}
+                                    </td>
+                                    <td class="individual_tableCell_data !text-ro-black-text !opacity-90 font-semibold">
+                                        <div class="applicant">
+                                            <div class="applicant__passport_container">
+                                                <img *ngFor="let interviewer of assessment?.applicants; index as i"  class="passport" src="../../../../assets/images/person_2.png" alt="">
+                                                
+                                                
+                                            </div>
+                                            <div class="applicant__number !text-hrms-genBlueColor-1 !font-bold">  {{assessment?.applicants!.length }} </div>
+                                        </div>
+                                     </td>
+                                     <td class="individual_tableCell_data !text-ro-black-text !opacity-90 font-semibold">
+                                        <div class="applicant">
+                                            <div class="applicant__passport_container">
+                                                <img *ngFor="let interviewer of assessment?.interviewers; index as i" class="passport" src="../../../../assets/images/place_holder_img.svg" alt="">
+                                                
+                                            </div>
+                                            <div class="applicant__number !text-hrms-genBlueColor-1 !font-bold">  {{ assessment?.interviewers!.length }} </div>
+                                        </div>
+                                     </td>
+                                     
+                                     <td class="individual_tableCell_data">
+                                        <span [ngClass]="{'Approved': assessment.scheduleStatus == 'Completed', 'Pending': assessment.scheduleStatus == 'Started' || assessment.scheduleStatus == 'Awaiting ChairPerson', 
+                                         'NotAssessed': assessment.scheduleStatus == 'Not Started'}" 
+                                        class="status">
+                                           {{ getAppropriateStatusName(assessment) }}
+                                      </span>
+                                     </td>
+                                     
+                                    <td class="individual_tableCell_data align-middle">
+                                        <img (click)="showAnInterview(assessment)" class="inline-flex"  src="../../../assets/images/eye_view.svg" alt="">
+                                    </td>    
+                                </tr>  
+                            </ng-container>   
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>  
+    
+    <div class="pagination_count !hidden">
+        <div class="form-group w-auto flex gap-3 px-1">
+            <input
+             
+             
+             name="records"
+             type="number" class="w-12 pb-0 border-t-0 border-l-0 border-r-0 border-b border-b-ro-hoverBlue-1 h-6 mb-3">
+            <small class="self-center text-[#8F8F8F]">Records</small>
+        </div>
+        <div class="flex-grow flex items-center justify-end  border border-black">
+            <div
+         
+         
+         class="prev transition-all justify-center items-center cursor-pointer hover:shadow-md hover:px-1">
+            <span class="h-5 flex items-center"><img class="max-w-[80%]" src="../../../assets/images/chevron_left.svg" alt=""></span>
+        </div>
+         
+        <div class="pages flex gap-4">
+            <span 
+            class="a_page_number">
+            1
+           </span>
+        </div>
+        <div 
+         
+         class="next transition-all flex justify-center items-center cursor-pointer hover:shadow-md hover:px-1">
+            <span class="h-5 flex items-center"><img class="max-w-[80%]" src="../../../assets/images/chevron_right.svg" alt="">
+            </span>
+        </div>
+        </div>
+    </div>
+</div>

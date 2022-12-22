@@ -1,0 +1,54 @@
+
+
+.multi_select_container{
+    @apply w-full overflow-visible  mt-6 rounded-lg border border-hrms-day-text-color focus-within:outline-none focus-within:outline-hrms-day-text-color; 
+
+    .parent_input_control, .form-control{
+       @apply border-none border-0 overflow-visible #{!important};
+    }
+
+    .form-control{
+        @apply ring-transparent shadow-transparent outline-0 outline-offset-0 ring-0 outline-transparent ring-offset-0 #{!important};
+    }
+    .parent_input_control:focus-within input:focus{
+        border-left: unset !important;
+        padding-top: 1rem;
+    }
+
+    .search_dropDown{
+        @apply absolute z-10 shadow-2xl shadow-slate-200 top-[8.5rem] left-0 right-0 hidden rounded-lg bg-white border-b border-x border-hrms-dull;
+
+        & .list_of_names_container{
+            @apply w-full list-none;
+
+            & .name_field{
+               @apply py-4 px-3  flex justify-between cursor-pointer text-black bg-white hover:bg-hrms-calender-blue hover:font-semibold; 
+            }
+        }
+
+        &.show{
+            @apply h-auto block max-h-64 overflow-y-auto #{!important};
+        }
+    }
+
+    .addition_button{
+        @apply absolute hidden right-4 items-center gap-4  top-1/2  text-white bg-hrms-hoverBlue-1 border border-hrms-hoverBlue-1 rounded-md px-5 py-1 cursor-pointer hover:shadow-md hover:border-hrms-genBlueColor-1 hover:bg-hrms-genBlueColor-1;
+
+        &:disabled{
+            @apply opacity-20 pointer-events-none;
+        }
+        & img{
+            @apply -mt-1;
+        }
+    }
+
+
+    & input[type='checkbox']{
+        @apply h-9 w-9 rounded-2xl cursor-pointer;
+
+        &:focus{
+            @apply ring-transparent shadow-transparent outline-0 outline-offset-0 ring-0 outline-transparent ring-offset-0;
+        }
+    }
+
+}

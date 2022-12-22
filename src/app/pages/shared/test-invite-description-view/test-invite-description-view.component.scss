@@ -1,0 +1,5 @@
+
+.main_container::before{
+    display: none !important;
+    @apply overflow-visible
+}

@@ -1,0 +1,55 @@
+
+<div class="w-screen h-screen flex overflow-hidden">
+    <div class="hidden firstHalf md:flex justify-center md:flex-auto md:w-1/2 h-screen">
+        <div class="h-11/12 w-full flex flex-col gap-y-56">
+            <div class="pt-16 mb-16">
+                <div class="w-full flex items-center px-10">
+                    <div class="w-2/5 fadeIn">
+                        <img class="object-cover" src="../../../assets/images/login_globus_logo.svg" alt="">
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="w-full pl-36 pt-10 text-white dropInFromTop overflow-hidden">
+                <p class="first_text">Globus</p>
+                <p class="second_text">HR Solution</p>
+            </div>
+        </div>
+    </div>
+    <div class="secondHalf bgSecondHalf">
+        <div class=" h-auto w-full bg-white border rounded-lg dropInFromRight">
+            <div class="loginCustom loginForm">
+                <h4 class="login-title text-hrms-genBlueColor-1">Welcome Back </h4>
+                <span class="text-hrms-black-text sub-title">Please enter your credentials to login</span>
+                
+
+               <form action="" [formGroup]="loginForm" (keyup.enter)="submitThisForm(loginForm, $event)">
+                <div class="mt-7 mb-14 relative">
+                    <div class="form-group parent_input_control">
+                        <label for="username" class="form-labels">Email Address or Username</label>
+                        <input formControlName="username" type="email" placeholder="Enter Email or username" 
+                        class="form-control" id="login_email">
+                    </div>
+                    <div class="form-group parent_input_control">
+                        <label for="password" class="form-labels">Password</label>
+                        <input [type]="type" formControlName="password" placeholder="Enter Password" 
+                        class="form-control" id="login_password">
+                        <span  (click)="changeVisibility()" class="absolute showOrHide top-8 right-5 cursor-pointer">{{showOrHide}}</span>
+                    </div>
+                </div>
+
+                <div class=" mb-14 parent_input_control relative">
+                    <label for="token" class="form-labels">Token</label>
+                    <input formControlName="token" type="text" placeholder="" 
+                    class="rounded form-control token w-full h-32">
+                    <button (click)="generateToken($event)" [ngClass]="{'disabled': loginForm.invalid }" class="token_generation">Generate Token</button>
+                </div>
+                
+                <button (click)="loginIntoAD($event)" [disabled]="loginForm.invalid" type="button" class="btn-red-custom flex  justify-center items-center">
+                    Login
+                </button>
+               </form>
+            </div>
+        </div>
+    </div>
+</div>

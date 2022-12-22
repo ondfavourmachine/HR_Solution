@@ -1,0 +1,35 @@
+
+
+.body_of_schedule{
+    height: 100%;
+    backdrop-filter: blur(3px);
+    @apply w-full border flex border-hrms-read-notification rounded-lg relative z-[3] cursor-pointer;
+
+    & .side_bar{
+        @apply  h-full w-[2%] border-r border-r-hrms-pending-text-color;
+    }
+
+    & .schedule_content{
+        height: 100%;
+        @apply  w-[98%] px-5 py-3;
+
+        & .typeOfInvite{
+            font-size: .85em;
+            @apply text-hrms-day-text-color flex justify-between;
+        }
+
+        & .job_position{
+            font-size: 0.75em;
+            @apply text-hrms-genBlueColor-1 font-hrmsCamptonBook font-semibold
+        }
+
+        & .time_display {
+            @apply w-full flex gap-5 h-[2ch] items-end mt-12;
+
+            & .time{
+                font-size: .795em;
+                @apply text-hrms-day-text-color flex w-full items-center;
+            }
+        }
+    }
+}

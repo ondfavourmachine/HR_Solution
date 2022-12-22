@@ -6,7 +6,7 @@
             <p class="">
                 By joining Globus Bank, you can look forward to plenty of challenges and opportunities, and the chance to develop both professionally and personally.
             </p>
-            <a [routerLink]="['jobs']" class="generic_button red_inside job_opening_button">
+            <a [routerLink]="['jobs', 'External']" class="generic_button red_inside job_opening_button">
                 See Job Opening
             </a>
           </div>
@@ -82,84 +82,111 @@
                 </p>
             </div>
             <div class="core_values__boxes">
-                <div class="box">
-                    <div class="innards">
-                        <span>
-                            <img src="../../../assets/images/creativity_icon.svg" alt="">
-                        </span>
-                        <span>
-                            <img src="../../../assets/images/add.svg" alt="">
-                        </span>
+                <div class="box_container">
+                    <div class="box">
+                        <div class="innards">
+                            <span>
+                                <img src="../../../assets/images/creativity_icon.svg" alt="">
+                            </span>
+                            <span>
+                                <img src="../../../assets/images/add.svg" alt="">
+                            </span>
+                        </div>
+                        <h6>
+                            Creativity
+                        </h6>
                     </div>
-                    <h6>
-                        Creativity
-                    </h6>
+
+                    <div class="hover_container"></div>
                 </div>
-                <div class="box">
-                    <div class="innards">
-                        <span>
-                            <img src="../../../assets/images/excellence_icon.svg" alt="">
-                        </span>
-                        <span>
-                            <img src="../../../assets/images/add.svg" alt="">
-                        </span>
+
+                <div class="box_container">
+                    <div class="box">
+                        <div class="innards">
+                            <span>
+                                <img src="../../../assets/images/excellence_icon.svg" alt="">
+                            </span>
+                            <span>
+                                <img src="../../../assets/images/add.svg" alt="">
+                            </span>
+                        </div>
+                        <h6>
+                            Excellence
+                        </h6>
                     </div>
-                    <h6>
-                        Excellence
-                    </h6>
+                    <div class="hover_container"></div>
                 </div>
-                <div class="box">
-                    <div class="innards">
-                        <span>
-                            <img src="../../../assets/images/respect_icon.svg" alt="">
-                        </span>
-                        <span>
-                            <img src="../../../assets/images/add.svg" alt="">
-                        </span>
+
+                <div class="box_container">
+                    <div class="box">
+                        <div class="innards">
+                            <span>
+                                <img src="../../../assets/images/respect_icon.svg" alt="">
+                            </span>
+                            <span>
+                                <img src="../../../assets/images/add.svg" alt="">
+                            </span>
+                        </div>
+                        <h6>
+                            Respect
+                        </h6>
                     </div>
-                    <h6>
-                        Respect
-                    </h6>
+                    <div class="hover_container"></div>
                 </div>
-                <div class="box">
-                    <div class="innards">
-                        <span>
-                            <img src="../../../assets/images/reliabilty_icon.svg" alt="">
-                        </span>
-                        <span>
-                            <img src="../../../assets/images/add.svg" alt="">
-                        </span>
+                
+
+                <div class="box_container">
+                    <div class="box">
+                        <div class="innards">
+                            <span>
+                                <img src="../../../assets/images/reliabilty_icon.svg" alt="">
+                            </span>
+                            <span>
+                                <img src="../../../assets/images/add.svg" alt="">
+                            </span>
+                        </div>
+                        <h6>
+                            Reliability
+                        </h6>
                     </div>
-                    <h6>
-                        Reliability
-                    </h6>
+                    <div class="hover_container"></div>
                 </div>
-                <div class="box">
-                    <div class="innards">
-                        <span>
-                            <img src="../../../assets/images/simplicity_icon.svg" alt="">
-                        </span>
-                        <span>
-                            <img src="../../../assets/images/add.svg" alt="">
-                        </span>
+                
+
+                <div class="box_container">
+                    <div class="box">
+                        <div class="innards">
+                            <span>
+                                <img src="../../../assets/images/simplicity_icon.svg" alt="">
+                            </span>
+                            <span>
+                                <img src="../../../assets/images/add.svg" alt="">
+                            </span>
+                        </div>
+                        <h6>
+                            Simplicity
+                        </h6>
                     </div>
-                    <h6>
-                        Simplicity
-                    </h6>
+                    <div class="hover_container"></div>
                 </div>
-                <div class="box">
-                    <div class="innards">
-                        <span>
-                            <img src="../../../assets/images/logo_icon.svg" alt="">
-                        </span>
-                        <span>
-                            <img src="../../../assets/images/add.svg" alt="">
-                        </span>
+                
+                <div class="box_container">
+                    <div class="box">
+                        <div class="innards">
+                            <span>
+                                <img src="../../../assets/images/logo_icon.svg" alt="">
+                            </span>
+                            <span>
+                                <img src="../../../assets/images/add.svg" alt="">
+                            </span>
+                        </div>
+                        <h6>
+                            ...Lead the Change
+                        </h6>
                     </div>
-                    <h6>
-                        ...Lead the Change
-                    </h6>
+                    <div class="hover_container"></div>
                 </div>
+                
             </div>
         </div>
     </section>
@@ -194,7 +221,7 @@
             </div>
         </div>
          <div class="job_opening_container">
-            <a class=" generic_button red_inside">See Job Opening</a>
+            <a [routerLink]="['jobs', 'External']" class=" generic_button red_inside">See Job Opening</a>
          </div>
     </section>
     <app-footer></app-footer>
