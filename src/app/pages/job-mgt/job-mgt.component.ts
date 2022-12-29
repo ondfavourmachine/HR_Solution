@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { lastValueFrom } from 'rxjs';
 import { AGlobusBranch, AJob, DepartmentsInGlobus, InformationForApprovalModal, JobStatus, JobToBeCreated, JobType, tabs, Views } from 'src/app/models/generalModels';
 import { JobsService } from 'src/app/services/jobs.service';
 import { SharedService } from 'src/app/services/sharedServices';
@@ -86,17 +87,8 @@ export class JobMgtComponent implements OnInit {
     .subscribe({next: (val: {viewToShow: Views, data: any}) => {
       this.views = val.viewToShow;
       this.dataFromCreateJob = {...val.data};
+      console.log(val.data);
       this.currentBranchInView = this.locationsOfGlobus.find(elem => elem.id == parseInt(this.dataFromCreateJob?.location))?.branchName as string;
-      // this.JobObjectives.nativeElement.insertAdjacentHTML('beforeend', this.sharedService.insertLisIntoUl(this.dataFromCreateJob.jobObjectives));
-      // this.Accountability.nativeElement.insertAdjacentHTML('beforeend', this.sharedService.insertLisIntoUl(this.dataFromCreateJob.accountabilities));
-      // /// seperator
-      // this.ProfessionalCompetencies.nativeElement.insertAdjacentHTML('beforeend', this.sharedService.insertLisIntoUl( this.dataFromCreateJob.professionalCompetencies));
-      // this.PersonSpecifications.nativeElement.insertAdjacentHTML('beforeend',this.sharedService.insertLisIntoUl( this.dataFromCreateJob.personSpecification));
-      // this.BehavioralCompetencies.nativeElement.insertAdjacentHTML('beforeend', this.sharedService.insertLisIntoUl(this.dataFromCreateJob.behavioralCompetencies));
-      // this.OrganisationalCompetencies.nativeElement.insertAdjacentHTML('beforeend', this.sharedService.insertLisIntoUl( this.dataFromCreateJob.organisationalCompetencies));
-      // this.EducationalQualifications.nativeElement.insertAdjacentHTML('beforeend', this.sharedService.insertLisIntoUl(this.dataFromCreateJob.educationalQualifications));
-      // this.Experience.nativeElement.insertAdjacentHTML('beforeend', this.sharedService.insertLisIntoUl(this.dataFromCreateJob.experience));
-
       this.sharedService.insertIntoAdjacentHtmlOfElement<HTMLElement, ElementRef, string>([
         {element: this.JobObjectives, content: this.sharedService.insertLisIntoUl(this.dataFromCreateJob.jobObjectives)},
         {element: this.Accountability, content: this.sharedService.insertLisIntoUl(this.dataFromCreateJob.accountabilities)} ,
@@ -120,6 +112,10 @@ export class JobMgtComponent implements OnInit {
     })
   }
 
+  getUnitName(unitName: string): string{
+    return unitName ?  unitName.split('/')![0] : '';
+  }
+
   sendJobForApproval(event: Event){
     const btn = event.target as HTMLButtonElement;
     const prevText = btn.textContent;
@@ -130,7 +126,7 @@ export class JobMgtComponent implements OnInit {
     form.accountablities = accountabilities;
     form.position = jobTitle;
     form.department = this.deptInGlobus.find(elem => elem.name == department)?.id;
-    form.unit = parseInt(unit);
+    form.unit = parseInt(unit.split('/')[1]);
     form.reportTo = reportTo;
     form.supervises = supervise;
     form.location = this.locationsOfGlobus.find(elem => elem.id == parseInt(location))?.id as number;
@@ -152,8 +148,6 @@ export class JobMgtComponent implements OnInit {
     form.educationalQualifications =educationalQualifications;
     form.experience = experience;
     form.createdBy = ''
-
-    console.log(form);
     this.sharedService.loading4button(btn, 'yes', 'Submitting, Please wait...');
     this.jobservice.createAJob(form)
     .subscribe({
@@ -161,12 +155,16 @@ export class JobMgtComponent implements OnInit {
         if(!val.hasError && val.statusCode == '200'){
           this.sharedService.loading4button(btn, 'done', prevText as string);
           this.sharedService.triggerSuccessfulInitiationModal(`You have successfully initiated a Job Creation.  You will be notified when it's been treated by the approver`);
+          this.refresh();
           this.views = 'jobs';
           return;
         }
-        this.sharedService.errorSnackBar('An error occured during Job creation. Please try again', 'close')
+        this.sharedService.errorSnackBar('An error occured during Job creation. Please try again', 'close');
+        throw new Error(val.info as string);
       },
-      error: console.error
+      error: (error) => {
+        this.sharedService.loading4button(btn, 'done', prevText as string)
+      }
     })
   }  
 
@@ -177,62 +175,52 @@ export class JobMgtComponent implements OnInit {
       this.deptInGlobus = result;
    }
 
-   startApprovalProcessForAJob(event: {view: Views, data: AJob}){
+   async startApprovalProcessForAJob(event: {view: Views, data: AJob}){
     if(event.view == 'approve'){
-      const {position, accountablities, experience, objective, organisationalCompetencies, educationalQualifications, personSpecification, professionalCompetencies, behavioralCompetencies, 
-        departmentName, unit, supervises, id, classOfDegree, reportTo, locationName, deadline, grade, typeName, category, isInterviewRequired, isTestRequired} = event.data;
+      const {position, accountablities, experience, department, objective, organisationalCompetencies, educationalQualifications, personSpecification, professionalCompetencies, behavioralCompetencies, 
+        departmentName, unit: unitFromServer, supervises, id, classOfDegree, reportTo, locationName, deadline, grade, typeName, category, isInterviewRequired, isTestRequired} = event.data;
+       try {
+        const res = await lastValueFrom(this.sharedService.getUnits(department));
+        const foundUnit = res.result.find(unit => unit.unitId == unitFromServer);
         this.jobID = id;
-      this.dataFromCreateJob.jobTitle = position;
-      this.dataFromCreateJob.unit = unit;
-      this.dataFromCreateJob.jobObjectives = objective;
-      this.dataFromCreateJob.accountabilities = accountablities;
-      this.dataFromCreateJob.educationalQualifications = educationalQualifications;
-      this.dataFromCreateJob.personSpecification = personSpecification;
-      this.dataFromCreateJob.professionalCompetencies = professionalCompetencies;
-      this.dataFromCreateJob.behavioralCompetencies = behavioralCompetencies;
-      this.dataFromCreateJob.department = departmentName;
-      this.dataFromCreateJob.supervise = supervises;
-      this.dataFromCreateJob.reportTo = reportTo;
-      this.dataFromCreateJob.location = locationName;
-      this.dataFromCreateJob.deadline = deadline;
-      this.dataFromCreateJob.grade = grade;
-      this.dataFromCreateJob.category = category;
-      this.dataFromCreateJob.testIsRequired = isTestRequired ? 'Yes' : 'No';
-      this.dataFromCreateJob.interviewIsRequired = isInterviewRequired ? 'Yes' : 'No';
-      this.dataFromCreateJob.type =typeName;
-      this.dataFromCreateJob.classOfDegree = classOfDegree;
-      this.dataFromCreateJob.organisationalCompetencies = organisationalCompetencies;
-      this.dataFromCreateJob.experience = experience;
-
-      this.currentBranchInView = this.dataFromCreateJob.location;
-      // this.sharedService.fillUpJobObject<JobToBeCreated ,JobToBeCreatedKeys>(this.dataFromCreateJob, 
-      //   [accountablities, experience, organisationalCompetencies, 
-      //   educationalQualifications, personSpecification, professionalCompetencies,
-      //   behavioralCompetencies, classOfDegree, reportTo, deadline, grade,
-      //   category] as JobToBeCreatedKeys[])
-
-      // this.JobObjectivesTwo.nativeElement.insertAdjacentHTML('beforeend', this.sharedService.insertLisIntoUl(this.dataFromCreateJob.jobObjectives));
-      // this.AccountabilityTwo.nativeElement.insertAdjacentHTML('beforeend', this.sharedService.insertLisIntoUl(this.dataFromCreateJob.accountabilities));
-      /// seperator
-      // this.ProfessionalCompetenciesTwo.nativeElement.insertAdjacentHTML('beforeend', this.sharedService.insertLisIntoUl( this.dataFromCreateJob.professionalCompetencies));
-      // this.PersonSpecificationsTwo.nativeElement.insertAdjacentHTML('beforeend',this.sharedService.insertLisIntoUl( this.dataFromCreateJob.personSpecification));
-      // this.BehavioralCompetenciesTwo.nativeElement.insertAdjacentHTML('beforeend', this.sharedService.insertLisIntoUl(this.dataFromCreateJob.behavioralCompetencies));
-      // this.OrganisationalCompetenciesTwo.nativeElement.insertAdjacentHTML('beforeend', this.sharedService.insertLisIntoUl( this.dataFromCreateJob.organisationalCompetencies));
-      // this.EducationalQualificationsTwo.nativeElement.insertAdjacentHTML('beforeend', this.sharedService.insertLisIntoUl(this.dataFromCreateJob.educationalQualifications));
-      // this.ExperienceTwo.nativeElement.insertAdjacentHTML('beforeend', this.sharedService.insertLisIntoUl(this.dataFromCreateJob.experience));
-
-      this.sharedService.insertIntoAdjacentHtmlOfElement<HTMLElement, ElementRef, string>([
-         {element: this.JobObjectivesTwo, content: this.sharedService.insertLisIntoUl(this.dataFromCreateJob.jobObjectives)},
-         {element: this.AccountabilityTwo, content: this.sharedService.insertLisIntoUl(this.dataFromCreateJob.accountabilities)} ,
-         {element: this.ProfessionalCompetenciesTwo, content: this.sharedService.insertLisIntoUl( this.dataFromCreateJob.professionalCompetencies)},
-         {element: this.PersonSpecificationsTwo, content: this.sharedService.insertLisIntoUl( this.dataFromCreateJob.personSpecification)},
-         {element: this.BehavioralCompetenciesTwo, content: this.sharedService.insertLisIntoUl(this.dataFromCreateJob.behavioralCompetencies)},
-         {element: this.OrganisationalCompetenciesTwo, content: this.sharedService.insertLisIntoUl( this.dataFromCreateJob.organisationalCompetencies)},
-         {element: this.EducationalQualificationsTwo, content: this.sharedService.insertLisIntoUl(this.dataFromCreateJob.educationalQualifications)},
-         {element:  this.ExperienceTwo, content: this.sharedService.insertLisIntoUl(this.dataFromCreateJob.experience)}
-      ])
-      this.sharedService.showAllChildren([this.JobObjectivesTwo, this.PersonSpecificationsTwo, this.AccountabilityTwo, this.ProfessionalCompetenciesTwo, this.ExperienceTwo, this.EducationalQualificationsTwo, this.OrganisationalCompetenciesTwo, this.BehavioralCompetenciesTwo]);
-      this.views = event.view;
+        this.dataFromCreateJob.jobTitle = position;
+        this.dataFromCreateJob.unit = `${foundUnit?.name}/${unitFromServer}`;
+        this.dataFromCreateJob.jobObjectives = objective;
+        this.dataFromCreateJob.accountabilities = accountablities;
+        this.dataFromCreateJob.educationalQualifications = educationalQualifications;
+        this.dataFromCreateJob.personSpecification = personSpecification;
+        this.dataFromCreateJob.professionalCompetencies = professionalCompetencies;
+        this.dataFromCreateJob.behavioralCompetencies = behavioralCompetencies;
+        this.dataFromCreateJob.department = departmentName;
+        this.dataFromCreateJob.supervise = supervises;
+        this.dataFromCreateJob.reportTo = reportTo;
+        this.dataFromCreateJob.location = locationName;
+        this.dataFromCreateJob.deadline = deadline;
+        this.dataFromCreateJob.grade = grade;
+        this.dataFromCreateJob.category = category;
+        this.dataFromCreateJob.testIsRequired = isTestRequired ? 'Yes' : 'No';
+        this.dataFromCreateJob.interviewIsRequired = isInterviewRequired ? 'Yes' : 'No';
+        this.dataFromCreateJob.type =typeName;
+        this.dataFromCreateJob.classOfDegree = classOfDegree;
+        this.dataFromCreateJob.organisationalCompetencies = organisationalCompetencies;
+        this.dataFromCreateJob.experience = experience;
+  
+        this.currentBranchInView = this.dataFromCreateJob.location;
+        this.sharedService.insertIntoAdjacentHtmlOfElement<HTMLElement, ElementRef, string>([
+           {element: this.JobObjectivesTwo, content: this.sharedService.insertLisIntoUl(this.dataFromCreateJob.jobObjectives)},
+           {element: this.AccountabilityTwo, content: this.sharedService.insertLisIntoUl(this.dataFromCreateJob.accountabilities)} ,
+           {element: this.ProfessionalCompetenciesTwo, content: this.sharedService.insertLisIntoUl( this.dataFromCreateJob.professionalCompetencies)},
+           {element: this.PersonSpecificationsTwo, content: this.sharedService.insertLisIntoUl( this.dataFromCreateJob.personSpecification)},
+           {element: this.BehavioralCompetenciesTwo, content: this.sharedService.insertLisIntoUl(this.dataFromCreateJob.behavioralCompetencies)},
+           {element: this.OrganisationalCompetenciesTwo, content: this.sharedService.insertLisIntoUl( this.dataFromCreateJob.organisationalCompetencies)},
+           {element: this.EducationalQualificationsTwo, content: this.sharedService.insertLisIntoUl(this.dataFromCreateJob.educationalQualifications)},
+           {element:  this.ExperienceTwo, content: this.sharedService.insertLisIntoUl(this.dataFromCreateJob.experience)}
+        ])
+        this.sharedService.showAllChildren([this.JobObjectivesTwo, this.PersonSpecificationsTwo, this.AccountabilityTwo, this.ProfessionalCompetenciesTwo, this.ExperienceTwo, this.EducationalQualificationsTwo, this.OrganisationalCompetenciesTwo, this.BehavioralCompetenciesTwo]);
+        this.views = event.view;
+       } catch (error) {
+         this.sharedService.errorSnackBar(`Couldn't fetch details of Departmental unit for this job. Please try again!`)
+       }
     }
    }
 
@@ -277,7 +265,7 @@ export class JobMgtComponent implements OnInit {
      ).subscribe({
        next: () => {
         this.sharedService.loading4button(btn, 'done', prevText);
-        this.sharedService.triggerSuccessfulInitiationModal('You have successfully approved this Job.', undefined, () => this.refresh());
+        this.sharedService.triggerSuccessfulInitiationModal('You have successfully approved this Job.', undefined, this.refresh);
        },
        error: () => {
         this.sharedService.errorSnackBar('An error occured while trying to approve job.', 'close');

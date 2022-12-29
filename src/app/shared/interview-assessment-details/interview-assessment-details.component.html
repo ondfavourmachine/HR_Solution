@@ -211,7 +211,7 @@
                                                           'NotAssessed': applicant?.interviewerStatus == 'Not Started', 
                                                           'Pending':  applicant?.interviewerStatus == 'Ongoing' }" 
                                                         class="status">
-                                                           {{applicant?.interviewerStatus }}
+                                                           {{applicant?.interviewerStatus == 'Completed' ? 'Assessed' : applicant?.interviewerStatus }}
                                                       </span>
                                                      </td>
                                                      

@@ -78,7 +78,7 @@
             </div>
 
             <div class="form-group ngxEditor_custom_container">
-                <label for="username" class="form-labels">Experience</label>
+                <label for="username" class="form-labels flex items-center gap-5">Experience  <span class="text-hrms-slightRed flex items-center">  <small class=" text-[1.15em]">*</small>   <small>(Please use a number in your sentence: Eg, 1 year of experience)</small></span> </label>
               <div class="ngxEditor_content">
                 <ngx-editor-menu [editor]="editorBindings['experience'].editor" [toolbar]="editorBindings['experience'].editorToolbar"> </ngx-editor-menu>
                 <ngx-editor [editor]="editorBindings['experience'].editor" [(ngModel)]="editorBindings['experience'].html" [placeholder]="'Enter details here'"></ngx-editor>
@@ -145,7 +145,7 @@
 
                 <select [(ngModel)]="otherJobDetails.unit" name="unit"  id="unit" class="form-control">
                   <option selected> Select Unit</option>
-                  <option [value]="unit.unitId" *ngFor="let unit of unitsInGlobus; index as i"> {{unit?.name }} </option>
+                  <option [value]="unit.name+'/'+unit.unitId" *ngFor="let unit of unitsInGlobus; index as i"> {{unit?.name }} </option>
               </select>
             </div>
 

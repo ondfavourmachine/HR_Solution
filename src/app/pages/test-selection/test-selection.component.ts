@@ -69,7 +69,8 @@ export class TestSelectionComponent implements OnInit, SelectionMethods {
     const data: InformationForApprovalModal<string, string> = {
     header: acceptOrReject == 5  ? 'Pass Applicant' : acceptOrReject == 2 ? 'Approve Decision' : 'Fail Applicant', 
     button: acceptOrReject == 5 ? 'Pass Applicant' :  acceptOrReject == 2 ? 'Approve Decision' : 'Fail Applicant', 
-    callBack: this.acceptAnApplicant as unknown as Function}
+    // callBack: this.acceptAnApplicant as unknown as Function
+  }
     const config: MatDialogConfig = {
       width: '28vw',
       height: '38vh',

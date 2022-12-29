@@ -40,10 +40,12 @@ export class HomeSelectionComponent implements OnInit, OnDestroy {
       case 'Interview 01':
       this.router.navigateByUrl(`dashboard/applicant-selection/interviews`);
       break;
+      case 'Post Acceptance':
+      this.router.navigateByUrl(`dashboard/applicant-selection/post-acceptance`);
+      break;
       case 'Interview 02':
       case 'Interview 03':
       const urlBreakdown = event.split(' ');
-      console.log(urlBreakdown);
       this.router.navigateByUrl(`dashboard/applicant-selection/interviews/${urlBreakdown[1]}`);
       break;
       default:

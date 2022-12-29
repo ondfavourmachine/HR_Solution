@@ -88,7 +88,7 @@
              <section class="multi_select_wrapper overflow-visible">  
               <app-multi-select 
                [interviewType]="typeOfInvite"
-              (sendUpApplicants)="showApplicantsSelected($event)" [labelName]="'Add Applicant'"></app-multi-select>
+               (sendUpApplicants)="showApplicantsSelected($event)" [labelName]="'Add Applicant'"></app-multi-select>
             </section>
 
             <section class="applicant_display">
@@ -108,9 +108,9 @@
 
 
 
-            <section *ngIf="selectedInviteType == 'Test_invites_1'" class="form_contents overflow-visible">
+            <section *ngIf="selectedInviteType == 'Test_invites_1' || selectedInviteType == 'Offer_letter_invites_6'" class ="form_contents overflow-visible">
                 <div class="form-group parent_input_control">
-                      <label for="classOfDegree" class="form-labels">Test Location (Branch Name)</label>
+                      <label for="classOfDegree" class="form-labels"> {{ selectedInviteType == 'Test_invites_1' ? 'Test Location (Branch Name)' : 'Pickup Location'  }}</label>
                       <select [(ngModel)]="selectedTestLocation" name="selectedDept" name="" id="selectedDept" class="form-control">
                           <option selected>Select a branch</option>
                           <option [value]="branch.branchName + '--' + branch.id " *ngFor="let branch of (testLocations$ | async)?.result; index as i">  {{ branch?.branchName }} </option>
@@ -140,21 +140,22 @@
                         
                         {{( selectedInviteType == 'Interview_invites_2'
                         || selectedInviteType == 'Interview_invites_3' || selectedInviteType == 'Interview_invites_4'  )  ? 
-                        'Pick Interview Date' : selectedInviteType == 'Medical_invites_5' ? 'Pick Visit Date' : 'Pick Test Date'}}
+                        'Pick Interview Date' : selectedInviteType == 'Medical_invites_5' ? 'Pick Visit Date' : selectedInviteType == 'Offer_letter_invites_6' ? 'Offer Letter Collection Date' : 'Pick Test Date'}}
                     </label>
-                      <input type="date"  [(ngModel)]="dateOfTest" name="dateOfTest"  [placeholder]="selectedInviteType == 'Interview_invites_2' ? 'Select Interview Date' : 'Select Test Date'" 
+                      <input type="date"  [(ngModel)]="dateOfTest" name="dateOfTest"  [placeholder]="selectedInviteType == 'Interview_invites_2' ? 'Select Interview Date' :   'Select Test Date'" 
                       class="form-control" id="date_of_test">  
                </div> 
             </section>
 
             <section  *ngIf="selectedInviteType == 'Test_invites_1' || selectedInviteType == 'Interview_invites_2' 
-                     || selectedInviteType == 'Interview_invites_3' || selectedInviteType == 'Interview_invites_4' ||  selectedInviteType == 'Medical_invites_5'" 
+                     || selectedInviteType == 'Interview_invites_3' || selectedInviteType == 'Interview_invites_4' ||  
+                      selectedInviteType == 'Medical_invites_5' || selectedInviteType == 'Offer_letter_invites_6'" 
                       class="form_contents overflow-visible">
                 <div class="form-group parent_input_control">
                       <label  for="classOfDegree" class="form-labels">{{
                        (selectedInviteType == 'Interview_invites_2'
                         || selectedInviteType == 'Interview_invites_3' || selectedInviteType == 'Interview_invites_4') 
-                        ? 'Choose time for interview' : selectedInviteType == 'Medical_invites_5' ? 'Time for medical appointment?' : 'What time is the test holding?'
+                        ? 'Choose time for interview' : selectedInviteType == 'Medical_invites_5' ? 'Time for medical appointment?' : selectedInviteType == 'Offer_letter_invites_6'  ? 'Time for offer Letter Collection' : 'What time is the test holding?'
                         }}</label>
                       <select [(ngModel)]="preferredTimeForTest" name="preferredTimeForTest" name="" id="selectedDept" class="form-control">
                           <option selected>Select a suitable time</option>

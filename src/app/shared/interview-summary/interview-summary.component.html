@@ -50,7 +50,7 @@
                     <div class="applicant__number !text-hrms-genBlueColor-1 !font-bold">  {{ data?.testInvigilators!.length }} </div>
                 </div>
 
-                <div  class="applicant">
+                <div *ngIf="data?.inviteType! >= 2" class="applicant">
                     <div class="applicant__passport_container">
                         <img *ngFor="let invigilator of data?.interviewers | slice:0:3; index as i" class="passport" src="../../../assets/images/person_2.png" alt="">
                         
@@ -78,7 +78,7 @@
                 <div class="main_interviewer">
                     <span class="heading mb-3">{{
                         (data?.inviteTypeName == 'Test Invite' || data?.inviteTypeName == 'Test invites') ? 'Invigilators' : 'Interviewers'}} 
-                        <span *ngIf="data?.inviteType! < 5" class="info"> {{ data?.inviteType == 1  ? data?.testInvigilators![0].displayName == null ? '' : data?.testInvigilators!.length : data?.interviewers![0].displayName == null ? ''  : data?.interviewers!.length }}  </span>
+                        <span *ngIf="data?.inviteType! < 5" class="info"> {{ data?.inviteType == 1  ? data?.testInvigilators![0]?.displayName == null ? '' : data?.testInvigilators!.length : data?.interviewers![0]?.displayName == null ? ''  : data?.interviewers!.length }}  </span>
                     </span>
                     <div class="interviewer">
                         <div *ngIf="(!data?.interviewChairPerson || data?.interviewChairPerson == '') && data?.inviteType! < 5" [ngClass]="{'!opacity-20': !data?.interviewChairPerson}" class="personality">

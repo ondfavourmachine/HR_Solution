@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { Component, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApplicantSelectionComponent } from '../../pages/applicant-selection/applicant-selection.component';
 import { RouterModule, Routes } from '@angular/router';
@@ -9,6 +9,7 @@ import { InterviewSelectionComponent } from 'src/app/pages/interview-selection/i
 import { MedicalSelectionComponent } from 'src/app/pages/medical-selection/medical-selection.component';
 import { OfferSelectionComponent } from '../../pages/offer-selection/offer-selection.component';
 import { BroadCastService } from 'src/app/services/broad-cast.service';
+import { PostAcceptanceSelectionComponent } from '../../pages/post-acceptance-selection/post-acceptance-selection.component';
 // import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const routes: Routes = [
@@ -22,7 +23,8 @@ const routes: Routes = [
       {path: 'interviews', component: InterviewSelectionComponent},
       {path: 'interviews/:extraStages', component: InterviewSelectionComponent},
       {path: 'medical', component: MedicalSelectionComponent},
-      {path: 'offer', component: OfferSelectionComponent}
+      {path: 'offer', component: OfferSelectionComponent},
+      {path: 'post-acceptance', component: PostAcceptanceSelectionComponent}
     ]
   }
 ]
@@ -34,7 +36,8 @@ const routes: Routes = [
     HomeSelectionComponent,
     TestSelectionComponent,
     OfferSelectionComponent,
-    MedicalSelectionComponent
+    MedicalSelectionComponent,
+    PostAcceptanceSelectionComponent
   ],
   imports: [
     CommonModule,

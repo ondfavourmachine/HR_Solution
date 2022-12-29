@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { lastValueFrom } from 'rxjs';
+import { debounce, lastValueFrom } from 'rxjs';
 import { FormTypesForJobApplication, tabs, WeekDayNameAndTheirCorrespondingNumber } from 'src/app/models/generalModels';
 import { ASchedule, CreateInviteDS, ScheduleDay, ScheduleSummaryStats, ScheduleSummaryTypes, StageOfCreation } from 'src/app/models/scheduleModels';
 import { ScheduleSwitching } from 'src/app/modules/schedule-master/base-schedule-switcher';
@@ -69,7 +69,7 @@ export class SchedulerComponent extends ScheduleSwitching implements OnInit {
        if(val){
         const hour = (val.testTime as string).split(':')[0] == '10' ? 
           (val.testTime as string).split(':')[0] : (val.testTime as string).split(':')[0].startsWith('0') ? (val.testTime as string).split(':')[0].slice(1) : (val.testTime as string).split(':')[0];
-       const interviewType = val.interviewType.split('_')[2];
+       const interviewType = val.interviewType.split('_')[val.interviewType.split('_').length - 1];
         let scheduleToCreate: Partial<ASchedule> = {
         interviewChairPerson: typeof val.interviewChairPerson == 'object' ? val.interviewChairPerson!.mail as string : '',
         schduleDateFormatForDisplay: convertDateAndTimeToScheduleFormat(val.date, val.testTime),

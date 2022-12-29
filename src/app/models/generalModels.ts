@@ -204,6 +204,8 @@ export interface AGlobusBranch {
   'Test Assessments' | 'Interview Assessments' |
   'Approved' | 'Pending' | 'All Invites' | 'Interview Invites' | 'Test Invites' | 'All Applications' | 'Tests' | 'Interview 01' | 'Interview 02' | 'Interview 03' | 'Medical' | 'Offer' | 'Post Acceptance';
 
+
+ export type mimeTypes = 'jpg' | 'png' | 'jpeg' | 'doc' | 'docx' | 'pdf';
   export interface JobToBeCreated{
     objective: string,
     accountablities: string,
@@ -287,59 +289,56 @@ export interface AGlobusBranch {
     position?: string
     certification_URL: string
     actorName: null
-applicationId: number
-
-applicationStage: number
-// applicationStageName: null | string
-approverComment: string
-approverStatus: string
-audit_Comment: string
-audit_Status:string
-authenticity: number
-comment: null | string
-communication: number
-competence: number
-currentPosition: null | string
-currentRenumeration:number
-dateApplied: string
-dateTime: string
-drive: number
-experience: number
-financialExpectation: number
-focus: number
-hR_Admin: string
-hR_Comment: string
-hR_Status : string
-hospitalName: null | string
-indebtness: null | string
-intelligence: number
-interPersonalSkill: number
-intergrity: number
-interviewerEmail: null | string
-interviewerName: null |string
-interviewerPosition: null | string
-invitationStatus?: InvitationStatus
-jobCategory: null | string
-jobFit: number
-leadershipSkill: number
-location: null | string
-noticePeriod: null | string
-performanceTrackRecord: number
-pickUpBranch: null | string
-pickUpLocation: null | string
-reasonLeaving: null | string
-recommendation: null | string
-residential_State: null | string
-roleName: null | string
-scheduleApproved: null | string
-scheduleId: null | string
-score: number
-testAssessed: number
-totalScore: number
-isActive: boolean,
-
-
-
+    applicationId: number
+    applicationStage: number
+    approverComment: string
+    approverStatus: string
+    audit_Comment: string
+    audit_Status:string
+    authenticity: number
+    comment: null | string
+    communication: number
+    competence: number
+    currentPosition: null | string
+    currentRenumeration:number
+    dateApplied: string
+    dateTime: string
+    drive: number
+    experience: number
+    financialExpectation: number
+    focus: number
+    hR_Admin: string
+    hR_Comment: string
+    hR_Status : string
+    hospitalName: null | string
+    indebtness: null | string
+    intelligence: number
+    interPersonalSkill: number
+    intergrity: number
+    interviewerEmail: null | string
+    interviewerName: null |string
+    interviewerPosition: null | string
+    invitationStatus?: InvitationStatus
+    jobCategory: null | string
+    jobFit: number
+    leadershipSkill: number
+    location: null | string
+    noticePeriod: null | string
+    performanceTrackRecord: number
+    pickUpBranch: null | string
+    pickUpLocation: null | string
+    reasonLeaving: null | string
+    recommendation: null | string
+    residential_State: null | string
+    roleName: null | string
+    scheduleApproved: null | string
+    scheduleId: null | string
+    score: number
+    testAssessed: number
+    totalScore: number
+    isActive: boolean,
+    offerAcceptance: ApprovalProcessStatuses
+    offerRole: null | string,
   }
 
   export interface AnApplication extends RequiredApplicantDetails{
@@ -347,7 +346,8 @@ isActive: boolean,
     dateApplied: string,
     applicationStatus: string,
     applicationStage: number
-    applicationStageName: string
+    applicationStageName: string,
+    acceptanceDocument: string,
     approverComment: string
     approverStatus: string,
     auditApproval?: ApprovalProcessStatuses
@@ -360,7 +360,8 @@ isActive: boolean,
     raters?: Array<{id: number, email: string}>
     applicationId: number,
     scheduleRef?: string
-    invitationStatus?: InvitationStatus
+    invitationStatus?: InvitationStatus,
+    infoStatus?: string
     status: ApprovalProcessStatuses
     interviewInfoId: number,
     chairPersonAssessed: boolean,
@@ -482,6 +483,26 @@ isActive: boolean,
     nextPage: null | string,
     previousPage: null | string,
     statusCode: null |string,
+  }
+
+  export interface PostAcceptanceInfo{
+    applicationRefNo: string
+    referenceName: string
+    referencePhone: string
+    referenceEmail: string
+    referenceAddress: string
+    taxId?:string
+    nhfno?: string
+    pensionNo?: string
+    pensionProvider?: string
+    passport: string | File
+    olevel: string | File
+    degree: string | File
+    nysc: string | File
+    marriage: string | File
+    masters: string | File
+    certificate?: string | File
+    nameChange?: string | File
   }
 
   

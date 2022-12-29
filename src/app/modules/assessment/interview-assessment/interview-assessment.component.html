@@ -140,10 +140,9 @@
                                      </td>
                                      
                                      <td class="individual_tableCell_data">
-                                        <span [ngClass]="{'Approved': assessment.scheduleStatus == 'Completed', 'Pending': assessment.scheduleStatus == 'Started' || assessment.scheduleStatus == 'Awaiting ChairPerson', 
-                                         'NotAssessed': assessment.scheduleStatus == 'Not Started'}" 
+                                        <span [ngClass]="getOverallInterviewStatus(assessment, true)" 
                                         class="status">
-                                           {{ getAppropriateStatusName(assessment) }}
+                                           {{ getOverallInterviewStatus(assessment,false) }}
                                       </span>
                                      </td>
                                      

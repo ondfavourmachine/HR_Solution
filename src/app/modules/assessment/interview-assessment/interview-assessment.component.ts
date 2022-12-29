@@ -54,21 +54,27 @@ export class InterviewAssessmentComponent implements OnInit {
     this.dialog.open(InterviewAssessmentDetailsComponent, config)
   }
 
-  getAppropriateStatusName(assessment: AssessmentDetails): string{
-    let returnVal = '';
-    switch(assessment.scheduleStatus){
-      case 'Started':
-      case 'Awaiting ChairPerson':
-      returnVal = 'On going';
-      break;
-      case 'Completed':
-      returnVal = 'Completed'
-      break;
-      default:
-      returnVal = 'Not Started'
-    }
-    return returnVal;
-  }
+  // getAppropriateStatusName(assessment: AssessmentDetails): string{
+  //   let returnVal = '';
+  //   switch(assessment.scheduleStatus){
+  //     case 'Started':
+  //     case 'Awaiting ChairPerson':
+  //     returnVal = this.getOverallInterviewStatus(assessment);
+  //     break;
+  //     case 'Completed':
+  //     returnVal = 'Completed'
+  //     break;
+  //     default:
+  //     returnVal = 'Not Started'
+  //   }
+  //   return returnVal;
+  // }
+
+  getOverallInterviewStatus(assessment: AssessmentDetails, returnClassNames: boolean): string{
+    if(assessment.applicants.every(applicant => applicant.interviewerStatus == 'Completed')) return returnClassNames ? 'Approved': 'Completed'
+    if(assessment.applicants.some(applicant => applicant.interviewerStatus == 'Ongoing')) return returnClassNames ? 'Pending' : 'On going'
+    return returnClassNames ? 'NotAssessed' : 'Not Started';
+   }
 
  
 

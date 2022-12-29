@@ -1,0 +1,119 @@
+
+.assessment_applicant__container{
+    @apply w-full h-[74.5vh];
+
+    & .first_part{
+        @apply text-[#3C3C3C];
+    }
+
+    & .main_content{
+        @apply w-full  h-[74.5vh] px-9 overflow-y-scroll;
+
+        & h5{
+            @apply font-hrmsCamptonBook font-semibold leading-loose text-hrms-genBlueColor-1 text-[0.95em] border-b border-b-hrms-black-text-2 mt-2 mb-5;
+        }
+
+        & .parent_input_control{
+            @apply rounded-2xl;
+        }
+
+        &  .parent_input_control{
+            @apply rounded-lg mt-6 border border-hrms-day-text-color focus-within:outline-none focus-within:outline-hrms-day-text-color; 
+
+            & select, input{
+                @apply border-0 border-transparent mt-3;
+            }
+
+            & select:focus, input:focus{
+               @apply ring-transparent shadow-transparent outline-0 outline-offset-0 ring-0 outline-transparent ring-offset-0;
+            }
+
+            & select:not(:focus), input:not(:focus){
+                font-size: 0.899em;
+            }
+        }
+
+        & .parent_input_control:focus-within input:focus{
+            @apply border-l-0 border-transparent #{!important};
+        }
+
+        .parent_input_control + .parent_input_control{
+            @apply mb-5;
+        }
+
+
+        & .upload_test_record_container{
+            @apply w-full border border-hrms-read-notification px-3 py-3 flex gap-3 rounded-xl mb-5;
+
+            & .test_record_contents{
+                @apply w-full; 
+
+                & h5{
+                    font-size: .899em;
+                    @apply text-hrms-read-notification font-bold border-b-0;
+                }
+
+                & .parent_input_control{
+                    @apply mt-3
+                }
+
+                p{
+                    @apply py-5 flex gap-3 items-center;
+                }
+
+                & label.trigger{
+                    font-size: .829em;
+                    @apply rounded-3xl border border-hrms-read-notification bg-hrms-dashboard-bg text-hrms-read-notification px-4 py-2;
+                }
+
+                & span.text{
+                    font-size: .779em;
+                    @apply text-hrms-read-notification max-w-[42rem];
+                }
+            }
+
+            & .image_container{
+                @apply w-auto px-3 flex items-center;
+
+                & span{
+                    @apply w-44 rounded-lg border h-full border-[#E2ECF5] bg-[#E2ECF5] inline-flex justify-center items-center py-2 px-3;
+                }
+            }
+        }
+
+      
+
+        & .upload_test_record_container + .upload_test_record_container{
+            @apply mb-5;
+        }
+
+        & .addition_panel{
+            @apply w-full flex gap-3 font-medium text-hrms-read-notification items-center;
+        }
+    }
+
+    & .bottom_footer{
+        @apply absolute left-0 -bottom-2 flex justify-end items-center right-0 py-4 border-t-2 border-t-[#DADADA] bg-white;
+    }
+
+    & .cancelBtn_container{
+        @apply inline-flex justify-end items-end overflow-visible;
+    }
+    
+    & .cancelBtn{
+        @apply relative w-7 -top-1 overflow-visible cursor-pointer;
+
+        &::after, &::before{
+            content: '';
+            @apply absolute inset-0 bg-hrms-slightRed h-[2px];
+        }
+
+        &::after{
+            @apply  rotate-45;
+        }
+
+        &::before{
+            @apply -rotate-45;
+        }
+    }
+}

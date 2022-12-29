@@ -1,10 +1,9 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { ActivatedRoute, Params } from '@angular/router';
 import { PartialObserver } from 'rxjs';
 import { ApplicantSelectionStatistics, ApplicantsSelectionResponse, SelectionMethods } from 'src/app/models/applicant-selection.models';
-import { AnApplication, ApplicationApprovalStatus, InformationForApprovalModal, InformationForModal, PreviewActions, RequiredQuarterFormat } from 'src/app/models/generalModels';
+import { AnApplication, PreviewActions, ApplicationApprovalStatus, RequiredQuarterFormat, InformationForModal, InformationForApprovalModal } from 'src/app/models/generalModels';
 import { ApplicantSelectionService } from 'src/app/services/applicant-selection.service';
 import { BroadCastService } from 'src/app/services/broad-cast.service';
 import { SchedulerDateManipulationService } from 'src/app/services/scheduler-date-manipulation.service';
@@ -13,31 +12,28 @@ import { ApprovalModalComponent } from 'src/app/shared/approval-modal/approval-m
 import { PreviewApplicationComponent } from '../preview-application/preview-application.component';
 
 @Component({
-  selector: 'app-medical-selection',
-  templateUrl: './medical-selection.component.html',
-  styleUrls: ['./medical-selection.component.scss']
+  selector: 'app-post-acceptance-selection',
+  templateUrl: './post-acceptance-selection.component.html',
+  styleUrls: ['./post-acceptance-selection.component.scss']
 })
-export class MedicalSelectionComponent implements OnInit, SelectionMethods {
-
+export class PostAcceptanceSelectionComponent implements OnInit, SelectionMethods {
   applicantAboutToBeAccepted!: AnApplication;
   quartersToUse: RequiredQuarterFormat[] = [];
   isLoading: boolean = false;
   statistics: Partial<ApplicantSelectionStatistics> = {};
   applicantsToBeSelected: AnApplication[] = [];
-  // stage: number | undefined
   constructor(
     private applicationSelectionService: ApplicantSelectionService, 
     private broadCast: BroadCastService,
     private dialog: MatDialog,
     private sdm: SchedulerDateManipulationService,
     private sharedService: SharedService,
-    // private router: ActivatedRoute,
-  ) {
+  ) { 
     this.handleApplicantsFromServer = this.handleApplicantsFromServer.bind(this);
     this.triggerApprovalModalForAcceptingApplicant = this.triggerApprovalModalForAcceptingApplicant.bind(this);
     this.acceptAnApplicant = this.acceptAnApplicant.bind(this);
     this.getApplicantsForSelection = this.getApplicantsForSelection.bind(this);
-   }
+  }
   ngOnInit(): void {
     const res = this.sdm.generateQuartersOfCurrentYear();
     this.quartersToUse = this.sdm.presentQuartersInHumanReadableFormat(res); 
@@ -49,7 +45,7 @@ export class MedicalSelectionComponent implements OnInit, SelectionMethods {
       next: this.handleApplicantsFromServer,
       error: (err) => console.log(err)
     }
-    this.applicationSelectionService.getApplicants({ApplicationStage: 5, PageNumber: '1', PageSize: '10'}).subscribe(pObs);
+    this.applicationSelectionService.getApplicants({ApplicationStage: 7, PageNumber: '1', PageSize: '10'}).subscribe(pObs);
   }
   handleApplicantsFromServer(val: ApplicantsSelectionResponse): void {
     const { accepted, all, awaiting, pending, rejected, returned, data } = val;
@@ -57,6 +53,7 @@ export class MedicalSelectionComponent implements OnInit, SelectionMethods {
     this.broadCast.broadCastStatistics(this.statistics);
     this.isLoading = false;
     this.applicantsToBeSelected = data;
+    console.log(this.applicantsToBeSelected);
   }
   gotoApplicantView(applicant: AnApplication): void {
     const data: InformationForModal<AnApplication> = { 
@@ -86,13 +83,12 @@ export class MedicalSelectionComponent implements OnInit, SelectionMethods {
       const dialog = this.dialog.open(ApprovalModalComponent, config);
       dialog.afterClosed().subscribe(
         val => {
-          // this is wrong,i am calling this twice and it shouldn't be so. Please fix;
             this.acceptAnApplicant(PreviewActions.CLOSEANDSUBMIT, val, acceptOrReject == 5 ? 2 : acceptOrReject == 2 ? 2 : 3)
         }
       )
-      }
+    }
   }
-  
+ 
   acceptAnApplicant(command: PreviewActions, comment: string, specificTypeOfApproval?:ApplicationApprovalStatus): void {
     if(command == 2 && comment.length < 1){
       this.sharedService.errorSnackBar('Please enter a comment before accepting or rejecting!');
@@ -114,27 +110,8 @@ export class MedicalSelectionComponent implements OnInit, SelectionMethods {
         status == 403 ? this.sharedService.errorSnackBar('You are not authorized to accept this applicant') : this.sharedService.errorSnackBar('An error occured while trying to accept applicant!');
       }})
   }
-  acceptingWasSuccessful(): void {
-    if(this.applicantAboutToBeAccepted.hR_Status == 'Pending'){
-      this.sharedService.triggerSuccessfulInitiationModal('You have initiated to pass an applicant. You will be notified when it is approved', 'Continue to Applicant Selection', this.getApplicantsForSelection);
-      return;
-    }
-
-    if(this.applicantAboutToBeAccepted.hR_Status == 'Approve'){
-      this.sharedService.triggerSuccessfulInitiationModal('You have successfully approve the decision to "Pass" the applicant to move to the next stage.', 'Continue to Applicant Selection', this.getApplicantsForSelection);
-      return;
-    }
-    if(this.applicantAboutToBeAccepted.hR_Status == 'Awaiting'){
-      this.sharedService.triggerSuccessfulInitiationModal('Applicant has been approved Successfully!', 'Continue to Applicant Selection', this.getApplicantsForSelection);
-    }
-
-    if(this.applicantAboutToBeAccepted.approverStatus == 'Awaiting'){
-      this.sharedService.triggerSuccessfulInitiationModal('Applicant has been approved Successfully!', 'Continue to Applicant Selection', this.getApplicantsForSelection);
-    }
-  }
-
+  acceptingWasSuccessful(): void {}
   trackByFn(index: number, applicant: AnApplication) {
     return applicant.applicationRefNo; // or item.id
   }
-
 }

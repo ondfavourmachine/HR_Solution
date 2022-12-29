@@ -6,7 +6,9 @@ import { ExternalApplicantService } from '../services/external-applicant.service
 import { JobsService } from '../services/jobs.service';
 import { SharedService } from 'src/app/services/sharedServices';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { TestInviteDescriptionViewComponent } from '../pages/shared/test-invite-description-view/test-invite-description-view.component';
+import { TestInviteDescriptionViewComponent } from '../shared/test-invite-description-view/test-invite-description-view.component';
+import { PostAcceptanceInformationComponent } from '../shared/post-acceptance-information/post-acceptance-information.component';
+// import { TestInviteDescriptionViewComponent } from '../pages/shared/test-invite-description-view/test-invite-description-view.component';
 
 @Component({
   selector: 'app-external-candidate-dashboard',
@@ -30,6 +32,8 @@ export class ExternalCandidateDashboardComponent implements OnInit {
   showApplicantNavigation: boolean = true;
   today: Date = new Date(Date.now());
   candidateEmail!: string
+  isLoading: boolean = false;
+  hideNoContent: boolean = false
   constructor(private activatedRoute: ActivatedRoute, 
     private externalCandidateService: ExternalApplicantService,
     private sharedService: SharedService,
@@ -42,21 +46,27 @@ export class ExternalCandidateDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     const {email} = this.activatedRoute.snapshot.params;
-    console.log(email);
     this.candidateEmail = email;
     this.getApplicantJobs(email);
   }
 
   getApplicantJobs(email: string){
+    this.isLoading = true;
     this.externalCandidateService.getApplicantJobs(email)
     .subscribe({next: this.handleJobApplicantJobs,error: console.error})
   }
 
   handleJobApplicantJobs(val: BaseResponse<JobAppliedForByApplicant[]>){
+   try {
     const {result} = val;
     this.applications.push(...result);
     const jobs = this.applications.map(elem => elem.jobId);
-    this.fetchJobDetailsAppliedForByApplicant(jobs)
+    this.fetchJobDetailsAppliedForByApplicant(jobs);
+    this.hideNoContent= true;
+   } catch (error) {
+    this.isLoading = false;
+    this.sharedService.errorSnackBar(`Unable to select jobs for ${this.candidateEmail}`);
+   }
   }
 
   async fetchJobDetailsAppliedForByApplicant(jobIds: Array<number>){
@@ -118,17 +128,20 @@ export class ExternalCandidateDashboardComponent implements OnInit {
     this.views = 'preview';
   }
 
- async showTestDetails(event: Event){
+ async showTestDetails(event: Event, typeOfResponse: 'Test Details' | 'Offer Letter Details'){
     const small = event.target as HTMLElement;
     small.textContent = 'Fetching...';
     try {
-      const {result} = await lastValueFrom(this.externalCandidateService.getTestDetailsSentToApplicantsEmail(this.candidateEmail));
+      const {result} = 
+      typeOfResponse  == 'Test Details' ?
+      await lastValueFrom(this.externalCandidateService.getTestDetailsSentToApplicantsEmail(this.candidateEmail)) :
+      await lastValueFrom(this.externalCandidateService.getOfferLetterDetailsByApplicantsEmail(this.candidateEmail))
       small.textContent = 'View details';
       const config: MatDialogConfig = {
         width: '38vw',
-        height: '42vh',
+        height: typeOfResponse  == 'Test Details'  ? '42vh' : '46vh',
         panelClass: 'testInviteDescriptionView', 
-        data: result   
+        data: {...result, isOfferLetterInformation: typeOfResponse  == 'Test Details' ? false: true, stage: this.applications[0].applicationStage,  applicantRefNo: this.applications[0].applicationRefNo }  
       }
       this.dialog.open(TestInviteDescriptionViewComponent, config)
     } catch (error) {
@@ -136,5 +149,19 @@ export class ExternalCandidateDashboardComponent implements OnInit {
       this.sharedService.errorSnackBar('Failed to fetch test details. Please try again!')
     }
   }
+
+  startUploadingDocuments(){
+    
+      const config: MatDialogConfig = {
+        width: '40vw',
+        height: '75vh',
+        panelClass: 'preview_application', 
+        data: {applicationRefNo: this.applications[0].applicationRefNo}
+      }
+      this.dialog.open(PostAcceptanceInformationComponent, config)
+   
+  }
+
+ 
 
 }

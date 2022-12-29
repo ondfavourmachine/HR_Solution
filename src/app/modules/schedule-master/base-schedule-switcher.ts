@@ -2,7 +2,7 @@
 import { Component } from "@angular/core"
 import { MatDialog, MatDialogConfig } from "@angular/material/dialog"
 import { CreateInviteDS } from "src/app/models/scheduleModels";
-import { InterviewSummaryComponent } from "src/app/pages/shared/interview-summary/interview-summary.component";
+import { InterviewSummaryComponent } from "src/app/shared/interview-summary/interview-summary.component";
 
 @Component({
     template: '',

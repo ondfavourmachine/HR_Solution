@@ -1967,6 +1967,7 @@ table{
                 @apply h-[60%] w-full rounded-md max-h-[60%] overflow-hidden;
 
                 & img{
+                    width: 26rem;
                     aspect-ratio: 4/3; 
                     @apply object-cover;
                 }

@@ -31,16 +31,10 @@
                                         Job Title
                                     </th>
                                     <th scope="col" class="individual_table_header">
-                                      Invitation
+                                      Acceptance Status
                                     </th>
                                     <th scope="col"  class="individual_table_header">
-                                      Hospital
-                                    </th>
-    
-                                  
-    
-                                    <th scope="col" class="individual_table_header">
-                                        Status
+                                      Information Status
                                     </th>
                                     <th scope="col" class="individual_table_header">
                                         View
@@ -50,19 +44,10 @@
                             <tbody>
     
                                 <tr *ngIf="isLoading">
-                                    <td  class="px-4">   
-                                        <ng-container >
-                                            <ngx-skeleton  borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
-                                          </ng-container>
-                          
-                                       
-                                    </td>
                                     <td class="px-4"> 
                                         <ng-container >
                                             <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
-                                          </ng-container>
-                          
-                                      
+                                          </ng-container> 
                                     </td>
                                     <td class="px-4">
                                         <ng-container >
@@ -122,23 +107,19 @@
                                         </td>
                                         <td class="individual_tableCell_data !text-ro-black-text !opacity-90">
                                             <span [ngClass]="
-                                              {'Pending': applicant.invitationStatus == 'Not Sent' , 
-                                               'Approved': applicant.invitationStatus == 'Sent'}" 
-                                              class="status">{{ applicant?.invitationStatus }}</span>
+                                              {'Pending': applicant.offerAcceptance == 'Pending' , 
+                                               'Approved': applicant.offerAcceptance == 'Approve'}" 
+                                              class="status">{{ applicant?.offerAcceptance }}</span>
                                          </td>
-                                         <td class="individual_tableCell_data !text-ro-black-text !opacity-90 font-semibold">
-                                            {{ applicant?.hospitalName || 'Not Available' }}
-                                         </td>
+                                       
                                          
                                          <td class="individual_tableCell_data">
                                             <span [ngClass]="
                                               {
-                                             'Approved': applicant.approverStatus == 'Approve', 
-                                             'Waiting': applicant.approverStatus == 'Awaiting', 
-                                             'Rejected' : applicant.hR_Status == 'Fail' || applicant.hR_Status == 'Returned',
-                                             'Pending': applicant.approverStatus == 'Pending' || applicant.hR_Status == 'Pending' || applicant.hR_Status == ''
+                                             'Approved': applicant.infoStatus == 'Submitted', 
+                                             'Pending': applicant.infoStatus == 'Pending'
                                              }" 
-                                              class="status">{{  applicant?.approverStatus == 'Pending' ? 'Pending' : applicant?.approverStatus == 'Approve' ? 'Passed' :  applicant?.approverStatus == 'Awaiting' ? 'Awaiting' : 'Failed'  }}</span>
+                                              class="status">{{  applicant?.infoStatus  }}</span>
                                         </td>
                                         <td class="individual_tableCell_data align-middle">
                                             <img  (click)="gotoApplicantView(applicant)" src="../../../assets/images/eye_view.svg" alt="">

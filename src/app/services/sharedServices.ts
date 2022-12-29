@@ -8,7 +8,7 @@ import { ages, convertToBytesToMB } from './small_reusable_functions';
 
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { SuccessfulInitiationComponent } from '../shared/successful-initiation/successful-initiation.component';
-import { InterviewSummaryComponent } from '../pages/shared/interview-summary/interview-summary.component';
+import { InterviewSummaryComponent } from '../shared/interview-summary/interview-summary.component';
 
 
 @Injectable({
@@ -194,6 +194,13 @@ export class SharedService {
 
   reformatANumber(val: any){
     return new Intl.NumberFormat('en').format(val)
+  }
+
+  convertToHumanReadableFileSize(filesize?: number){
+    const bytes = 1024
+    const kilobyte = 1 * bytes;
+    const megabyte = kilobyte * bytes;
+    return `${(filesize! / megabyte).toFixed(2)}MB`
   }
   
   

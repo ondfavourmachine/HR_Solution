@@ -1,0 +1,373 @@
+<main class="assessment_applicant__container relative">
+    <header>
+       <div class="first_part">
+        Post Acceptance Information   
+       </div>
+       <div class="second_part" >
+        <span (click)="closeBtn()"  ><img  src="../../../assets/images/close-icon.svg" alt=""></span>
+       </div>
+    </header>
+
+    <div class="main_content">
+        <h5>Personal Reference Details</h5>
+        <div class="form-group parent_input_control">
+            <label for="candidate_reference_name" class="form-labels"> Name <small class="text-red-500 text-[.88em]">*</small> </label>
+            <input  type="text" name="nameOfRef" 
+            [(ngModel)]="postAcceptanceInformation.referenceName" placeholder="enter your reference name here"
+            class="form-control" id="candidate_reference_name">  
+        </div> 
+
+        <div class="form-group parent_input_control">
+            <label for="candidate_reference_phone_number" class="form-labels"> Phone Number <small class="text-red-500 text-[.88em]">*</small></label>
+            <input  
+            [(ngModel)]="postAcceptanceInformation.referencePhone"
+             type="tel" name="phoneNumberOfRef"  placeholder="enter your reference phone number here"
+            class="form-control" id="candidate_reference_phone_number">  
+        </div> 
+
+        <div class="form-group parent_input_control">
+            <label for="candidate_reference_email" class="form-labels"> Email Address <small class="text-red-500 text-[.88em]">*</small></label>
+            <input 
+            [(ngModel)]="postAcceptanceInformation.referenceEmail"
+             type="email" name="refEmail"  placeholder="enter your reference email here"
+            class="form-control" id="candidate_reference_email">  
+        </div> 
+
+        <div class="form-group parent_input_control">
+            <label for="candidate_reference_physical_address" class="form-labels"> Physical Address <small class="text-red-500 text-[.88em]">*</small></label>
+            <input  
+            [(ngModel)]="postAcceptanceInformation.referenceAddress"
+             type="text" name="refaddress"  placeholder="enter your reference physical address here"
+            class="form-control" id="candidate_reference_physical_address">  
+        </div> 
+
+        <h5>Other Information</h5>
+
+        <div class="form-group parent_input_control">
+            <label for="tax_id" class="form-labels">Tax ID (Optional)</label>
+            <input  
+             [(ngModel)]="postAcceptanceInformation.taxId"
+             type="text" name="tax_id"  placeholder="enter your textId here"
+            class="form-control" id="tax_id">  
+        </div> 
+
+        <div class="form-group parent_input_control">
+            <label for="nhf" class="form-labels">NHF Number (Optional)</label>
+            <input  
+              [(ngModel)]="postAcceptanceInformation.nhfno"
+              type="text" name="nhf"  placeholder="enter your NHF number"
+            class="form-control" id="nhf">  
+        </div> 
+
+        <div class="form-group parent_input_control">
+            <label for="pension_number" class="form-labels">Pension Number (Optional)</label>
+            <input  
+             [(ngModel)]="postAcceptanceInformation.pensionNo"
+             type="text" name="pension_number"  placeholder="enter your pension number"
+            class="form-control" id="pension_number">  
+        </div> 
+
+        <div class="form-group parent_input_control">
+            <label for="pension_provider" class="form-labels">Pension Provider (Optional)</label>
+            <input
+              [(ngModel)]="postAcceptanceInformation.pensionProvider"  
+              type="text" name="pension_provider"  placeholder="enter your pension provider"
+            class="form-control" id="pension_provider">  
+        </div> 
+
+        <h5>Documents</h5>
+
+        <div class="upload_test_record_container">
+            <div class="test_record_contents">
+                <!-- [ngClass]="{'!text-hrms-bgBlue-1': hasUploadedScore}" -->
+              <h5 >Recent Passport Photograph <small class="text-red-500 text-[.88em]">* 2mb Max size</small>   </h5>
+              <p *ngIf="!shouldShowFileUploadedDisplay('passport')">
+                <label for="recent_passport_photograph"  class="trigger cursor-pointer">Upload </label>
+                <span class="text">Click here to upload  passport photograph </span>
+                <input [(ngModel)]="postAcceptanceInformation.passport" 
+                   accept=".png,.jpg,.jpeg"
+                    (change)="handlePickedFile($event, 'passport')"
+                   id="recent_passport_photograph" type="file" class="hidden">
+              </p>
+              <p class="!flex-row !gap-0" *ngIf="shouldShowFileUploadedDisplay('passport')">
+                <span class="text flex-grow inline-flex items-center overflow-visible gap-2">
+                  <span class="inline-flex flex-grow items-center gap-2">
+                    <small class="text-xl basis-auto whitespace-nowrap text-ellipsis border-b border-dashed border-hrms-bgBlue-1 !text-hrms-bgBlue-1">  {{ getNameOfFile('passport')}} </small>
+                    <small class="text-xl size_of_file font-bold !px-3">{{ convertToHumanReadableFileSize('passport') }}</small>
+                  </span>
+                  <span class="w-[30%] cancelBtn_container"><small (click)="removeUploadedFile('passport')" class="cancelBtn"></small></span>
+                </span>
+              </p>
+            </div>
+            <div *ngIf="!shouldShowFileUploadedDisplay('passport')" class="image_container" >
+              <span><img src="../../../assets/images/no_uploaded_data.svg" alt=""></span>
+            </div>
+            <div *ngIf="shouldShowFileUploadedDisplay('passport')" 
+                 class="image_container">
+              <span class="w-[11rem] bg-transparent">
+                <img class="aspect-[8/9] rounded-lg" [src]="defaultDisplay" alt=""></span>
+            </div>
+        </div>
+
+        <div class="upload_test_record_container">
+            <div class="test_record_contents">
+                <!-- [ngClass]="{'!text-hrms-bgBlue-1': hasUploadedScore}" -->
+              <h5 >O'Level Result <small class="text-red-500 text-[.88em]">*</small> </h5>
+              <p *ngIf="!shouldShowFileUploadedDisplay('olevel')">
+                <label for="o_level"  class="trigger cursor-pointer">Upload</label>
+                <span class="text">Click here to upload O'Level </span>
+                <input
+                  (change)="handlePickedFile($event, 'olevel')"
+                   accept=".pdf" [(ngModel)]="postAcceptanceInformation.olevel"  id="o_level" type="file" class="hidden">
+              </p>
+
+              <p class="!flex-row !gap-0" *ngIf="shouldShowFileUploadedDisplay('olevel')">
+               
+                <span class="text flex-grow inline-flex items-center overflow-visible gap-2">
+                  <span class="inline-flex flex-grow items-center gap-2">
+                    <small class="text-xl basis-auto whitespace-nowrap text-ellipsis border-b border-dashed border-hrms-bgBlue-1 !text-hrms-bgBlue-1">  {{ getNameOfFile('olevel')}} </small>
+                    <small class="text-xl size_of_file font-bold !px-3">{{ convertToHumanReadableFileSize('olevel') }}</small>
+                  </span>
+                  <span class="w-[30%] cancelBtn_container"><small (click)="removeUploadedFile('olevel')" class="cancelBtn"></small></span>
+                </span>
+              </p>
+            </div>
+            <div *ngIf="!shouldShowFileUploadedDisplay('olevel')" class="image_container" >
+                <span><img src="../../../assets/images/no_uploaded_data.svg" alt=""></span>
+              </div>
+              <div *ngIf="shouldShowFileUploadedDisplay('olevel')" 
+                   class="image_container">
+                <span class="!bg-transparent">
+                  <img class="aspect-[8/9] !w-[20rem] rounded-lg" src="../../../assets/images/pdf_uploaded.svg" alt=""></span>
+              </div>
+           
+        </div>
+
+        <div class="upload_test_record_container">
+            <div class="test_record_contents">
+                <!-- [ngClass]="{'!text-hrms-bgBlue-1': hasUploadedScore}" -->
+              <h5 >Bachelor's Degree <small class="text-red-500 text-[.88em]">*</small> </h5>
+              <p *ngIf="!shouldShowFileUploadedDisplay('degree')">
+                <label for="bachelors_degree"  class="trigger cursor-pointer">Upload</label>
+                <span class="text">Click here to upload bachelor's degree </span>
+                <input 
+                accept=".pdf"
+                (change)="handlePickedFile($event, 'degree')"
+                    [(ngModel)]="postAcceptanceInformation.degree"
+                    id="bachelors_degree" type="file" class="hidden">
+              </p>
+              <p class="!flex-row !gap-0" *ngIf="shouldShowFileUploadedDisplay('degree')">
+              
+                <span class="text flex-grow inline-flex items-center overflow-visible gap-2">
+                  <span class="inline-flex flex-grow items-center gap-2">
+                    <small class="text-xl basis-auto whitespace-nowrap text-ellipsis border-b border-dashed border-hrms-bgBlue-1 !text-hrms-bgBlue-1">  {{ getNameOfFile('degree')}} </small>
+                    <small class="text-xl size_of_file font-bold !px-3">{{ convertToHumanReadableFileSize('degree') }}</small>
+                  </span>
+                  <span class="w-[30%] cancelBtn_container"><small (click)="removeUploadedFile('degree')" class="cancelBtn"></small></span>
+                </span>
+              </p>
+            </div>
+            <div *ngIf="!shouldShowFileUploadedDisplay('degree')" class="image_container" >
+              <span><img src="../../../assets/images/no_uploaded_data.svg" alt=""></span>
+            </div>
+            <div *ngIf="shouldShowFileUploadedDisplay('degree')" 
+                   class="image_container">
+                <span class="!bg-transparent">
+                  <img class="aspect-[8/9] !w-[20rem] rounded-lg" src="../../../assets/images/pdf_uploaded.svg" alt=""></span>
+              </div>
+           
+        </div>
+
+        <div class="upload_test_record_container">
+            <div class="test_record_contents">
+                <!-- [ngClass]="{'!text-hrms-bgBlue-1': hasUploadedScore}" -->
+              <h5 >Master's Degree(Optional) </h5>
+              <p *ngIf="!shouldShowFileUploadedDisplay('masters')">
+                <label for="masters_degree"  class="trigger cursor-pointer">Upload</label>
+                <span class="text">Click here to upload master's degree </span>
+                <input
+                accept=".pdf"
+                (change)="handlePickedFile($event, 'masters')"
+                 [(ngModel)]="postAcceptanceInformation.masters"  
+                id="masters_degree" type="file" class="hidden">
+              </p>
+
+              <p class="!flex-row !gap-0" *ngIf="shouldShowFileUploadedDisplay('masters')">
+               
+                <span class="text flex-grow inline-flex items-center overflow-visible gap-2">
+                  <span class="inline-flex flex-grow items-center gap-2">
+                    <small class="text-xl basis-auto whitespace-nowrap text-ellipsis border-b border-dashed border-hrms-bgBlue-1 !text-hrms-bgBlue-1">  {{ getNameOfFile('masters')}} </small>
+                    <small class="text-xl size_of_file font-bold !px-3">{{ convertToHumanReadableFileSize('masters') }}</small>
+                  </span>
+                  <span class="w-[30%] cancelBtn_container"><small (click)="removeUploadedFile('masters')" class="cancelBtn"></small></span>
+                </span>
+              </p>
+            </div>
+            <div *ngIf="!shouldShowFileUploadedDisplay('masters')" class="image_container" >
+              <span><img src="../../../assets/images/no_uploaded_data.svg" alt=""></span>
+            </div>
+            <div *ngIf="shouldShowFileUploadedDisplay('masters')" 
+                   class="image_container">
+                <span class="!bg-transparent">
+                  <img class="aspect-[8/9] !w-[20rem] rounded-lg" src="../../../assets/images/pdf_uploaded.svg" alt=""></span>
+            </div>
+           
+        </div>
+
+        <div class="upload_test_record_container">
+            <div class="test_record_contents">
+                <!-- [ngClass]="{'!text-hrms-bgBlue-1': hasUploadedScore}" -->
+              <h5 >NYSC Certificate <small class="text-red-500 text-[.88em]">*</small>  </h5>
+              <p *ngIf="!shouldShowFileUploadedDisplay('nysc')">
+                <label for="nysc_certificate" class="trigger cursor-pointer">Upload</label>
+                <span class="text">Click here to upload nysc certificate </span>
+                <input 
+                   accept=".pdf"
+                   (change)="handlePickedFile($event, 'nysc')"
+                   [(ngModel)]="postAcceptanceInformation.nysc"
+                  id="nysc_certificate" type="file" class="hidden">
+              </p>
+
+              <p class="!flex-row !gap-0" *ngIf="shouldShowFileUploadedDisplay('nysc')">
+              
+                <span class="text flex-grow inline-flex items-center overflow-visible gap-2">
+                  <span class="inline-flex flex-grow items-center gap-2">
+                    <small class="text-xl basis-auto whitespace-nowrap text-ellipsis border-b border-dashed border-hrms-bgBlue-1 !text-hrms-bgBlue-1">  {{ getNameOfFile('nysc')}} </small>
+                    <small class="text-xl size_of_file font-bold !px-3">{{ convertToHumanReadableFileSize('nysc') }}</small>
+                  </span>
+                  <span class="w-[30%] cancelBtn_container"><small (click)="removeUploadedFile('nysc')" class="cancelBtn"></small></span>
+                </span>
+              </p>
+            </div>
+            <div *ngIf="!shouldShowFileUploadedDisplay('nysc')" class="image_container" >
+              <span><img src="../../../assets/images/no_uploaded_data.svg" alt=""></span>
+            </div>
+            <div *ngIf="shouldShowFileUploadedDisplay('nysc')" 
+                   class="image_container">
+                <span class="!bg-transparent">
+                  <img class="aspect-[8/9] !w-[20rem] rounded-lg" src="../../../assets/images/pdf_uploaded.svg" alt=""></span>
+              </div>
+           
+        </div>
+
+        <div class="upload_test_record_container">
+            <div class="test_record_contents">
+                <!-- [ngClass]="{'!text-hrms-bgBlue-1': hasUploadedScore}" -->
+              <h5 >Marriage Certificate (Optional) </h5>
+              <p *ngIf="!shouldShowFileUploadedDisplay('marriage')">
+                <label for="marriage_certificate" class="trigger cursor-pointer">Upload</label>
+                <span class="text">Click here to upload marriage certificate </span>
+                <input  accept=".pdf"
+                (change)="handlePickedFile($event, 'marriage')"
+                  [(ngModel)]="postAcceptanceInformation.marriage"
+                  id="marriage_certificate" type="file" class="hidden">
+              </p>
+              <p class="!flex-row !gap-0" *ngIf="shouldShowFileUploadedDisplay('marriage')">
+               
+                <span class="text flex-grow inline-flex items-center overflow-visible gap-2">
+                  <span class="inline-flex flex-grow items-center gap-2">
+                    <small class="text-xl basis-auto whitespace-nowrap text-ellipsis border-b border-dashed border-hrms-bgBlue-1 !text-hrms-bgBlue-1">  {{ getNameOfFile('marriage')}} </small>
+                    <small class="text-xl size_of_file font-bold !px-3">{{ convertToHumanReadableFileSize('marriage') }}</small>
+                  </span>
+                  <span class="w-[30%] cancelBtn_container"><small (click)="removeUploadedFile('marriage')" class="cancelBtn"></small></span>
+                </span>
+              </p>
+            </div>
+            <div *ngIf="!shouldShowFileUploadedDisplay('marriage')" class="image_container" >
+              <span><img src="../../../assets/images/no_uploaded_data.svg" alt=""></span>
+            </div>
+            <div *ngIf="shouldShowFileUploadedDisplay('marriage')" 
+                   class="image_container">
+                <span class="!bg-transparent">
+                  <img class="aspect-[8/9] !w-[20rem] rounded-lg" src="../../../assets/images/pdf_uploaded.svg" alt=""></span>
+              </div>
+           
+        </div>
+
+        <div class="upload_test_record_container">
+            <div class="test_record_contents">
+                <!-- [ngClass]="{'!text-hrms-bgBlue-1': hasUploadedScore}" -->
+              <h5 >Change of Name Affidavit (Optional) </h5>
+              <p *ngIf="!shouldShowFileUploadedDisplay('nameChange')">
+                <label for="change_name_affidavit" class="trigger cursor-pointer">Upload</label>
+                <span class="text">Click here to upload change of name affidavit certificate </span>
+                <input
+                accept=".pdf"
+                (change)="handlePickedFile($event, 'nameChange')"
+                  [(ngModel)]="postAcceptanceInformation.nameChange" 
+                 id="change_name_affidavit" type="file" class="hidden">
+              </p>
+              <p class="!flex-row !gap-0" *ngIf="shouldShowFileUploadedDisplay('nameChange')">
+                
+                <span class="text flex-grow inline-flex items-center overflow-visible gap-2">
+                  <span class="inline-flex flex-grow items-center gap-2">
+                    <small class="text-xl basis-auto whitespace-nowrap text-ellipsis border-b border-dashed border-hrms-bgBlue-1 !text-hrms-bgBlue-1">  {{ getNameOfFile('nameChange')}} </small>
+                    <small class="text-xl size_of_file font-bold !px-3">{{ convertToHumanReadableFileSize('nameChange') }}</small>
+                  </span>
+                  <span class="w-[30%] cancelBtn_container"><small (click)="removeUploadedFile('nameChange')" class="cancelBtn"></small></span>
+                </span>
+              </p>
+            </div>
+            <div *ngIf="!shouldShowFileUploadedDisplay('nameChange')" class="image_container" >
+              <span><img src="../../../assets/images/no_uploaded_data.svg" alt=""></span>
+            </div>
+            <div *ngIf="shouldShowFileUploadedDisplay('nameChange')" 
+                   class="image_container">
+                <span class="!bg-transparent">
+                  <img class="aspect-[8/9] !w-[20rem] rounded-lg" src="../../../assets/images/pdf_uploaded.svg" alt=""></span>
+              </div>
+           
+        </div>
+
+        <div class="upload_test_record_container !mb-64">
+            <div class="test_record_contents">
+                <!-- [ngClass]="{'!text-hrms-bgBlue-1': hasUploadedScore}" -->
+              <h5 >Other Certification (Optional) </h5>
+              <p *ngIf="!shouldShowFileUploadedDisplay('certificate')">
+                <label for="other_certification" class="trigger cursor-pointer">Upload</label>
+                <span class="text">Click here to upload other certificate </span>
+                <input 
+                accept=".pdf"
+                 (change)="handlePickedFile($event, 'certificate')"
+                 [(ngModel)]="postAcceptanceInformation.certificate"
+                 id="other_certification" type="file" class="hidden">
+              </p>
+              <p class="!flex-row !gap-0" *ngIf="shouldShowFileUploadedDisplay('certificate')">
+                
+                <span class="text flex-grow inline-flex items-center overflow-visible gap-2">
+                  <span class="inline-flex flex-grow items-center gap-2">
+                    <small class="text-xl basis-auto  whitespace-nowrap text-ellipsis border-b border-dashed border-hrms-bgBlue-1 !text-hrms-bgBlue-1">  {{ getNameOfFile('certificate')}} </small>
+                    <small class="text-xl size_of_file font-bold !px-3">{{ convertToHumanReadableFileSize('certificate') }}</small>
+                  </span>
+                  <span class="w-[30%] cancelBtn_container"><small (click)="removeUploadedFile('certificate')" class="cancelBtn"></small></span>
+                </span>
+              </p>
+            </div>
+            <div *ngIf="!shouldShowFileUploadedDisplay('certificate')" class="image_container" >
+              <span><img src="../../../assets/images/no_uploaded_data.svg" alt=""></span>
+            </div>
+            <div *ngIf="shouldShowFileUploadedDisplay('certificate')" 
+                   class="image_container">
+                <span class="!bg-transparent">
+                  <img class="aspect-[8/9] !w-[20rem] rounded-lg" src="../../../assets/images/pdf_uploaded.svg" alt=""></span>
+              </div>
+           
+        </div>
+
+        <!-- <div class="addition_panel">
+            <span class="-mt-2"><img src="../../../assets/images/add.svg" alt=""></span>
+            <span>Add Another certificate</span>
+        </div> -->
+        
+    </div>
+
+    <footer class="bottom_footer">
+         <!-- <pre>{{enableSubmitBtn | json }}</pre> -->
+        <button [disabled]="enableSubmitBtn" 
+          (click)="startAddingDocuments($event)"
+         class="btn-red-custom disabled:bg-red-300 disabled:pointer-events-none !py-2 !px-4 !mb-0 !w-max">
+            Submit
+        </button>
+     </footer>
+
+</main>

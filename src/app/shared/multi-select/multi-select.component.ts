@@ -30,9 +30,7 @@ export class MultiSelectComponent implements OnInit {
   searchedPersons: Array<Partial<StaffName & SearchedApplicant>> = [];
   selectedApplicants: Set<string> = new Set();
   // searchedStaff: Array<Partial<StaffName & SearchedApplicant>> = [];
-  constructor(private scheduleService: ScheduleService) {
-    this.searchForPerson = this.searchForPerson.bind(this)
-   }
+  constructor(private scheduleService: ScheduleService) {this.searchForPerson = this.searchForPerson.bind(this)}
 
   ngOnInit(): void {
     // using defer because i am accessing this viewChild in the ngOnInit life cyle hook and because i set static to true in the viewChild config.
@@ -49,7 +47,8 @@ export class MultiSelectComponent implements OnInit {
     try {
       switch(element.id){
         case 'Add Applicant':
-          const interviewtype = this.interviewType.split('_')[2] ?? 0
+          // const brokenByUnderscore = this.interviewType.split('_');
+          const interviewtype = this.interviewType.split('_')[this.interviewType.split('_').length - 1] ?? 0
           const {result} = await lastValueFrom(this.scheduleService.getApplicants(parseInt(interviewtype), element.value));
           this.searchedPersons = result;
         break;

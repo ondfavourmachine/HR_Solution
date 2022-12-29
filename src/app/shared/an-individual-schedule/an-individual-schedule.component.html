@@ -2,7 +2,7 @@
     <div class="side_bar" [ngClass]="{
       '!bg-hrms-pending-text-color !border-r !border-r-hrms-pending-text-color': this.schedule?.inviteType == 1, 
       '!bg-hrms-black-text !border-r !border-r-hrms-black-text': (this.schedule?.inviteType == 2 || this.schedule?.inviteType == 3 || this.schedule?.inviteType == 4),
-       '!bg-[#d34da7]': this.schedule?.inviteType == 5}">
+       '!bg-[#d34da7]': this.schedule?.inviteType == 5, '!bg-hrms-green !border-r !border-r-hrms-green': this.schedule?.inviteType == 6}">
 
     </div>
     <div class="schedule_content overflow-visible">
@@ -21,9 +21,9 @@
             </div>
             <div class="applicant__number"> {{ schedule?.applicants!.length + ' applicant'}}</div>
         </div>
-        <div class="time_display">
+        <div class="time_display !gap-3">
             <img class="self-center" src="../../../assets/images/dull_calender.svg" alt="">
-            <span class="time"> {{ schedule?.dateTime | date:'medium' }} </span>
+            <span class="time"> {{ (schedule?.dateTime | date:'medium') }}  </span>
         </div>
     </div>
 </main>

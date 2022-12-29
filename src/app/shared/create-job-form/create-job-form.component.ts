@@ -46,7 +46,6 @@ export class CreateJobFormComponent implements OnInit {
   }
   deptInGlobus: DepartmentsInGlobus[] = [];
   branchesInGlobus: AGlobusBranch[] = []
-  // unitsInGlobus: AUNITINGLOBUS[] = []
   fetchingUnits: boolean  = false;
   unitsInGlobus: UnitsInGlobus[] = []
   constructor(private jobservice: JobsService, public sharedService: SharedService, private dialog: MatDialogRef<DashboardComponent>) { }
@@ -120,13 +119,6 @@ export class CreateJobFormComponent implements OnInit {
      this.deptInGlobus = result;
   }
 
-  // getUnit(){
-  //   this.sharedService.getUnits()
-  //   .subscribe({
-  //     next: console.log,
-  //     error: console.error
-  //   })
-  // }
 
   getBranchLocationsInGlobus(){
     this.sharedService.getBranchesInGlobus()
@@ -146,6 +138,7 @@ export class CreateJobFormComponent implements OnInit {
       ...this.otherJobDetails
     }
     const returnRes = {viewToShow: 'preview', data: form };
+    console.log(returnRes);
     this.dialog.close(returnRes);
   }
 
@@ -156,6 +149,7 @@ export class CreateJobFormComponent implements OnInit {
 
   closeDialog(){
     const returnRes = {viewToShow: 'jobs', data: {} };
+    console.log(returnRes);
     this.dialog.close(returnRes);
   }
 

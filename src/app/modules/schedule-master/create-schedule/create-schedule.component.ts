@@ -66,7 +66,6 @@ export class CreateScheduleComponent implements OnInit, NecessaryModalMethods {
 
   closeBtn(sendUp: boolean): void{
     if(sendUp){
-      // debugger;
       let response: CreateInviteDS = {
         interviewers: [...this.interviewers],
         interviewees: [...this.interviewInvitees],
@@ -75,9 +74,9 @@ export class CreateScheduleComponent implements OnInit, NecessaryModalMethods {
         description: this.description,
         stageOfCreation: StageOfCreation.Initiation,
         interviewChairPerson: this.mainInterviewer as StaffName,
-        location: this.typeOfInvite == InterviewTypes.Test_Invite ? this.selectedTestLocation.split('--')[0] : '',
+        location: (this.typeOfInvite == InterviewTypes.Test_Invite) || (this.typeOfInvite == InterviewTypes.Offer_Letter_Invite) ? this.selectedTestLocation.split('--')[0] : '',
         date: this.dateOfTest,
-        branchId: this.typeOfInvite == InterviewTypes.Test_Invite  ? parseInt(this.selectedTestLocation.split('--')[1]) : 0,
+        branchId: (this.typeOfInvite == InterviewTypes.Test_Invite) || (this.typeOfInvite == InterviewTypes.Offer_Letter_Invite)  ? parseInt(this.selectedTestLocation.split('--')[1]) : 0,
         testTime: this.preferredTimeForTest,
         interviewTestLink: this.typeOfInvite == InterviewTypes.Test_Invite ? '': this.interviewTestLink as string, 
         interviewType: this.typeOfInvite,

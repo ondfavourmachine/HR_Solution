@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { InformationForApprovingAnAssessment } from 'src/app/models/assessment.models';
 import { InterviewTypesWithNumber } from 'src/app/models/scheduleModels';
-import { InterviewSummaryComponent } from 'src/app/pages/shared/interview-summary/interview-summary.component';
+import { InterviewSummaryComponent } from 'src/app/shared/interview-summary/interview-summary.component';
 import { AssessApplicantModalComponent } from '../assess-applicant-modal/assess-applicant-modal.component';
 
 @Component({

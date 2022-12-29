@@ -22,9 +22,9 @@ import { PreviewApplicationComponent } from 'src/app/pages/preview-application/p
 import { CreateAScheduleComponent } from '../../shared/create-aschedule/create-aschedule.component';
 import { MultiSelectComponent } from '../../shared/multi-select/multi-select.component';
 import { AnIndividualScheduleComponent } from '../../shared/an-individual-schedule/an-individual-schedule.component';
-import { InterviewSummaryComponent } from '../../pages/shared/interview-summary/interview-summary.component';
+import { InterviewSummaryComponent } from '../../shared/interview-summary/interview-summary.component';
 import { InterviewApprovalComponent } from 'src/app/shared/interview-approval/interview-approval.component';
-import { TestInviteDescriptionViewComponent } from '../../pages/shared/test-invite-description-view/test-invite-description-view.component';
+
 import { GeneralSearchBarComponent } from '../../shared/general-search-bar/general-search-bar.component';
 import { TableSearchParamsWithDownloadIconsComponent } from '../../shared/table-search-params-with-download-icons/table-search-params-with-download-icons.component';
 import { ApplicantImageCvDetailsComponent } from '../../shared/applicant-image-cv-details/applicant-image-cv-details.component';
@@ -33,6 +33,9 @@ import { InterviewAssessmentDetailsComponent } from '../../shared/interview-asse
 import { AssessmentSheetComponent } from '../../shared/assessment-sheet/assessment-sheet.component';
 import { TitleStringDisplayForGradingPipe } from '../../shared/title-string-display-for-grading.pipe';
 import { LoadingSpinnerComponent } from '../../shared/loading-spinner/loading-spinner.component';
+import { NoContentComponent } from '../../shared/no-content/no-content.component';
+import { TestInviteDescriptionViewComponent } from 'src/app/shared/test-invite-description-view/test-invite-description-view.component';
+import { PostAcceptanceInformationComponent } from '../../shared/post-acceptance-information/post-acceptance-information.component';
 
 @NgModule({
   declarations: [
@@ -60,8 +63,9 @@ import { LoadingSpinnerComponent } from '../../shared/loading-spinner/loading-sp
     InterviewAssessmentDetailsComponent,
     AssessmentSheetComponent,
     TitleStringDisplayForGradingPipe,
-    LoadingSpinnerComponent
-
+    LoadingSpinnerComponent,
+    NoContentComponent,
+    PostAcceptanceInformationComponent,
 
   ],
   imports: [
@@ -100,7 +104,8 @@ import { LoadingSpinnerComponent } from '../../shared/loading-spinner/loading-sp
     ApplicantImageCvDetailsComponent,
     AssessApplicantModalComponent,
     InterviewAssessmentDetailsComponent,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
+    NoContentComponent,
   ], 
   providers: [TitleStringDisplayForGradingPipe]
 })

@@ -1,15 +1,14 @@
 
-import { Component, ElementRef, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { lastValueFrom, PartialObserver } from 'rxjs';
-import { InformationForApprovingAnAssessment, RatingsInformationOnAnApplicant, RequiredDetailsFromInterviewChair } from 'src/app/models/assessment.models';
-import { AnApplication, ApplicationApprovalStatus, ApprovalProcessStatuses, InformationForModal, PreviewActions, RequiredApplicantDetails } from 'src/app/models/generalModels';
+import { InformationForApprovingAnAssessment,  RatingsInformationOnAnApplicant, RequiredDetailsFromInterviewChair } from 'src/app/models/assessment.models';
+import { AnApplication, mimeTypes, ApplicationApprovalStatus, ApprovalProcessStatuses, InformationForModal, PreviewActions, RequiredApplicantDetails } from 'src/app/models/generalModels';
 import { InterviewTypesWithNumber } from 'src/app/models/scheduleModels';
 import { AssessmentService } from 'src/app/services/assessment.service';
 import { SharedService } from 'src/app/services/sharedServices';
 import { InterviewApprovalComponent } from '../interview-approval/interview-approval.component';
 import { InterviewAssessmentDetailsComponent } from '../interview-assessment-details/interview-assessment-details.component';
- type mimeTypes = 'jpg' | 'png' | 'jpeg' | 'doc' | 'docx' | 'pdf';
 @Component({
   selector: 'app-assess-applicant-modal',
   templateUrl: './assess-applicant-modal.component.html',
@@ -115,12 +114,7 @@ export class AssessApplicantModalComponent implements OnInit {
     this.hasUploadedScore = true;
   }
 
-  convertToHumanReadableFileSize(filesize?: number){
-    const bytes = 1024
-    const kilobyte = 1 * bytes;
-    const megabyte = kilobyte * bytes;
-    return `${(filesize! / megabyte).toFixed(2)}MB`
-  }
+ 
 
  submitAssessment(event: Event){
     const btn = event.target as HTMLButtonElement;
@@ -197,7 +191,7 @@ export class AssessApplicantModalComponent implements OnInit {
       next:async (val) => {
         currentlyOpenElement?.classList.remove('shrinkUp'); 
         if(val && val!.length > 2){
-          const {applicationRefNo, testScore} = this.data.applicantData;
+          const { applicationRefNo, testScore } = this.data.applicantData;
           this.sharedService.loading4button(btn, 'yes', 'Approving...');
           try {
             const res = await lastValueFrom(this.assessment.approveTestScore(

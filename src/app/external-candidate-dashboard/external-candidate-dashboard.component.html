@@ -16,9 +16,9 @@
                [AnApprovedJob]="job"
                 [showApplicantJob]="true"
                 (displayJobDetails)="handleClick($event)"></app-job>
-            </ng-container>
+             </ng-container>
 
-            <ng-container *ngIf="jobsAppliedTo!.length < 1">
+            <ng-container *ngIf="jobsAppliedTo!.length < 1 && isLoading">
               <ngx-skeleton  borderRadius="12px" height="30vh" margin="15px 0 8px 0" width="100%">
                 <div class="job" >
                   <div class="job_title">
@@ -65,8 +65,11 @@
                 </div>
               </ngx-skeleton>
             </ng-container>
-
             
+             <!-- !hideNoContent  !isLoading -->
+             <ng-container >
+               <app-no-content></app-no-content>
+             </ng-container>    
           </div>
         </div>
       </div>
@@ -157,7 +160,8 @@
               </div>
               <div [ngClass]="{'block': subView == 'track application', '!hidden': subView == 'preview'}" class="preview_details_container">
                  <ol class="application_levels">
-                  <li [ngClass]="{'completed': applications![0]?.applicationStage! > 0 && applications![0]?.approverStatus == 'Approve', 'current_stage': applications![0]?.applicationStage! == 0 && applications![0]?.approverStatus == 'Pending'}" 
+                  <li [ngClass]="{'completed': applications![0]?.applicationStage! > 0, 
+                    'current_stage': applications![0]?.applicationStage! == 0 && applications![0]?.approverStatus == 'Awaiting'}" 
                       class="a_level">
                     <div class="content">
                       <span><a > {{ applications![0]?.approverStatus == 'Approve' ?  'Application': 'Application'}} </a> 
@@ -166,67 +170,97 @@
                     </div>
                   </li>
 
-                  <li [ngClass]="{'completed': applications![0]?.applicationStage! >= 1 && applications![0]?.approverStatus == 'Approve',
-                    'current_stage': applications![0]?.applicationStage! == 1 && applications![0]?.approverStatus == 'Pending' }" class="a_level">
+                  <li [ngClass]="{'completed': applications![0]?.applicationStage! >= 1 
+                      && (applications![0]?.applicationStageName == 'Interview01' || applications![0]?.applicationStageName == 'Interview02'
+                       || applications![0]?.applicationStageName == 'Interview03' || applications![0]?.applicationStageName == 'MedicalTest'
+                       || applications![0]?.applicationStageName == 'OfferLetter' || applications![0]?.applicationStageName == 'PostAceptance'),
+                    'current_stage': applications![0]?.applicationStage! == 1 
+                    && applications![0]?.applicationStageName == 'TestStage' }" class="a_level">
                     <div class="content">
                       <span><a >Test Stage</a></span>
-                      <small *ngIf="!applications[0]?.isMailSent" class="last_text">
-                        {{ applications[0]?.applicationStage! == 1 ? 'A test invite will be sent to you soon.': applications![0]?.applicationStage! < 1 ? 'No Description yet' : 'A test invite has been sent'}}
-                        
+                      <small *ngIf="applications[0]?.invitationStatus == 'Not Sent'" class="last_text">
+                        {{ applications[0]?.applicationStage! == 1  && applications[0]?.invitationStatus == 'Not Sent' ? 'A test invite will be sent to you soon.': 'No Description yet'}}  
                       </small>
-                      <small *ngIf="applications[0]?.applicationStage! >= 1" class="last_text">
+                      <small *ngIf="applications[0]?.invitationStatus == 'Sent'" class="last_text">
                         A test invite has been sent
-                        <small (click)="showTestDetails($event)" class="font-bold cursor-pointer hover:border-b hover:border-b-hrms-hoverBlue-1 !text-hrms-hoverBlue-1 !text-xl !font-hrmsCamptonMedium"> View details</small>
+                        <small (click)="showTestDetails($event, 'Test Details')" class="font-bold cursor-pointer hover:border-b hover:border-b-hrms-hoverBlue-1 !text-hrms-hoverBlue-1 !text-xl !font-hrmsCamptonMedium"> View details</small>
                       </small>
                     </div>
                   </li>
 
                   <li [ngClass]="{
-                    'completed': applications![0]?.applicationStage! >= 2 && applications![0]?.approverStatus == 'Approve',
-                    'current_stage': applications![0]?.applicationStage! >= 2 && applications![0]?.approverStatus == 'Pending' }" class="a_level">
+                    'completed': applications![0]?.applicationStage! >= 2 
+                      && (applications![0]?.applicationStageName == 'Interview02'
+                      || applications![0]?.applicationStageName == 'Interview03' || applications![0]?.applicationStageName == 'MedicalTest'
+                      || applications![0]?.applicationStageName == 'OfferLetter' || applications![0]?.applicationStageName == 'PostAceptance'  ),
+                    'current_stage': applications![0]?.applicationStage! == 2 && applications![0]?.approverStatus == 'Pending' }" class="a_level">
                     <div class="content">
                       <span><a >Interview 01</a></span>
-                      <small class="last_text">{{ applications![0]?.applicationStage! >= 2 && applications![0]?.approverStatus == 'Approve' ? 'Invite has been sent' : 'No Description yet'}}</small>
+                      <small class="last_text">{{ applications![0]?.applicationStage! == 2 &&  applications![0]?.invitationStatus == 'Sent' ?  'Invite has been sent' : applications![0]?.applicationStage! >= 3 ? 'Your Interview has been assessed has been moved to Interview 02 stage' : 'No Description yet'}}</small>
                     </div>
                   </li>
                   <li [ngClass]="{
-                    'completed': applications![0]?.applicationStage! >= 3 && applications![0]?.approverStatus == 'Approve',
-                    'current_stage': applications![0]?.applicationStage! >= 3 && applications![0]?.approverStatus == 'Pending' }" class="a_level">
+                    'completed': applications![0]?.applicationStage! >= 3
+                    && ( applications![0]?.applicationStageName == 'Interview03' || applications![0]?.applicationStageName == 'MedicalTest'
+                    || applications![0]?.applicationStageName == 'OfferLetter' || applications![0]?.applicationStageName == 'PostAceptance'),
+                    'current_stage': applications![0]?.applicationStage! == 3 && applications![0]?.approverStatus == 'Pending' }" class="a_level">
                     <div class="content">
                       <span><a >Interview 02</a></span>
-                      <small class="last_text">{{ applications![0]?.applicationStage! >= 3 && applications![0]?.approverStatus == 'Approve' ? 'Invite has been sent' : 'No Description yet'}}</small>
+                      <small class="last_text">{{ applications![0]?.applicationStage! == 3 && applications![0]?.invitationStatus == 'Sent' ? 'Invite has been sent' : applications![0]?.applicationStage! >= 4 ? 'Your Interview has been assessed has been moved to Interview 03 stage' : 'No Description yet'}}</small>
                     </div>
                   </li>
 
                   <li [ngClass]="{
-                    'completed': applications![0]?.applicationStage! >= 4 && applications![0]?.approverStatus == 'Approve',
-                    'current_stage': applications![0]?.applicationStage! >= 4 && applications![0]?.approverStatus == 'Pending'}" class="a_level">
+                    'completed': applications![0]?.applicationStage! >= 4
+                      && (applications![0]?.applicationStageName == 'MedicalTest' || applications![0]?.applicationStageName == 'OfferLetter' || applications![0]?.applicationStageName == 'PostAceptance'),
+                    'current_stage': applications![0]?.applicationStage! == 4 && applications![0]?.approverStatus == 'Pending'}" class="a_level">
                     <div class="content">
                       <span><a >Interview 03</a></span>
-                      <small class="last_text">{{ applications![0]?.applicationStage! >= 4 && applications![0]?.approverStatus == 'Approve' ? 'Invite has been sent' : 'No Description yet'}}</small>
+                      <small class="last_text">{{ applications![0]?.applicationStage! == 4 && applications![0]?.invitationStatus == 'Sent' ? 'Invite has been sent' : applications![0]?.applicationStage! >= 5 ? 'Your Interview has been assessed has been moved to Medicals stage' : 'No Description yet'}}</small>
                     </div>
                   </li>
 
                   <li [ngClass]="{
-                    'completed': applications![0]?.applicationStage! >= 5 && applications![0]?.approverStatus == 'Approve',
-                    'current_stage': applications![0]?.applicationStage! >= 5 && applications![0]?.approverStatus == 'Pending' }" class="a_level">
+                    'completed': applications![0]?.applicationStage! >= 5 
+                      && (applications![0]?.applicationStageName == 'OfferLetter' || applications![0]?.applicationStageName == 'PostAceptance'),
+                    'current_stage': applications![0]?.applicationStage! == 5 && applications![0]?.approverStatus == 'Pending' }" class="a_level">
                     <div class="content">
                       <span><a >Medical Test</a></span>
-                      <small class="last_text">{{ applications![0]?.applicationStage! >= 5 && applications![0]?.approverStatus == 'Approve' ? 'Invite has been sent' : 'No Description yet'}}</small>
+                      <small class="last_text">{{ applications![0]?.applicationStage! == 5 && applications![0]?.invitationStatus == 'Sent' ? 'Invite has been sent' : applications![0]?.applicationStage! >= 6 ? 'Your medical assessment has been completed and your offer letter is being prepared' : 'No Description yet'}}</small>
                     </div>
                   </li>
 
-                  <li class="a_level">
+                  <li  [ngClass]="{
+                    'completed': applications![0]?.applicationStage! >= 6
+                      && applications![0]?.applicationStageName == 'PostAceptance',
+                    'current_stage': applications![0]?.applicationStage! == 6  }" class="a_level">
                     <div class="content">
                       <span><a >Offer Letter</a></span>
-                      <small class="last_text">No Description yet</small>
+                      <small *ngIf="applications[0]?.invitationStatus != 'Sent'" class="last_text">No Description yet</small>
+
+                      <small *ngIf="applications[0]?.invitationStatus == 'Sent'" class="last_text">
+                        An offer letter has been sent to you.
+                        <small 
+                        (click)="showTestDetails($event, 'Offer Letter Details')"
+                        class="font-bold cursor-pointer hover:border-b hover:border-b-hrms-hoverBlue-1 !text-hrms-hoverBlue-1 !text-xl !font-hrmsCamptonMedium"> View details</small>
+                      </small>
                     </div>
                   </li>
 
-                  <li class="a_level last">
+                  <li class="a_level last"
+                  [ngClass]="{
+                    'completed': applications![0]?.applicationStage! == 7
+                      && applications![0]?.applicationStageName == 'PostAceptance' }">
                     <div class="content">
                       <span><a >Post Acceptance</a></span>
-                      <small class="last_text">No Description yet</small>
+                      <small *ngIf="applications![0]?.applicationStage!  < 7"  class="last_text">No Description yet</small>
+                      <small *ngIf="applications![0]?.acceptanceDocument == 'Pending'"  class="last_text">
+                        Provide the information and documents needed in here 
+                        <small 
+                        (click)="startUploadingDocuments()"
+                        class="font-bold cursor-pointer hover:border-b hover:border-b-hrms-hoverBlue-1 !text-hrms-hoverBlue-1 !text-xl !font-hrmsCamptonMedium"> View details</small>
+                      </small>
+                      <small *ngIf="applications![0]?.acceptanceDocument == 'Submitted'"  class="last_text">Documents Uploaded</small>
                     </div>
                   </li>
                  </ol>
@@ -242,10 +276,6 @@
            <li>
              <p class="heading">
                <span>Location</span> 
-               <!-- <span [ngClass]="{'opacity-0': relevantData.whoIsViewing != 'Others'}">
-                 <img  class="edit_button" src="../../../assets/images/edit_button.svg" alt="">
-                 <small>Edit</small>
-               </span> -->
              </p>
              <p class="text"> {{ oneApplication?.location }} </p>
            </li>
@@ -276,24 +306,6 @@
              </p>
              <p class="text">  {{ oneApplication?.deadline | date: 'mediumDate'}} </p>
            </li>
-
-           <!-- <li class="">
-              <div class="apply_contents">
-                <button *ngIf="subView == 'preview' && views == 'preview'" (click)="subView = 'apply'" class="btn-red-custom cursor-pointer">
-                  Apply for this Job
-                </button>
-
-                <button #AsidePreviewButton *ngIf="subView == 'apply'" (click)="subView = 'preview'" class="btn-red-custom cursor-pointer">
-                  Preview
-                </button>
-
-                <div class="warning">
-                  <span><img src="../../../assets/images/exclamation_mark.png" alt=""></span>
-                  <span>Please note that within <strong>a six-month period</strong>, only <strong>one position</strong> may be applied for.</span>
-                </div>
-              </div>
-          </li> -->
-
          </ul>
        </aside>
       </div>

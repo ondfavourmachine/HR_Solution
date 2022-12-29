@@ -138,7 +138,7 @@
                               <span class="test flex-grow inline-flex items-center overflow-visible gap-2">
                                 <span class="inline-flex flex-grow items-center gap-2">
                                   <small class="text-xl basis-[86%] whitespace-nowrap text-ellipsis border-b border-dashed border-hrms-bgBlue-1 !text-hrms-bgBlue-1">  {{ file?.name}} </small>
-                                  <small class="text-xl size_of_file font-bold">{{ convertToHumanReadableFileSize(file?.size) }}</small>
+                                  <small class="text-xl size_of_file font-bold">{{ sharedService.convertToHumanReadableFileSize(file?.size) }}</small>
                                 </span>
                                 <span class="w-[60%] cancelBtn_container"><small (click)="removeUploadedFile()" class="cancelBtn"></small></span>
                               </span>
@@ -223,13 +223,13 @@
                       </div> 
 
                       <div class="form-group parent_input_control">
-                        <label for="current_renumeration" class="form-labels">Current Renumeration</label>
+                        <label for="current_renumeration" class="form-labels">Current Renumeration  <small class="text-hrms-read-notification">(Annually)</small> </label>
                         <input [disabled]="disableInput" [(ngModel)]="interviewChairDetails.currentRenumeration"  (change)="formatAmount($event)" type="tel" name="current_renumeration"  placeholder="Enter current renumeration"
                         class="form-control" id="current_renumeration">  
                       </div> 
 
                       <div class="form-group parent_input_control">
-                        <label for="financial" class="form-labels">Financial Expectation/Level</label>
+                        <label for="financial" class="form-labels">Financial Expectation/Level   <small class="text-hrms-read-notification">(Annually)</small> </label>
                         <input [disabled]="disableInput" [(ngModel)]="interviewChairDetails.financialExpectation"  (change)="formatAmount($event)" type="tel" name="financial"  placeholder="Enter Financial Expectation/Level here"
                         class="form-control" id="financial">  
                       </div>
@@ -494,7 +494,7 @@
             </div>  
         </section>
     </div>
-    <div *ngIf="role == 'HRAdmin' && data?.applicantData?.chairPersonAssessed && !loggedInUserHasntGradedApplicant" 
+    <div *ngIf="(role == 'HRAdmin' || role == 'Staff') && data?.applicantData?.chairPersonAssessed && !loggedInUserHasntGradedApplicant" 
       class="w-full flex justify-end items-center gap-5 px-6">
       <button
         (click)="calculateScore($event)" 

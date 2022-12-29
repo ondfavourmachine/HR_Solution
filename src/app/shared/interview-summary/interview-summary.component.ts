@@ -58,9 +58,10 @@ appropriateDateTimeToDisplay!:string
     let schedule: Partial<ASchedule> = {};
     const {branchId, applicants, dateTime, interviewChairPerson, testTime, testInvigilators, interviewers, description, departmentId, inviteType} = this.data;
     schedule = {branchId, applicants: applicants?.map(elem => ({email: elem.email, applicatiionRef: elem.applicatiionRef})), 
-      dateTime, description, testTime, testInvigilators, interviewers, interviewChairPerson, departmentId, inviteType
+      dateTime, description, testTime, testInvigilators, interviewers, interviewChairPerson, departmentId, inviteType: !inviteType ? 6 : inviteType // lazy way of setting offer letter type. Will refactor later
       };
     'hospitalName' in this.data && this.data.hospitalName!.length > 2 ? schedule = {...schedule, hospitalName: this.data.hospitalName} : null;
+    // debugger;
     this.sharedService.loading4button(btn, 'yes', 'Creating Schedule...');
     this.scheduleService.createSchedule(schedule)
     .subscribe({
@@ -92,6 +93,7 @@ appropriateDateTimeToDisplay!:string
       case 5:
       returnVal = 'Approve Medical Invite'
       break;
+      
     }
 
     return returnVal as string;
@@ -102,7 +104,6 @@ appropriateDateTimeToDisplay!:string
     const prevText = btn.textContent as string;
     const currentlyOpenElement =  document.querySelector('.interview_summary_comp');
     currentlyOpenElement?.classList.add('shrinkUp'); 
-    // debugger;
     const data: InformationForApprovingAnAssessment = 
     {
       buttonText: this.AppropriateTextForButton(this.data.inviteType as InterviewTypesWithNumber), 
@@ -122,6 +123,7 @@ appropriateDateTimeToDisplay!:string
         if(val && val.length > 2){
           this.sharedService.loading4button(btn, 'yes', 'Approving...');
           try {
+            // debugger;
             const res = await lastValueFrom(this.scheduleService.approveSchedule({scheduleId: this.data.id as number, scheduleRef: this.data.scheduleId as string, actionType: 1, status: ScheduleApprovalNum.Approving, comment: val}));
             if(!res.hasError && (res.statusCode == '200' || res.statusCode == 200)){
               this.data.stageOfCreation == StageOfCreation.Approved

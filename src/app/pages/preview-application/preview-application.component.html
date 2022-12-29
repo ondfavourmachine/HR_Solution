@@ -230,6 +230,28 @@
         </div>
      </header>
 
+     <header *ngIf="data?.applicantData?.applicationStage == 2 && data?.applicantData?.interviewAssessed! == 4 && data?.applicantData?.approverStatus == 'Approve'">
+        <div class="first_part" [ngClass]="{'gap-20': !data?.applicantData?.hR_Admin, 'gap-5': data?.applicantData?.hR_Admin }">
+            Applicant Interview Details
+            <span class="status_container" [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen }">Invitation: 
+                <span class="status"
+                [ngClass]="
+                {'Pending': data?.applicantData?.scheduleStatus == 'Pending', 
+                 'Approved': data?.applicantData?.scheduleStatus == 'Approve'}" 
+                > {{ data?.applicantData?.scheduleStatus == 'Approve' ? 'Sent' : 'Not Sent' }} 
+              </span>
+            </span>
+            <span class="status_container" [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen }">Status: 
+               <span class="status Approved" 
+               > Passed 
+             </span>
+           </span>
+           </div>
+        <div class="second_part" >
+         <span  [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen}" ><img (click)="closeBtn()" src="../../../assets/images/close-icon.svg" alt=""></span>
+        </div>
+     </header>
+
     <div class="application_container">
         <app-applicant-image-cv-details
          [data]="data"
@@ -326,7 +348,7 @@
                                 Residential State
                             </span>
                             <span class="text">
-                                {{ data.applicantData?.residential_State }}
+                                {{ data.applicantData?.residential_State || data?.applicantData?.stateName || 'Nil' }}
                             </span>
                         </div>
                         <div class="grid_item">
@@ -335,6 +357,42 @@
                             </span>
                             <span class="text">
                                 {{ data.applicantData?.residentialAddress }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="others" *ngIf="data?.applicantData?.applicationStage == 6">
+                        <div class="grid_item">
+                            <span class="heading">Pickup Branch</span>
+                            <span class="text">{{ data?.applicantData?.pickUpBranch  || 'Nil' }}</span>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading">
+                                Pickup Date
+                            </span>
+                            <span class="text">
+                               {{ data?.applicantData?.dateTime | date:'mediumDate'  }}
+                            </span>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading">
+                                Acceptance Status
+                            </span>
+                            <span class="status"  [ngClass]="{'text-[#15A372] bg-[#E6F5EF] w-max px-3 py-1 rounded-2xl': data?.applicantData?.offerAcceptance == 'Approve', 
+                             'bg-[#FFF8E5] text-[#F89946] w-max px-3 py-1 rounded-2xl': data?.applicantData?.offerAcceptance == 'Pending'}">
+                                {{ data?.applicantData?.offerAcceptance || 'Nil' }}
+                            </span>
+                        </div>
+                    
+                    </div>
+
+                    <div class="others" *ngIf="data?.applicantData?.applicationStage == 6">
+                        <div class="grid_item">
+                            <span class="heading">
+                                Pickup Location
+                            </span>
+                            <span class="text">
+                               {{ data?.applicantData?.pickUpLocation   }}
                             </span>
                         </div>
                     </div>
@@ -353,7 +411,7 @@
                         <span class="text">{{ data?.applicantData?.hospitalName || 'Nil' }}</span>
                     </div>
                     
-                </div>
+                    </div>
                     <div class="educationalDetails">
                         <div class="grid_item">
                             <span class="heading">University</span>
@@ -451,6 +509,8 @@
                             </span>
                         </div>
                     </div>
+
+                   
 
                    
 
@@ -669,7 +729,7 @@
                 </div>
 
 
-                <div *ngIf="(data?.applicantData?.applicationStage == 5 || data?.applicantData?.applicationStage == 6) && role == 'HRAdmin' && data?.applicantData!.hR_Status == 'Pending'" [ngClass]="{'!flex': data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
+                <div *ngIf="data?.applicantData?.applicationStage == 5 && role == 'HRAdmin' && data?.applicantData!.hR_Status == 'Pending'" [ngClass]="{'!flex': data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
                     <button
                      class="btn-red-custom">
                         Fail
@@ -679,6 +739,15 @@
                      class="btn-red-custom green">
                         Pass
                     </button>
+                </div>
+
+                <div *ngIf="data?.applicantData?.applicationStage == 6 && role == 'HRAdmin' && data?.applicantData!.hR_Status == 'Pending' && data?.applicantData?.offerAcceptance == 'Pending'" [ngClass]="{'!flex': data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
+                    <button
+                    (click)="triggerAcceptanceOrRejection(5)"
+                     class="btn-red-custom">
+                        Confirm PickUp
+                    </button>
+                   
                 </div>
                 
             </footer>

@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ASchedule, StageOfCreation } from 'src/app/models/scheduleModels';
 import { ScheduleSwitching } from 'src/app/modules/schedule-master/base-schedule-switcher';
-import { InterviewSummaryComponent } from 'src/app/pages/shared/interview-summary/interview-summary.component';
+// import { InterviewSummaryComponent } from 'src/app/pages/shared/interview-summary/interview-summary.component';
 
 @Component({
   selector: 'app-an-individual-schedule',
@@ -17,7 +17,7 @@ export class AnIndividualScheduleComponent  extends ScheduleSwitching implements
   }
 
   ngOnInit(): void {
-    console.log(this.schedule?.inviteType);
+    console.log(this.schedule?.dateTime);
   }
 
   triggerParent(){
