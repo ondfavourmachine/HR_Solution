@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { ObsCallBack, Pagination, paginationOptions } from '../models/generalModels';
+// import { ApplicantSelectionComponent } from '../pages/applicant-selection/applicant-selection.component';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,7 @@ export class PaginationService  implements Pagination {
   startDate = new Date(Date.now() - 31556952000);
   endDate = Date.now();
   updatePaginationData: boolean = false;
-  updatePaginationDate: boolean = false;
+  // updatePaginationDate: boolean = false;
   constructor(private datePipe: DatePipe) { }
 
 
@@ -38,6 +39,10 @@ export class PaginationService  implements Pagination {
       sliceSecondNumber = sliceSecondNumber + parseInt(this.pageLimit.toString());
       currentPage++;
     }
+  }
+
+  getAPageOfPaginatedData<T>(page?: number): T[]{
+    return this.paginationData.get(page ?? this.currentPage) as T[];
   }
  
  generatePagesForView():void {
@@ -89,6 +94,36 @@ export class PaginationService  implements Pagination {
   this.startDate = new Date(Date.now() - 31556952000);
   this.endDate = Date.now();
   this.updatePaginationData = false;
+ }
+
+ loadNextSetOfPages<T>(obj: {ApplicationStage: number, noOfRecord?: number},  callBack: (ApplicationStage?: number, pageNumber?: number, noOfRecord?: number) => void): T[] | void{
+  const lastPageInSet = this.currentPageSet.slice(-1)[0];
+    if(this.currentPage == lastPageInSet){
+      this.prevPageSelection = this.nextPageSelection;
+      this.currentPageSet = this.arrayOfPagesSet[this.nextPageSelection];
+      this.nextPageSelection++;
+      this.currentPage = this.currentPageSet[0];
+      return this.paginationData.get(this.currentPage)!.length < 1 ? callBack(obj.ApplicationStage, this.currentPageSet[0], obj.noOfRecord) : this.getAPageOfPaginatedData(this.currentPage);
+    }else{
+      const index = this.currentPageSet.indexOf(this.currentPage);
+      this.currentPage = this.currentPageSet[index + 1];
+      return this.paginationData.get(this.currentPage)!.length < 1 ?  callBack(obj.ApplicationStage,this.currentPageSet[0], obj.noOfRecord) : this.getAPageOfPaginatedData(this.currentPage);
+    }
+ }
+
+ loadPreviousSetOfPages<T>(obj: {ApplicationStage: number, pageNumber?: number, noOfRecord?: number},  callBack: Function): T[] | void{
+  const firstPageInSet = this.currentPageSet.slice(0)[0];
+  if(this.currentPage == firstPageInSet){
+    this.nextPageSelection = this.prevPageSelection;
+    this.currentPageSet = this.arrayOfPagesSet[this.prevPageSelection - 1];
+    this.prevPageSelection--;
+    this.currentPage = this.currentPageSet[this.currentPageSet.length - 1];
+    return this.paginationData.get(this.currentPage)!.length < 1 ?  callBack(this.currentPageSet[this.currentPageSet.length - 1]) : this.getAPageOfPaginatedData(this.currentPage);
+  }else{
+    const index = this.currentPageSet.indexOf(this.currentPage);
+    this.currentPage = this.currentPageSet[index - 1];
+    return this.paginationData.get(this.currentPage)!.length < 1 ?  callBack(this.currentPageSet[index - 1]) : this.getAPageOfPaginatedData(this.currentPage);
+  }
  }
 
  fillUpPaginationMasterTableWithData(){}

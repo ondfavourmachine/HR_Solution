@@ -9,6 +9,9 @@ import { ages, convertToBytesToMB } from './small_reusable_functions';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { SuccessfulInitiationComponent } from '../shared/successful-initiation/successful-initiation.component';
 import { InterviewSummaryComponent } from '../shared/interview-summary/interview-summary.component';
+import { saveAs  } from 'file-saver';
+import * as XLSX from 'xlsx';
+import { DatePipe } from '@angular/common';
 
 
 @Injectable({
@@ -16,7 +19,7 @@ import { InterviewSummaryComponent } from '../shared/interview-summary/interview
 })
 export class SharedService {
    private fileSizeLimit: number = 2;
-  constructor(private http: HttpClient, private _snackBar:MatSnackBar, private dialog: MatDialog) {
+   constructor(private http: HttpClient, private _snackBar:MatSnackBar, private dialog: MatDialog, private datePipe: DatePipe) {
     
    }
 
@@ -202,6 +205,36 @@ export class SharedService {
     const megabyte = kilobyte * bytes;
     return `${(filesize! / megabyte).toFixed(2)}MB`
   }
+
+  downloadAsExcel(reportData: any[] | Partial<any>[], fileName: string){
+    const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    const EXCEL_EXTENSION = '.xlsx';
+    const excelBuffer = this.generateExcelFile(reportData as any[]);
+    const blob: Blob = new Blob([excelBuffer], {type: EXCEL_TYPE});
+    saveAs(blob, `${fileName}_exported${EXCEL_EXTENSION}`);
+  }
+
+  downloadAsPdf(data: any[], fileName: string) {
+    const blobPart = JSON.stringify(data);
+    const PDF_TYPE = 'application/pdf;charset=UTF-8';
+    const PDF_EXTENSION = '.pdf';
+    const blob: Blob = new Blob([blobPart], {type: PDF_TYPE});
+    saveAs(blob, `${fileName}_exported${PDF_EXTENSION}`);
+  }
+
+
+generateExcelFile(dataToConvertToExcel: Array<any>): any{
+  const workSheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToConvertToExcel);
+  const workBook: XLSX.WorkBook = {Sheets: {'data': workSheet}, SheetNames: ['data']}
+  const excelBuffer: any = XLSX.write(workBook, {bookType: 'xlsx', type: 'array'})
+  return excelBuffer;
+} 
+
+covertDateToHumanFreiendlyFormat(date: string | Date, format: string): string | null{
+  return this.datePipe.transform(date, format);
+}
+
+
   
   
 }

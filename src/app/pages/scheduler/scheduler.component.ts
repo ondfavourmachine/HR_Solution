@@ -206,8 +206,9 @@ export class SchedulerComponent extends ScheduleSwitching implements OnInit {
         const {dateTime} = elem;
         const [date, time] = dateTime.split('T');
         let modifiedTime = time.split(':').slice(0,2).join(':');
-        const timeConvertedToScheduleFormat = convertDateAndTimeToScheduleFormat(date, modifiedTime);
-        // console.log(timeConvertedToScheduleFormat);
+        let timeConvertedToScheduleFormat = convertDateAndTimeToScheduleFormat(date, modifiedTime);
+        const [timeOfDay, year, month, day] = timeConvertedToScheduleFormat.split('--');
+        month == '01' ? timeConvertedToScheduleFormat = `${timeOfDay}--${year}--1--${day}` : null;
         const actual = matrixOfDate.find(schedule => schedule.startOfBusinessHour == timeConvertedToScheduleFormat);
         const targetBusinessHourBox = matrixOfDate.find(schedule => schedule.startOfBusinessHour == actual?.endOfBusinessHour );
         targetBusinessHourBox!.schedule = elem;

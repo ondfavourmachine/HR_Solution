@@ -26,13 +26,13 @@ export interface ApplicantsSelectionResponse{
   export type ApplicantSelectionStatistics = Pick<ApplicantsSelectionResponse, 'accepted' | 'all' | 'awaiting' | 'rejected' | 'returned' | 'pending'>;
 
 export interface SelectionMethods{
-    getApplicantsForSelection() : void,
+    getApplicantsForSelection(ApplicationStage?: number, pageNumber?: number, noOfRecord?: number) : void,
     handleApplicantsFromServer(val: ApplicantsSelectionResponse): void 
     gotoApplicantView(val: AnApplication): void,
     triggerApprovalModalForAcceptingApplicant(command: PreviewActions, acceptOrReject: ApplicationApprovalStatus): void,
     applicantAboutToBeAccepted: AnApplication,
     acceptAnApplicant(command: PreviewActions, comment: string): void,
-    acceptingWasSuccessful():void
+    acceptingWasSuccessful?():void,
 }
 
 export interface NecessaryModalMethods{

@@ -1434,7 +1434,7 @@ input:focus, select:focus, textarea:focus {
         }
 
         & .passport_label{
-            @apply flex flex-wrap flex-col gap-1;
+            @apply flex flex-wrap flex-col gap-1 ;
 
             & small{ @apply text-left}
         }
@@ -1497,6 +1497,14 @@ input:focus, select:focus, textarea:focus {
             & .an_input{
                 @apply h-14 w-14 rounded-full
             }
+        }
+    }
+
+    & .important_content{
+        @apply relative overflow-visible;
+        &::after{
+            content: '*';
+            @apply absolute right-0 top-0 bottom-0 text-[1.25em] text-hrms-slightRed overflow-visible;
         }
     }
 }
@@ -1751,15 +1759,35 @@ table{
 // pagination controls
 .pagination_count{
     font-size: 1em;
-    @apply pr-5 flex gap-4 justify-between items-center w-full border border-red-500 h-[3.5rem] overflow-visible;
+    @apply pr-5 flex gap-4 justify-between items-center w-full h-[3.5rem] overflow-visible;
 
-    & > *{
+    &  *{
         @apply overflow-visible;
     }
 
+    & #records{
+        @apply w-20 pb-0 border-t-0 text-[1em] border-l-0 border-r-0 border-b h-auto mb-3 focus:p-0 
+         focus:outline-0 focus:ring-0 focus:ring-offset-0 focus:ring-transparent;
+    }
     & .a_page_number{
         font-size: 1em;
-        @apply transition-all scale-90 text-[#8F8F8F] cursor-pointer hover:scale-110 underline ;
+        @apply transition-all scale-90 text-[#8F8F8F] cursor-pointer hover:scale-110 underline;
+    }
+
+    & .prev, .next{
+        @apply transition-all justify-center items-center cursor-pointer hover:shadow-md hover:px-1
+    }
+
+    & .current{
+        text-decoration-color: #003366;
+        text-decoration-thickness: 3px;
+       @apply underline scale-110 text-hrms-genBlueColor-1;
+    }
+
+    .reducedIntensity{
+        opacity: 0.2 !important;
+        pointer-events: none;
+        @apply scale-75;
     }
 }
 
@@ -2047,7 +2075,7 @@ table{
                         display: grid;
                         grid-template-columns: repeat(auto-fit, minmax(11vw, 1fr));
                         grid-auto-rows: max-content;
-                        @apply py-8 border-b border-hrms-read-notification w-full gap-y-8 gap-x-4 overflow-visible;
+                        @apply py-8 border-b border-hrms-dull w-full gap-y-8 gap-x-4 overflow-visible;
 
                         & .grid_item{
                             @apply py-2 flex gap-1 flex-col  overflow-hidden;
@@ -2055,16 +2083,52 @@ table{
                             & .heading{
                                 font-size: .875em;
                                 @apply text-hrms-read-notification font-hrmsCamptonExtraLight font-medium overflow-hidden;
+
+                                &.modified{
+                                    @apply text-hrms-genBlueColor-1 font-semibold font-hrmsCamptonMedium pl-2;
+                                }
                             }
 
                             & .text{
                                 font-size: 1.1em;
                                 @apply text-hrms-genBlueColor-1 font-hrmsCamptonMedium h-auto font-medium overflow-hidden;
                             }
+
+                            & .download_btn{
+                                @apply px-8  py-2 rounded-3xl w-max border border-hrms-slightRed text-hrms-slightRed font-hrmsCamptonLight hover:bg-hrms-slightRed hover:text-white cursor-pointer;
+                            }
                         }
                     }
+                    & .postAcceptanceHeadings{
+                       @apply text-[1.1em] -mb-[0.7rem] font-semibold cursor-pointer text-hrms-genBlueColor-1;
+                    }
                     & .others{
-                        @apply border-b-0
+                        @apply border-b-0;
+
+                        &.postAcceptanceDetails{
+                           @apply pt-0 border-b border-hrms-dull ;
+                        }
+
+                        &.docs{
+                            grid-template-columns: repeat(auto-fit, minmax(17vw, 1fr));
+
+                            & .grid_item{
+                                @apply grid relative ml-24 overflow-visible #{!important};
+
+                                &::before{
+                                    content: '';
+                                    background-image: url(./assets/images/pdf_uploaded.svg);
+                                    background-position: center;
+                                    background-size: 89%;
+                                    background-repeat: no-repeat;
+                                    transform: translateX(-5.75rem);
+                                    @apply absolute inset-0 sm:w-[33%] md:w-[31%] lg:w-[28%] xl:w-[20%];
+                                }
+
+                            }
+                        }
+
+
                     }
                 }
 

@@ -139,7 +139,7 @@ export class ExternalCandidateDashboardComponent implements OnInit {
       small.textContent = 'View details';
       const config: MatDialogConfig = {
         width: '38vw',
-        height: typeOfResponse  == 'Test Details'  ? '42vh' : '46vh',
+        height: typeOfResponse  == 'Test Details'  ? '42vh' : '50vh',
         panelClass: 'testInviteDescriptionView', 
         data: {...result, isOfferLetterInformation: typeOfResponse  == 'Test Details' ? false: true, stage: this.applications[0].applicationStage,  applicantRefNo: this.applications[0].applicationRefNo }  
       }

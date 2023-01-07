@@ -8,14 +8,15 @@
             <img (click)="closeBtn()" src="../../../assets/images/close-icon.svg" alt=""></span>
         </div>
      </header>
-    <header *ngIf="checkIfApplicationHasApplicationStage && !checkIfChairPersonAssessed">
+    <!-- <header *ngIf="checkIfApplicationHasApplicationStage && !checkIfChairPersonAssessed">
+        <pre>testing....</pre>
         <div class="first_part gap-20">
          Applicant Information   
         </div>
         <div class="second_part" >
          <span  [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen}" ><img (click)="closeBtn()" src="../../../assets/images/close-icon.svg" alt=""></span>
         </div>
-     </header>
+     </header> -->
 
      <header *ngIf="data?.applicantData?.approverStatus == 'Pending' && !checkIfChairPersonAssessed && data?.applicantData?.hR_Status == 'Pending' && data?.applicantData?.applicationStage == 0">
         <div class="first_part" [ngClass]="{'gap-20': !data?.applicantData?.hR_Admin, 'gap-5': data?.applicantData?.hR_Admin }">
@@ -252,6 +253,31 @@
         </div>
      </header>
 
+     <header *ngIf="data?.applicantData?.applicationStage == 7  && data?.applicantData?.offerAcceptance == 'Approve'">
+        <div class="first_part" [ngClass]="{'gap-20': !data?.applicantData?.hR_Admin, 'gap-5': data?.applicantData?.hR_Admin }">
+            Applicant Interview Details
+            <span class="status_container" [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen }">Acceptance Status: 
+                <span class="status"
+                [ngClass]="
+                {'Pending': data?.applicantData?.offerAcceptance == 'Pending', 
+                 'Approved': data?.applicantData?.offerAcceptance == 'Approve'}" 
+                > {{ data?.applicantData?.offerAcceptance == 'Pending' ? 'Not Yet' : 'Accepted'  }} 
+              </span>
+            </span>
+            <span class="status_container" [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen }">Information Status: 
+                <span class="status"
+                [ngClass]="
+                {'Pending': data?.applicantData?.infoStatus == 'Pending', 
+                 'Approved': data?.applicantData?.infoStatus == 'Submitted'}" 
+                > {{ data?.applicantData?.infoStatus  }} 
+              </span>
+           </span>
+           </div>
+        <div class="second_part" >
+         <span  [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen}" ><img (click)="closeBtn()" src="../../../assets/images/close-icon.svg" alt=""></span>
+        </div>
+     </header>
+
     <div class="application_container">
         <app-applicant-image-cv-details
          [data]="data"
@@ -360,7 +386,137 @@
                             </span>
                         </div>
                     </div>
+                    <div class="others">
+                        <div class="grid_item">
+                            <span class="heading">Professional Certificate</span>
+                            <span class="text">{{ data?.applicantData?.certification || 'Nil' }}</span>
+                        </div>
+                    </div>
 
+                    <!-- reference details -->
+                    <h5 *ngIf="data?.applicantData?.applicationStage == 7 && data?.applicantData?.infoStatus == 'Submitted'" class="text-[1.1em] !-mb-[0.7rem] font-semibold cursor-pointer text-hrms-genBlueColor-1 ">Reference Details</h5>
+                    <div class="others postAcceptanceDetails" *ngIf="data?.applicantData?.applicationStage == 7 && data?.applicantData?.infoStatus == 'Submitted'">
+                        
+                        <div class="grid_item">
+                            <span class="heading">Name</span>
+                            <span class="text">{{ data?.applicantData?.referenceName  || 'Nil' }}</span>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading">
+                                Phone Number
+                            </span>
+                            <span class="text">
+                               {{ data?.applicantData?.referencePhone  }}
+                            </span>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading">
+                                Email
+                            </span>
+                            <span class="text wrap-word">
+                                {{ data.applicantData?.referenceEmail || 'Nil' }}
+                            </span>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading">
+                                Physical Address
+                            </span>
+                            <span class="text wrap-word">
+                                {{ data.applicantData?.referenceAddress }}
+                            </span>
+                        </div>
+                    
+                    </div>
+
+
+                    <h5 *ngIf="data?.applicantData?.applicationStage == 7 && data?.applicantData?.infoStatus == 'Submitted'" class="postAcceptanceHeadings">Other Details</h5>
+                    <div class="others postAcceptanceDetails" *ngIf="data?.applicantData?.applicationStage == 7 && data?.applicantData?.infoStatus == 'Submitted'">
+                        
+                        <div class="grid_item">
+                            <span class="heading">Tax ID</span>
+                            <span class="text">{{ data?.applicantData?.taxId  || 'Nil' }}</span>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading">
+                                NHF Number
+                            </span>
+                            <span class="text">
+                               {{ data?.applicantData?.nhfno || 'Nil'  }}
+                            </span>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading">
+                                Pension Number
+                            </span>
+                            <span class="text wrap-word">
+                                {{ data.applicantData?.pensionNo || 'Nil' }}
+                            </span>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading">
+                                Pension Provider
+                            </span>
+                            <span class="text wrap-word">
+                                {{ data.applicantData?.pensionProvider || 'Nil' }}
+                            </span>
+                        </div> 
+                    </div>
+
+                    <h5 *ngIf="data?.applicantData?.applicationStage == 7 && data?.applicantData?.infoStatus == 'Submitted'" class="postAcceptanceHeadings">Documents</h5>
+                    <div class="others postAcceptanceDetails docs" *ngIf="data?.applicantData?.applicationStage == 7 && data?.applicantData?.infoStatus == 'Submitted'">
+                        
+                        <div class="grid_item">
+                            <span class="heading modified">Passport Photograph</span>
+                            <a [href]="data?.applicantData?.passportUrl" [title]="data?.applicantData?.passport" target="_blank" download class="download_btn">
+                                Download
+                            </a>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading modified">
+                                O'level Result
+                            </span>
+                            <a [href]="data?.applicantData?.oLeverlUrl" [title]="data?.applicantData?.oLeverl" target="_blank" download  class="download_btn">
+                                Download
+                            </a>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading modified">
+                                Bachelor's Degree
+                            </span>
+                            <a [href]="data?.applicantData?.degreeUrl" [title]="data?.applicantData?.degree" target="_blank" download class="download_btn">
+                                Download
+                            </a>
+                        </div>
+                        <div class="grid_item">
+                            <span class="heading modified">
+                                NYSC Certificate
+                            </span>
+                            <a [href]="data?.applicantData?.nyscUrl" [title]="data?.applicantData?.nysc" target="_blank" download class="download_btn">
+                                Download
+                            </a>
+                        </div> 
+
+                        <div class="grid_item">
+                            <span class="heading modified">
+                                Marriage Certificate
+                            </span>
+                            <a [href]="data?.applicantData?.marriageUrl" [title]="data?.applicantData?.marriage" target="_blank" download class="download_btn">
+                                Download
+                            </a>
+                        </div> 
+
+                        <div class="grid_item">
+                            <span class="heading modified">
+                                Name Change
+                            </span>
+                            <a [href]="data?.applicantData?.nameChangeUrl" [title]="data?.applicantData?.nameChange" target="_blank" download class="download_btn">
+                                Download
+                            </a>
+                        </div> 
+                    </div>
+
+
+                    <!-- ends here -->
                     <div class="others" *ngIf="data?.applicantData?.applicationStage == 6">
                         <div class="grid_item">
                             <span class="heading">Pickup Branch</span>

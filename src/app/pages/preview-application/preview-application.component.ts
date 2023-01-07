@@ -1,7 +1,7 @@
 import {  Component, Inject, OnInit, } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FullInterviewerDetailsAndInterviewResponse } from 'src/app/models/applicant-selection.models';
-import { AnApplication, ApplicationApprovalStatus, ApprovalProcessStatuses, InformationForModal, PreviewActions, RequiredApplicantDetails } from 'src/app/models/generalModels';
+import { AnApplication, ApplicationApprovalStatus, ApprovalProcessStatuses, InformationForModal, PostAcceptanceInfo, PreviewActions, RequiredApplicantDetails } from 'src/app/models/generalModels';
 import { SharedService } from 'src/app/services/sharedServices';
 import { AssessmentSheetComponent } from 'src/app/shared/assessment-sheet/assessment-sheet.component';
 import { ExternalCandidateJobsComponent } from '../external-candidate-jobs/external-candidate-jobs.component';
@@ -16,7 +16,7 @@ import { ExternalCandidateJobsComponent } from '../external-candidate-jobs/exter
 export class PreviewApplicationComponent implements OnInit {
   role!: string;
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: InformationForModal<AnApplication & RequiredApplicantDetails>,
+    @Inject(MAT_DIALOG_DATA) public data: InformationForModal<AnApplication & RequiredApplicantDetails & PostAcceptanceInfo>,
     private sharedService: SharedService,
     private dialog: MatDialog,
     private matDialogRef: MatDialogRef<ExternalCandidateJobsComponent>
@@ -24,6 +24,9 @@ export class PreviewApplicationComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this.data);
+    if(Array.isArray(this.data.applicantData.certification)){
+      this.data.applicantData.certification = this.data.applicantData.certification.map((elem: {certificate: string}) => elem.certificate ).join(' , ');
+    }
     this.role = this.sharedService.getRole();
   }
 
@@ -86,6 +89,10 @@ export class PreviewApplicationComponent implements OnInit {
         componentToShrink.classList.remove('shrinkUp');
       },
      })
+  }
+
+  download<T extends AnApplication & RequiredApplicantDetails & PostAcceptanceInfo>(nameOfDoc: keyof T, applicantData?: T){
+    const file = (applicantData as T)[nameOfDoc];
   }
 
 }

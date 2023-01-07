@@ -10,3 +10,7 @@
 .interviewScores:hover .grid_item:last-child{
         @apply pr-4;
 }
+
+.text.wrap-word{
+    overflow-wrap: break-word !important;
+}

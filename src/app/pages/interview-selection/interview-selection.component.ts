@@ -1,12 +1,13 @@
 import { HttpResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute, Params } from '@angular/router';
 import { PartialObserver } from 'rxjs';
 import { ApplicantSelectionStatistics, ApplicantsSelectionResponse, SelectionMethods } from 'src/app/models/applicant-selection.models';
-import { AnApplication, PreviewActions, ApplicationApprovalStatus, RequiredQuarterFormat, InformationForModal, InformationForApprovalModal } from 'src/app/models/generalModels';
+import { AnApplication, PreviewActions, PaginationMethodsForSelectionAndAssessments, ApplicationApprovalStatus, RequiredQuarterFormat, InformationForModal, InformationForApprovalModal } from 'src/app/models/generalModels';
 import { ApplicantSelectionService } from 'src/app/services/applicant-selection.service';
 import { BroadCastService } from 'src/app/services/broad-cast.service';
+import { PaginationService } from 'src/app/services/pagination.service';
 import { SchedulerDateManipulationService } from 'src/app/services/scheduler-date-manipulation.service';
 import { SharedService } from 'src/app/services/sharedServices';
 import { ApprovalModalComponent } from 'src/app/shared/approval-modal/approval-modal.component';
@@ -17,19 +18,22 @@ import { PreviewApplicationComponent } from '../preview-application/preview-appl
   templateUrl: './interview-selection.component.html',
   styleUrls: ['./interview-selection.component.scss']
 })
-export class InterviewSelectionComponent implements OnInit, SelectionMethods {
+export class InterviewSelectionComponent implements OnInit, SelectionMethods, PaginationMethodsForSelectionAndAssessments, OnDestroy {
   applicantAboutToBeAccepted!: AnApplication;
   quartersToUse: RequiredQuarterFormat[] = [];
   isLoading: boolean = false;
   statistics: Partial<ApplicantSelectionStatistics> = {};
   applicantsToBeSelected: AnApplication[] = [];
+  noOfrecords: number = 0;
   stage: number | undefined
+  
   constructor(
     private applicationSelectionService: ApplicantSelectionService, 
     private broadCast: BroadCastService,
     private dialog: MatDialog,
     private sdm: SchedulerDateManipulationService,
     private sharedService: SharedService,
+    public pagination: PaginationService,
     private router: ActivatedRoute,
   ) {
     this.handleApplicantsFromServer = this.handleApplicantsFromServer.bind(this);
@@ -44,13 +48,35 @@ export class InterviewSelectionComponent implements OnInit, SelectionMethods {
     this.quartersToUse = this.sdm.presentQuartersInHumanReadableFormat(res); 
     
   }
-  getApplicantsForSelection(): void {
+  getApplicantsForSelection(ApplicationStage?: number, pageNumber?: number, noOfRecord?: number): void {
     this.isLoading = true;
     const pObs: PartialObserver<ApplicantsSelectionResponse> = {
       next: this.handleApplicantsFromServer,
       error: (err) => console.log(err)
     }
-    this.applicationSelectionService.getApplicants({ApplicationStage: this.stage ?? 2, PageNumber: '1', PageSize: '10'}).subscribe(pObs);
+    this.applicationSelectionService.getApplicants({ApplicationStage: ApplicationStage ?? this.stage ? this.stage : 2, PageNumber: pageNumber ? pageNumber.toString() : '1', PageSize: noOfRecord ? noOfRecord.toString() : '10'}).subscribe(pObs);
+  }
+
+  loadNextSetOfPages(){
+    const res = this.pagination.loadNextSetOfPages<AnApplication>({ApplicationStage: this.stage ? this.stage : 2, noOfRecord: this.noOfrecords},this.getApplicantsForSelection);
+    Array.isArray(res) ? this.applicantsToBeSelected = res : null;
+  }
+  loadPreviousSetOfPages(){
+    const res = this.pagination.loadPreviousSetOfPages<AnApplication>({ApplicationStage: this.stage ? this.stage : 2, noOfRecord: this.noOfrecords},this.getApplicantsForSelection);
+    Array.isArray(res) ? this.applicantsToBeSelected = res : null;
+  }
+
+  fetchRequiredNoOfRecords(){
+    this.getApplicantsForSelection(this.pagination.currentPage, this.noOfrecords)
+  }
+  selectAPageAndInformation(pageNumber: number){
+    if(this.pagination.paginationData.get(pageNumber)!.length > 0){
+      this.pagination.currentPage = pageNumber;
+      this.applicantsToBeSelected = this.pagination.getAPageOfPaginatedData<AnApplication>(pageNumber);
+      return;
+    }
+    this.pagination.currentPage = pageNumber;
+    this.getApplicantsForSelection(pageNumber);
   }
 
   handleExtraStages(val: Params){
@@ -59,11 +85,11 @@ export class InterviewSelectionComponent implements OnInit, SelectionMethods {
       switch(extraStages){
         case '02':
         this.stage = 3;
-        this.getApplicantsForSelection();
+        this.getApplicantsForSelection(3, 1, 10);
         break;
         case '03':
         this.stage = 4;
-        this.getApplicantsForSelection();
+        this.getApplicantsForSelection(4, 1, 10);
         break; 
       }
      return;
@@ -71,11 +97,15 @@ export class InterviewSelectionComponent implements OnInit, SelectionMethods {
     this.getApplicantsForSelection();  
   }
   handleApplicantsFromServer(val: ApplicantsSelectionResponse): void {
-    const { accepted, all, awaiting, pending, rejected, returned, data } = val;
+    const { accepted, all, awaiting, pending, rejected, returned, data, totalRecords, pageSize } = val;
     this.statistics = {accepted, all, awaiting, rejected, returned, pending};
     this.broadCast.broadCastStatistics(this.statistics);
+    this.pagination.paginationData.size > 0 && this.pagination.paginationData.get(1)!.length > 0 ? this.pagination.updatePaginationData = true : this.pagination.updatePaginationData = false;
+    this.pagination.calculatePagination<AnApplication>(data, totalRecords);
+    this.pagination.generatePagesForView();
     this.isLoading = false;
-    this.applicantsToBeSelected = data;
+    this.noOfrecords = pageSize;
+    this.applicantsToBeSelected = this.pagination.getAPageOfPaginatedData<AnApplication>();
   }
   gotoApplicantView(applicant: AnApplication): void {
     const data: InformationForModal<AnApplication> = { 
@@ -154,6 +184,14 @@ export class InterviewSelectionComponent implements OnInit, SelectionMethods {
 
   trackByFn(index: number, applicant: AnApplication) {
     return applicant.applicationRefNo; // or item.id
+  }
+
+  downloadExcel(){
+    this.sharedService.downloadAsExcel(this.applicantsToBeSelected, 'applicants-with-interview-invites');
+  }
+
+  ngOnDestroy(): void {
+    this.pagination.clearPaginationStuff();
   }
 
 }

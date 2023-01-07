@@ -78,7 +78,7 @@ export class AssessApplicantModalComponent implements OnInit {
      this.interviewChairDetails.currentRenumeration = this.sharedService.reformatANumber(this.interviewChairDetails.currentRenumeration as unknown as string);
      this.interviewChairDetails.financialExpectation = isNaN(parseInt(this.interviewChairDetails.financialExpectation as any)) ? this.interviewChairDetails.financialExpectation :  this.sharedService.reformatANumber(this.interviewChairDetails.financialExpectation as unknown as string);
     } 
-    this.data!.applicantData.raters!.findIndex(elem => elem.email == this.email) > -1 ? this.loggedInUserHasntGradedApplicant = true : null;
+    this.data!.applicantData.raters && this.data!.applicantData.raters!.findIndex(elem => elem.email == this.email) > -1 ? this.loggedInUserHasntGradedApplicant = true : null;
     this.loggedInUserHasntGradedApplicant ? this.getGradesByLoggedInUser() : null;
   }
 
@@ -132,7 +132,7 @@ export class AssessApplicantModalComponent implements OnInit {
     .subscribe({
       next: (val) => {
         this.sharedService.loading4button(btn, 'done', prevText as string);
-        this.sharedService.triggerSuccessfulInitiationModal('You have successfully Graded this applicant', 'Continue');
+        this.sharedService.triggerSuccessfulInitiationModal('You have successfully Graded this applicant', 'Continue', this.data.extraInfo?.callBack);
         this.dialogRef.close(PreviewActions.CLOSEANDDONOTHING);
       },
       error: (error) => {
@@ -178,7 +178,6 @@ export class AssessApplicantModalComponent implements OnInit {
       typeOfAssessment: InterviewTypesWithNumber.Test_Invite
     }
     const currentlyOpenElement =  document.querySelector('.preview_application');
-    console.log(currentlyOpenElement);
     currentlyOpenElement?.classList.add('shrinkUp'); 
     const config: MatDialogConfig = {
       width: '42vw',
@@ -198,7 +197,7 @@ export class AssessApplicantModalComponent implements OnInit {
               { applicationRefNo: applicationRefNo, status, comment: val as string}));
             this.closeBtn();
             this.sharedService.loading4button(btn, 'done', prevText as string);
-            this.sharedService.triggerSuccessfulInitiationModal(`You have successfully approved applicant's test assessment`, 'Continue to Assessment');
+            this.sharedService.triggerSuccessfulInitiationModal(`You have successfully approved applicant's test assessment`, 'Continue to Assessment', this.data.extraInfo?.callBack);
           } catch (error) {
             this.sharedService.errorSnackBar('Failed to approve assessment. Please try again later!')
             this.sharedService.loading4button(btn, 'done', prevText as string);

@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormRecord, Validators } from '@angular/forms';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, FormRecord, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { forkJoin, Observable , lastValueFrom } from 'rxjs';
+import { forkJoin, Observable , lastValueFrom, Subscription } from 'rxjs';
 import { AJob,GeneralLookUp,otherRelevantData, Gender, MaritalStatus, RequiredApplicantDetails, FormTypesForJobApplication, Views, WhoIsViewing, NYSCStrings, CandidateFiles, PreviewActions } from 'src/app/models/generalModels';
 import { ExternalApplicantService } from 'src/app/services/external-applicant.service';
 import { JobsService } from 'src/app/services/jobs.service';
@@ -14,9 +14,10 @@ const calcAgeFromDob = (val: string) => new Date(Date.now()).getFullYear() - par
 @Component({
   selector: 'app-external-candidate-jobs',
   templateUrl: './external-candidate-jobs.component.html',
-  styleUrls: ['./external-candidate-jobs.component.scss']
+  styleUrls: ['./external-candidate-jobs.component.scss'],
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExternalCandidateJobsComponent implements OnInit {
+export class ExternalCandidateJobsComponent implements OnInit, AfterViewInit {
   @ViewChild('PassportInsertionPoint') PassportInsertionPoint!: ElementRef<HTMLElement>;
   @ViewChild('CVInsertionPoint') CVInsertionPoint!: ElementRef<HTMLElement>;
   @ViewChild('PersonSpecificationsThree') PersonSpecificationsThree!: ElementRef<HTMLElement>;
@@ -29,6 +30,8 @@ export class ExternalCandidateJobsComponent implements OnInit {
   @ViewChild('ExperienceThree') ExperienceThree!: ElementRef<HTMLElement>;
   @ViewChild('FormPreviewButton') FormPreviewButton!: ElementRef<HTMLButtonElement>;
   @ViewChild('AsidePreviewButton') AsidePreviewButton!: ElementRef<HTMLButtonElement>;
+  @ViewChild('ForeignUniversities', {static: false}) ForeignUniversities!: ElementRef<HTMLDivElement>;
+  @ViewChild('LocalUniversities', {static: false}) LocalUniversities!: ElementRef<HTMLDivElement>;
   relevantData!: otherRelevantData;
   approvedJobs: AJob[] = [];
   views: Views = 'jobs';
@@ -39,12 +42,13 @@ export class ExternalCandidateJobsComponent implements OnInit {
   currentBranchInView!: any
   personalDataForm!: FormRecord<FormControl<string | null>>;
   educationRelatedRecords!: FormRecord<FormControl<string | null>>;
-  extraInformation!: FormRecord<FormControl<string | null>>;
+  extraInformation!: FormGroup;
   states: GeneralLookUp[] = [];
   nigerianUniversities: GeneralLookUp[] = [];
   degrees: GeneralLookUp[] = [];
   acceptedYearsOfNYSCCompletion: number[] = this.acceptedYearsOfCompletion();
   fileStorage: CandidateFiles = {};
+  subscriptionsToClear: (Subscription | undefined)[] = []
   
   constructor(private activatedRoute: ActivatedRoute,
      public sharedService: SharedService,
@@ -52,22 +56,39 @@ export class ExternalCandidateJobsComponent implements OnInit {
      private lookUpService: LookUpService,
      private jobservice: JobsService,
      private dialog: MatDialog,
-     private fb: FormBuilder) { }
+     private fb: FormBuilder) { 
+      // this.showAnInputForEnteringForeignUniversities = this.showAnInputForEnteringForeignUniversities.bind(this)
+     }
 
   ngOnInit(): void {
     const {category} =this.activatedRoute.snapshot.params;
     this.relevantData = {category, whoIsViewing: WhoIsViewing.EXTERNALCANDIDATE};
-    this.personalDataForm = this.getFormGroup(FormTypesForJobApplication.PERSONALDATA);
-    this.educationRelatedRecords = this.getFormGroup(FormTypesForJobApplication.EDUCATIONALRELATEDRECORDS);
+    this.personalDataForm = this.getFormGroup(FormTypesForJobApplication.PERSONALDATA) as FormRecord<FormControl<string | null>>;
+    this.educationRelatedRecords = this.getFormGroup(FormTypesForJobApplication.EDUCATIONALRELATEDRECORDS) as FormRecord<FormControl<string | null>>;
     this.extraInformation = this.getFormGroup(FormTypesForJobApplication.OTHERS)
     this.getApprovedJobs();
     this.fetchLookups();
     this.acceptedYearsOfCompletion();
-    this.dob?.valueChanges.subscribe({next: (val) => this.age?.patchValue(calcAgeFromDob(val))})
+    this.subscriptionsToClear[0] = this.dob?.valueChanges.subscribe({next: (val) => this.age?.patchValue(calcAgeFromDob(val))});
   }
 
+   showAnInputForEnteringForeignUniversities(val: string){
+    if(!isNaN(parseInt(val))){
+       this.LocalUniversities.nativeElement.classList.add('hide_field');
+       this.ForeignUniversities.nativeElement.classList.remove('hide_field');
+    }
+   }
+
+   removeForeignUniversity(){
+     this.LocalUniversities.nativeElement.classList.remove('hide_field');
+     this.ForeignUniversities.nativeElement.classList.add('hide_field');
+   }
+
+   ngAfterViewInit(): void {
+    this.subscriptionsToClear[1] = this.university?.valueChanges.subscribe({next: (val) => this.showAnInputForEnteringForeignUniversities.bind(this)(val)});
+   }
+
    fetchLookups(){
-    // const arrOfObservables = [, this.lookUpService.getUniversities, this.lookUpService.getDegrees]
     forkJoin({
       getStates: this.lookUpService.getStates(),
       getUniversities: this.lookUpService.getUniversities(),
@@ -88,7 +109,7 @@ export class ExternalCandidateJobsComponent implements OnInit {
     )
    }
 
-   getFormGroup(typeOfForm: FormTypesForJobApplication): FormRecord<FormControl<string | null>>{
+   getFormGroup(typeOfForm: FormTypesForJobApplication): FormRecord<FormControl<string | null>> | FormGroup{
     switch(typeOfForm){
       case FormTypesForJobApplication.PERSONALDATA: {
         return this.fb.record({
@@ -98,7 +119,7 @@ export class ExternalCandidateJobsComponent implements OnInit {
           email: ['', [Validators.required, Validators.pattern(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/)]],
           dob: ['', Validators.required],
           age: ['', Validators.required],
-          phone: ['', [Validators.required, Validators.pattern(/(080|070|090|091)\d{8}/)]],
+          phone: ['', [Validators.required, Validators.pattern(/(080|070|090|091|081)\d{8}/)]],
           secondaryPhone: [''],
           gender: [Gender.Male, Validators.required],
           maritalStatus: [MaritalStatus.Single, Validators.required],
@@ -120,8 +141,8 @@ export class ExternalCandidateJobsComponent implements OnInit {
         })
       }
        case FormTypesForJobApplication.OTHERS: {
-        return this.fb.record({
-          certification: [''],
+        return this.fb.group({
+          certification: this.fb.array([]),
           currentEmployer: [''],
           yearsOfExperience: ['']
         })
@@ -130,6 +151,11 @@ export class ExternalCandidateJobsComponent implements OnInit {
     
    }
   // getters for personalDataForm
+
+  get certificates(): FormArray | any{
+    return this.extraInformation.controls['certification'] as FormArray;
+  }
+
   get firstName(): AbstractControl | null{
     return this.personalDataForm.get('firstName');
   }
@@ -176,6 +202,10 @@ export class ExternalCandidateJobsComponent implements OnInit {
 
   get completedNYSC(): AbstractControl | null{
     return this.educationRelatedRecords.get('completedNYSC');
+  }
+
+  get university(): AbstractControl | null{
+    return this.educationRelatedRecords.get('universityBSc');
   }
 
 
@@ -321,6 +351,15 @@ export class ExternalCandidateJobsComponent implements OnInit {
     )
   }
 
+  addAnotherCertificate(){
+    const acertificate = this.fb.group({certificate: ''});
+    (this.certificates as FormArray).push(acertificate);
+  }
+
+  removeCertificate(certificatePosition: number){
+    (this.certificates as FormArray).removeAt(certificatePosition);
+  }
+
   applyForAJob(){
     const prevText1 = this.FormPreviewButton.nativeElement.textContent as string;
     const prevText2 = this.AsidePreviewButton.nativeElement.textContent as string;
@@ -331,6 +370,7 @@ export class ExternalCandidateJobsComponent implements OnInit {
     this.educationRelatedRecords.disable();
     this.extraInformation.disable();
     candidateDetails.yearsOfExperience = parseInt(candidateDetails.yearsOfExperience as unknown as string);
+    candidateDetails.certification = (candidateDetails.certification as Array<any>).length > 0 ? (candidateDetails.certification as Array<any>).map((elem: {certificate: string}) => elem.certificate ).join(' , '): '';
     this.externalCandidatesService.applyForJob(candidateDetails)
     .subscribe({
       next: ({info}) => {
@@ -394,6 +434,6 @@ export class ExternalCandidateJobsComponent implements OnInit {
   }
 
   ngOnDestroy(){
-    
+   this.subscriptionsToClear.length > 0 && this.subscriptionsToClear.forEach(elem => elem?.unsubscribe())
   }
 }

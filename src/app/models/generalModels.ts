@@ -252,7 +252,7 @@ export interface AGlobusBranch {
 
   export type JobAppliedForByApplicant = RequiredApplicantDetails & AnApplication;
 
-  export interface RequiredApplicantDetails{
+  export interface RequiredApplicantDetails {
     jobId: number,
     applicationRefNo: string,
     firstName: string,
@@ -339,9 +339,16 @@ export interface AGlobusBranch {
     isActive: boolean,
     offerAcceptance: ApprovalProcessStatuses
     offerRole: null | string,
+    oLeverl: string
+    oLeverlUrl: string
+    passportUrl: string,
+    degreeUrl: string,
+    nyscUrl: string,
+    nameChangeUrl: string
+    marriageUrl: string
   }
 
-  export interface AnApplication extends RequiredApplicantDetails{
+  export interface AnApplication extends RequiredApplicantDetails {
     jobTitle: string,
     dateApplied: string,
     applicationStatus: string,
@@ -423,7 +430,7 @@ export interface AGlobusBranch {
     StartDate: string,
     EndDate: string,
     PageNumber: string,
-    PageSize: string
+    PageSize: string,
   }
 
   
@@ -435,6 +442,8 @@ export interface AGlobusBranch {
   export type PaginationMap = Map<number, Array<any>>
 
   export type paginationOptions = {updatePaginationData: boolean, currentPageToSet: number}
+
+  export type MakeAnApplicationSelectionCall = (ApplicationStage?: number, pageNumber?: number, noOfRecord?: number) => void
 
   export interface Pagination{
     paginationData: PaginationMap,
@@ -453,8 +462,19 @@ export interface AGlobusBranch {
     generateStartDate(date?: Date): string,
     generateEndDate(date?: Date): string,
     clearPaginationStuff(): void,
-    updatePaginationDate: boolean,
+    loadNextSetOfPages<T>(
+      ParametersForCallingApplicationSelection: {ApplicationStage: number, noOfRecord: number}, 
+      callBack: MakeAnApplicationSelectionCall): T[] | void
+    loadPreviousSetOfPages<T>(ParametersForCallingApplicationSelection: {ApplicationStage: number, noOfRecord: number}, 
+      callBack: MakeAnApplicationSelectionCall): T[] | void
     calculatePagination<T>(data: T[], totalPage: number): void
+  }
+
+  export interface PaginationMethodsForSelectionAndAssessments{
+    loadNextSetOfPages<T>(): T[] | void
+    loadPreviousSetOfPages<T>(): T[] | void
+    fetchRequiredNoOfRecords(): void
+    selectAPageAndInformation(pageNumber: number): void 
   }
 
   // export abstract class PreviewComponentResponse{

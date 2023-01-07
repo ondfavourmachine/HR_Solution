@@ -220,16 +220,16 @@
                  <form [formGroup]="personalDataForm" class="" [ngClass]="{'!block': applicationView == 1}">
                     <div class="file_container">
                       <label for="" class="passport_label">
-                        <span>Passport Photograph</span>
+                        <span class="important_content">Passport Photograph</span>
                         <small class="text-hrms-slightRed">Maximum Size is 2mb</small>
                       </label>
                       <div class="input_group passport_input"> 
                         <div #PassportInsertionPoint class="front_facing"><small>Click here to Upload</small></div>
-                        <input type="file" (change)="insertImageIntoFileStorage($event)" class="an_input back_facing" placeholder="">
+                        <input type="file" accept=".jpeg, .jpg, .png" (change)="insertImageIntoFileStorage($event)" class="an_input back_facing" placeholder="">
                       </div>
                    </div>
                   <div class="form_fields">
-                    <label for="">Full Name</label>
+                    <label for="" class="important_content">Full Name</label>
                     <div class="input_group">
                       <div class="input_sub_group">
                          <small 
@@ -251,7 +251,7 @@
                   </div>
 
                  <div class="form_fields">
-                  <label for="">Email Address</label>
+                  <label for="" class="important_content">Email Address</label>
                   <div class="input_group">  
                     <small 
                         [ngClass]="{'required': email?.touched && email?.errors}" 
@@ -262,7 +262,7 @@
                 </div>
 
                 <div class="form_fields">
-                  <label for="">Date of Birth</label>
+                  <label for="" class="important_content">Date of Birth</label>
                    <div class="input_group">                    
                     <div class="input_sub_group">
                       <small 
@@ -279,7 +279,7 @@
                 </div>
 
                 <div class="form_fields">
-                  <label for="">Mobile Number</label>
+                  <label for="" class="important_content">Mobile Number</label>
                   <div class="input_group">
                     <small 
                         [ngClass]="{'required': phone?.touched && phone?.errors}" 
@@ -294,7 +294,7 @@
                 </div>
 
                 <div class="form_fields_with_radios">
-                   <label for="">Gender</label>
+                   <label for="" class="important_content">Gender</label>
                    <div class="input_group_radio">                    
                     <input formControlName="gender" name="gender" value="Male" type="radio" class="an_input half" id="male" >
                     <label for="male">Male</label>
@@ -307,7 +307,7 @@
                 </div>
 
                 <div class="form_fields_with_radios">
-                  <label for="">Marital Status</label>
+                  <label for="" class="important_content">Marital Status</label>
                   <div class="input_group_radio">  
                                    
                    <input formControlName="maritalStatus" name="maritalStatus" value="Single" type="radio" class="an_input half" id="single" >
@@ -327,7 +327,7 @@
 
 
                 <div class="form_fields">
-                  <label for="">Residential State</label>
+                  <label for="" class="important_content">Residential State</label>
                   <div class="input_group">  
                     <small 
                         [ngClass]="{'required': state?.touched && state?.errors}" 
@@ -341,7 +341,7 @@
                 </div>
 
                 <div class="form_fields">
-                  <label for="">Residential Address</label>
+                  <label for="" class="important_content">Residential Address</label>
                   <div class="input_group">   
                     <small 
                         [ngClass]="{'required': residentialAddress?.touched && residentialAddress?.errors}" 
@@ -355,24 +355,34 @@
                  <form 
                    [formGroup]="educationRelatedRecords"
                    action="" class="" [ngClass]="{'!block': applicationView == 2}">
-                  <div class="form_fields">
+                  <div class="form_fields" #LocalUniversities>
                     <label for="universityBsc" class="passport_label">
-                      <span>University</span>
+                      <span class="important_content">University</span>
                       <small>First Degree</small>
                     </label>
                     <div class="input_group">                    
-                      <!-- <input formControlName="universityBSc" id="universityBsc"  type="text" class="an_input full" placeholder="First Degree"> -->
-
                       <select formControlName="universityBSc" class="a_select full" id="universityBsc">
                         <option value="" selected>Select a university</option>
+                        <option value="2" selected>Enter name of university</option>
                         <option [value]="university.name" *ngFor="let university of nigerianUniversities">
                           {{ university?.name }}
                         </option>
                       </select>
                     </div>
                   </div>
+                  <div class="form_fields hide_field" #ForeignUniversities>
+                    <label for="foreignUniversity" class="passport_label">
+                      <span class="important_content">University</span>
+                      <small>First Degree</small>
+                    </label>
+                    <div class="input_group">                    
+                      <input formControlName="universityBSc" id="foreignUniversity" 
+                        type="text" name="foreignUniversity"  class="an_input w-9/12" placeholder="Enter name of university">
+                        <small (click)="removeForeignUniversity()" class="px-3 self-end rounded-2xl py-1 border border-hrms-slightRed cursor-pointer hover:text-white hover:bg-hrms-slightRed bg-transparent text-hrms-slightRed"> remove entry</small>
+                    </div>
+                  </div>
                   <div class="form_fields">
-                    <label for="degree">Degree</label>
+                    <label for="degree" class="important_content">Degree</label>
                     <div class="input_group">                    
                       <!-- <input formControlName="degree"  type="text" id="degree"
                        class="an_input full" placeholder="First Degree"> -->
@@ -388,7 +398,7 @@
                     </div>
                   </div>
                   <div class="form_fields">
-                    <label for="">Class of Degree</label>
+                    <label for="" class="important_content">Class of Degree</label>
                     <div class="input_group">                    
                       <select formControlName="classOfDegree" class="a_select full">
                         <option value="" selected>Select a Class of Degree</option>
@@ -400,7 +410,7 @@
                   </div>
 
                   <div class="form_fields">
-                    <label for="courseofStudy">Course of Study</label>
+                    <label for="courseofStudy" class="important_content">Course of Study</label>
                     <div class="input_group">                    
                       <input formControlName="courseofStudy" 
                        id="courseofStudy" type="text" class="an_input full" placeholder="Course">
@@ -408,13 +418,21 @@
                   </div>
 
                   <div class="form_fields">
-                    <label for="" class="passport_label">
+                    <label for="universityMSc" class="passport_label">
                       <span>University</span>
                       <small>Master Degree(Optional)</small>
                     </label>
                     <div class="input_group">                    
-                      <input formControlName="universityMSc" type="text" class="an_input full" placeholder="Master">
+                      <select formControlName="universityMSc" class="a_select full" id="universityMSc">
+                        <option value="" selected>Select a university</option>
+                        <option value="" selected>Enter name of university</option>
+                        <option [value]="university.name" *ngFor="let university of nigerianUniversities">
+                          {{ university?.name }}
+                        </option>
+                      </select>
                     </div>
+
+
                   </div>
 
                   <div class="form_fields">
@@ -429,7 +447,7 @@
                   </div>
 
                   <div class="form_fields_with_radios">
-                    <label for="">Completed NYSC</label>
+                    <label for="" class="important_content">Completed NYSC</label>
                     <div class="input_group_radio">                    
                      <input value="Completed" 
                        formControlName="completedNYSC" 
@@ -460,7 +478,7 @@
                     <!-- {{ completedNYSC?.value }} -->
                   <div class="form_fields" [ngClass]="{'disabled': completedNYSC?.value != 'Completed'}">
                     <label for="" class="passport_label">
-                      <span>Year of Completion</span>
+                      <span class="important_content">Year of Completion</span>
                       <small>or year of exemption</small>
                     </label>
                     <div class="input_group">                    
@@ -476,7 +494,7 @@
                  <form [formGroup]="extraInformation" class="" [ngClass]="{'!block': applicationView == 3}">
                   <div class="file_container">
                     <label for="" class="passport_label">
-                      <span>Curriculum Vitae</span>
+                      <span class="important_content">Curriculum Vitae</span>
                       <small class="w-full text-hrms-lightRed-bg">Only Word Format</small>
                     </label>
                     <div class="input_group curriculum_vitae"> 
@@ -495,23 +513,31 @@
                       <span>Professional Certificate</span>
                       <small>Optional</small>
                     </label>
-                    <div class="input_group">                    
-                      <input formControlName="certification" type="text" class="an_input full" placeholder="Professional">
+                    <div class="input_group"> 
+                      <ng-container formArrayName="certification">
+                        <ng-container [formGroup]="cert" *ngFor="let cert of certificates.controls; index as i">
+                          <input formControlName="certificate" type="text" class="an_input w-9/12" placeholder="Professional">
+                          <small (click)="removeCertificate(i)" class="px-3 self-end rounded-2xl py-1 border border-hrms-slightRed cursor-pointer hover:text-white hover:bg-hrms-slightRed bg-transparent text-hrms-slightRed"> remove</small>
+                        </ng-container>  
+                      </ng-container>                   
+                      
 
                       <div class="addition_panel">
                         <span class="-mt-2"><img src="../../../assets/images/add.svg" alt=""></span>
-                        <span>Add Another certificate</span>
+                        <span class="hover:border hover:border-hrms-read-notification cursor-pointer
+                           px-3 py-1 rounded-3xl" 
+                         (click)="addAnotherCertificate()" >Add Another certificate</span>
                       </div>
                     </div>
                   </div>
                    
                   <div class="form_fields">
                     <label for="" class="passport_label">
-                      <span>Year of Experience</span>
+                      <span>Years of Experience</span>
                       <small>Optional</small>
                     </label>
                     <div class="input_group ml-4">                    
-                      <input formControlName="yearsOfExperience" type="text" class="an_input full" placeholder="Last name">
+                      <input formControlName="yearsOfExperience" type="text" class="an_input full" placeholder="Example 2, 4, 10 etc.">
                     </div>
                   </div>
 
@@ -521,20 +547,20 @@
                       <small>Optional</small>
                     </label>
                     <div class="input_group ml-4">                    
-                      <input formControlName="currentEmployer" type="text" class="an_input full" placeholder="Last name">
+                      <input formControlName="currentEmployer" type="text" class="an_input full" placeholder="Eg AbokiNetwork Inc.">
                     </div>
                   </div>
 
                  </form>
 
               <div class="button_fields">
-                <!--  -->
+                <!-- [disabled]="enableNextButtonsForPersonal",  [disabled]="educationRelatedRecords.invalid"  -->
                 <a (click)="gotoPreviousApplicationForm()" >Previous</a>
                  <button class="btn-red-custom" 
-                  [disabled]="enableNextButtonsForPersonal"
+                 [disabled]="enableNextButtonsForPersonal"
                   *ngIf="applicationView == 1"  (click)="gotoNextApplicationForm()" >Next</button>
                   <button class="btn-red-custom" 
-                  [disabled]="educationRelatedRecords.invalid"
+                  [disabled]="educationRelatedRecords.invalid" 
                   *ngIf="applicationView == 2" (click)="gotoNextApplicationForm()">Next</button>
                 <button class="btn-red-custom w-auto" 
                  [disabled]="enablePreviewButtonForOthers"

@@ -5,7 +5,7 @@
              [quartersToUse]="quartersToUse"
              ></app-table-search-params-with-download-icons>
             <div class="download_icons">
-                <span><img src="../../../assets/images/excel_icon.svg" alt="">Excel</span>
+                <span (click)="downloadExcel()"><img src="../../../assets/images/excel_icon.svg" alt="">Excel</span>
                 <span><img src="../../../assets/images/pdf_icon.svg" alt="">Pdf</span>
             </div>
         </div>
@@ -133,32 +133,32 @@
             </div>
         </div>  
         
-        <div class="pagination_count !hidden">
-            <div class="form-group w-auto flex gap-3 px-1">
+        <div class="pagination_count">
+            <div class="form-group w-auto flex gap-3 pl-6 pr-1">
                 <input
-                 
-                 
-                 name="records"
-                 type="number" class="w-12 pb-0 border-t-0 border-l-0 border-r-0 border-b border-b-ro-hoverBlue-1 h-6 mb-3">
-                <small class="self-center text-[#8F8F8F]">Records</small>
+                 id="records"
+                 (change)="fetchRequiredNoOfRecords()"
+                 [(ngModel)]="noOfRecords"
+                 name="records" type="number" >
+                <label for="records" class="self-center text-[#8F8F8F]">Records</label>
             </div>
-            <div class="flex-grow flex items-center justify-end  border border-black">
-                <div
-             
-             
-             class="prev transition-all justify-center items-center cursor-pointer hover:shadow-md hover:px-1">
-                <span class="h-5 flex items-center"><img class="max-w-[80%]" src="../../../assets/images/chevron_left.svg" alt=""></span>
-            </div>
-             
+            <div class="flex-grow gap-10 flex items-center justify-end">
+                <div (click)="loadPreviousSetOfPages()" [ngClass]="{'reducedIntensity': pagination.prevPageSelection == 0 }" class="prev ">
+                   <span class="h-5 flex items-center"><img class="max-w-[80%]" src="../../../assets/images/chevron_left.svg" alt=""></span>
+                </div>
             <div class="pages flex gap-4">
                 <span 
-                class="a_page_number">
-                1
+                *ngFor="let pageNumber of pagination.currentPageSet; index as i"
+                class="a_page_number"
+                (click)="selectAPageAndInformation(pageNumber)"
+                [ngClass]="{'current': pagination.currentPage == pageNumber }">
+                  {{ pageNumber }}
                </span>
             </div>
             <div 
-             
-             class="next transition-all flex justify-center items-center cursor-pointer hover:shadow-md hover:px-1">
+            (click)="loadNextSetOfPages()"
+            [ngClass]="{'reducedIntensity': pagination.currentPageSet.length < 4 }"
+             class="next ">
                 <span class="h-5 flex items-center"><img class="max-w-[80%]" src="../../../assets/images/chevron_right.svg" alt="">
                 </span>
             </div>

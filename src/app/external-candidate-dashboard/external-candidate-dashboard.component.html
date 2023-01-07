@@ -161,7 +161,7 @@
               <div [ngClass]="{'block': subView == 'track application', '!hidden': subView == 'preview'}" class="preview_details_container">
                  <ol class="application_levels">
                   <li [ngClass]="{'completed': applications![0]?.applicationStage! > 0, 
-                    'current_stage': applications![0]?.applicationStage! == 0 && applications![0]?.approverStatus == 'Awaiting'}" 
+                    'current_stage': applications![0]?.applicationStage! == 0 && applications![0]?.approverStatus == 'Pending'}" 
                       class="a_level">
                     <div class="content">
                       <span><a > {{ applications![0]?.approverStatus == 'Approve' ?  'Application': 'Application'}} </a> 

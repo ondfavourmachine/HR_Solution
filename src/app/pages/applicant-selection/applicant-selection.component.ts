@@ -1,10 +1,10 @@
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 // import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
 // import { MatDatepicker } from '@angular/material/datepicker';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { PartialObserver } from 'rxjs';
-import { AGlobusBranch, AnApplication, ApplicationApprovalStatus, BaseResponse, InformationForApprovalModal, InformationForModal, PreviewActions, RequiredQuarterFormat, tabs } from 'src/app/models/generalModels';
+import { AGlobusBranch, AnApplication, ApplicationApprovalStatus, BaseResponse, InformationForApprovalModal, InformationForModal, PaginationMethodsForSelectionAndAssessments, PreviewActions, RequiredQuarterFormat, tabs } from 'src/app/models/generalModels';
 import { ApplicantSelectionService } from 'src/app/services/applicant-selection.service';
 import { SharedService } from 'src/app/services/sharedServices';
 import { PreviewApplicationComponent } from 'src/app/pages/preview-application/preview-application.component';
@@ -13,19 +13,23 @@ import { SchedulerDateManipulationService } from 'src/app/services/scheduler-dat
 import { HttpResponse } from '@angular/common/http';
 import { ApplicantsSelectionResponse, SelectionMethods } from 'src/app/models/applicant-selection.models';
 import { BroadCastService } from 'src/app/services/broad-cast.service';
-import { AssessmentSheetComponent } from 'src/app/shared/assessment-sheet/assessment-sheet.component';
+import { PaginationService } from 'src/app/services/pagination.service';
+import {  jsPDF } from "jspdf";
+import autoTable from 'jspdf-autotable';
+import {UserOptions} from 'jspdf-autotable';
+// import { AssessmentSheetComponent } from 'src/app/shared/assessment-sheet/assessment-sheet.component';
 
 
 @Component({
   selector: 'app-applicant-selection',
   templateUrl: './applicant-selection.component.html',
-  styleUrls: ['./applicant-selection.component.scss']
+  styleUrls: ['./applicant-selection.component.scss'],
 })
-export class ApplicantSelectionComponent implements OnInit, SelectionMethods  { 
+export class ApplicantSelectionComponent implements OnInit, SelectionMethods,PaginationMethodsForSelectionAndAssessments, OnDestroy  { 
   isLoading: boolean = false;
   quartersToUse: RequiredQuarterFormat[] = [];
   globusBranches: AGlobusBranch[] = [];
- 
+  noOfrecords: number = 0
   // range!: FormGroup;
   
   selectedQuarter!: number;
@@ -36,7 +40,8 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods  {
     private dialog: MatDialog,
     private applicationSelectionService: ApplicantSelectionService,
     private broadCast: BroadCastService,
-    private sdm: SchedulerDateManipulationService
+    private sdm: SchedulerDateManipulationService,
+    public pagination: PaginationService
     ) {
       this.handleApplicantsFromServer = this.handleApplicantsFromServer.bind(this);
       this.triggerApprovalModalForAcceptingApplicant = this.triggerApprovalModalForAcceptingApplicant.bind(this);
@@ -52,13 +57,13 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods  {
     
   }
 
-  getApplicantsForSelection(){
+  getApplicantsForSelection(ApplicationStage?: number, pageNumber?: number, noOfRecord?: number){
     this.isLoading = true;
     const pObs: PartialObserver<ApplicantsSelectionResponse> = {
       next: this.handleApplicantsFromServer,
       error: (err) => console.log(err)
     }
-    this.applicationSelectionService.getApplicants({PageNumber: '1', PageSize: '15'}).subscribe(pObs);
+    this.applicationSelectionService.getApplicants({ApplicationStage: ApplicationStage ?? 0,  PageNumber: pageNumber ? pageNumber.toString() : '1', PageSize: noOfRecord ? noOfRecord.toString() : '10'}).subscribe(pObs);
   }
 
   getGlobusBranchLocations(){
@@ -70,12 +75,16 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods  {
   }
 
   handleApplicantsFromServer(val: ApplicantsSelectionResponse){
-    const { accepted, all, awaiting, pending, rejected, returned, data } = val;
+    const { accepted, all, awaiting, pending, rejected, returned, data, pageSize, totalRecords } = val;
     const statistics = {accepted, all, awaiting, rejected, returned, pending};
     this.broadCast.broadCastStatistics(statistics);
+    this.pagination.paginationData.size > 0 && this.pagination.paginationData.get(1)!.length > 0 ? this.pagination.updatePaginationData = true : this.pagination.updatePaginationData = false;
+    this.pagination.calculatePagination<AnApplication>(data, totalRecords);
+    this.pagination.generatePagesForView();
     this.isLoading = false;
-    this.applicantsToBeSelected = data;
-    // console.log(this.applicantsToBeSelected);
+    this.noOfrecords = pageSize
+    this.applicantsToBeSelected = this.pagination.getAPageOfPaginatedData<AnApplication>();
+    console.log(this.applicantsToBeSelected);
   }
 
   triggerApprovalModalForAcceptingApplicant(command: PreviewActions, acceptOrReject: ApplicationApprovalStatus){
@@ -156,9 +165,33 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods  {
     //   width: '54vw',
     //   height: '60vh',
     // }
-    //  const dialogRef = this.dialog.open(AssessmentSheetComponent, config);
+    //  const dialogRef = this.dialog.open(AssessmentSheetComponent, config);  
+  }
 
-    
+  loadNextSetOfPages(){
+    const res = this.pagination.loadNextSetOfPages<AnApplication>(
+      {ApplicationStage: 0, noOfRecord: this.noOfrecords},
+      this.getApplicantsForSelection);
+    Array.isArray(res) ? this.applicantsToBeSelected = res : null;
+  }
+
+  selectAPageAndInformation(pageNumber: number){
+    if(this.pagination.paginationData.get(pageNumber)!.length > 0){
+      this.pagination.currentPage = pageNumber;
+      this.applicantsToBeSelected = this.pagination.getAPageOfPaginatedData<AnApplication>(pageNumber);
+      return;
+    }
+    this.pagination.currentPage = pageNumber;
+    this.getApplicantsForSelection(pageNumber);
+  }
+
+  fetchRequiredNoOfRecords(){
+    this.getApplicantsForSelection(this.pagination.currentPage, this.noOfrecords)
+  }
+
+  loadPreviousSetOfPages(){
+    const res = this.pagination.loadPreviousSetOfPages<AnApplication>({ApplicationStage: 0, noOfRecord: this.noOfrecords},this.getApplicantsForSelection);
+    Array.isArray(res) ? this.applicantsToBeSelected = res : null;
   }
 
    statusToShow(applicant: AnApplication): string{
@@ -166,6 +199,38 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods  {
     if(applicant.approverStatus == 'Awaiting') return 'Awaiting';
     if (applicant.approverStatus == 'Approve' && applicant.hR_Status == 'Approve') return 'Approve';
      else return 'Pending';
+  }
+  downloadExcel(){
+    this.sharedService.downloadAsExcel(this.applicantsToBeSelected, 'applicants-selected');
+  }
+
+  downloadAsPdf(){
+    const columns: string[] = ['Serial_Number', 'Applicant_Name', 'Email', 'Age', 'Job_Title', 'Course', 'Date_Applied'];
+    const rows =  this.applicantsToBeSelected.map((elem, index) => {
+      return [
+        index > 8 ? `${index + 1}` : `0${index + 1}`,
+        `${elem.firstName} ${elem.middleName} ${elem.lastName}`,
+        `${elem.email}`,
+        `${elem.age.toString()}`,
+        `${elem.jobTitle || elem?.position}`,
+        `${elem.courseofStudy}`,
+        `${this.sharedService.covertDateToHumanFreiendlyFormat(elem.dateApplied, 'medium')}`
+      ]
+    })
+  var doc =  new jsPDF('landscape', 'mm', [320, 320]);
+  const options:UserOptions = {
+    head: [columns],
+    body: rows,
+    headStyles: {
+      fillColor: '#F4F7FF',
+      textColor: 'black'
+    }
+  }
+  autoTable(doc, options)
+  doc.save('applicants_selected.pdf');
+  }
+  ngOnDestroy(): void {
+    this.pagination.clearPaginationStuff();
   }
 }
 

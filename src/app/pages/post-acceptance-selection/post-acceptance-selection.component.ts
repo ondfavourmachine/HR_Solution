@@ -1,11 +1,12 @@
 import { HttpResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { PartialObserver } from 'rxjs';
 import { ApplicantSelectionStatistics, ApplicantsSelectionResponse, SelectionMethods } from 'src/app/models/applicant-selection.models';
-import { AnApplication, PreviewActions, ApplicationApprovalStatus, RequiredQuarterFormat, InformationForModal, InformationForApprovalModal } from 'src/app/models/generalModels';
+import { AnApplication, PreviewActions, ApplicationApprovalStatus, RequiredQuarterFormat, InformationForModal, InformationForApprovalModal, PaginationMethodsForSelectionAndAssessments } from 'src/app/models/generalModels';
 import { ApplicantSelectionService } from 'src/app/services/applicant-selection.service';
 import { BroadCastService } from 'src/app/services/broad-cast.service';
+import { PaginationService } from 'src/app/services/pagination.service';
 import { SchedulerDateManipulationService } from 'src/app/services/scheduler-date-manipulation.service';
 import { SharedService } from 'src/app/services/sharedServices';
 import { ApprovalModalComponent } from 'src/app/shared/approval-modal/approval-modal.component';
@@ -16,17 +17,19 @@ import { PreviewApplicationComponent } from '../preview-application/preview-appl
   templateUrl: './post-acceptance-selection.component.html',
   styleUrls: ['./post-acceptance-selection.component.scss']
 })
-export class PostAcceptanceSelectionComponent implements OnInit, SelectionMethods {
+export class PostAcceptanceSelectionComponent implements OnInit, SelectionMethods, PaginationMethodsForSelectionAndAssessments, OnDestroy {
   applicantAboutToBeAccepted!: AnApplication;
   quartersToUse: RequiredQuarterFormat[] = [];
   isLoading: boolean = false;
   statistics: Partial<ApplicantSelectionStatistics> = {};
   applicantsToBeSelected: AnApplication[] = [];
+  noOfRecords: number = 0;
   constructor(
     private applicationSelectionService: ApplicantSelectionService, 
     private broadCast: BroadCastService,
     private dialog: MatDialog,
     private sdm: SchedulerDateManipulationService,
+    public pagination: PaginationService,
     private sharedService: SharedService,
   ) { 
     this.handleApplicantsFromServer = this.handleApplicantsFromServer.bind(this);
@@ -39,21 +42,45 @@ export class PostAcceptanceSelectionComponent implements OnInit, SelectionMethod
     this.quartersToUse = this.sdm.presentQuartersInHumanReadableFormat(res); 
     this.getApplicantsForSelection();
   }
-  getApplicantsForSelection(): void {
+  getApplicantsForSelection(ApplicationStage?: number, pageNumber?: number, noOfRecord?: number): void {
     this.isLoading = true;
     const pObs: PartialObserver<ApplicantsSelectionResponse> = {
       next: this.handleApplicantsFromServer,
       error: (err) => console.log(err)
     }
-    this.applicationSelectionService.getApplicants({ApplicationStage: 7, PageNumber: '1', PageSize: '10'}).subscribe(pObs);
+    this.applicationSelectionService.getApplicants({ApplicationStage: ApplicationStage ?? 7, PageNumber: pageNumber ? pageNumber.toString() : '1', PageSize: noOfRecord ? noOfRecord.toString() : '10'}).subscribe(pObs);
+  }
+  loadNextSetOfPages(){
+    const res = this.pagination.loadNextSetOfPages<AnApplication>({ApplicationStage: 7, noOfRecord: this.noOfRecords},this.getApplicantsForSelection);
+    Array.isArray(res) ? this.applicantsToBeSelected = res : null;
+  }
+  loadPreviousSetOfPages(){
+    const res = this.pagination.loadPreviousSetOfPages<AnApplication>({ApplicationStage: 7, noOfRecord: this.noOfRecords},this.getApplicantsForSelection);
+    Array.isArray(res) ? this.applicantsToBeSelected = res : null;
+  }
+
+  fetchRequiredNoOfRecords(){
+    this.getApplicantsForSelection(this.pagination.currentPage, this.noOfRecords)
+  }
+  selectAPageAndInformation(pageNumber: number){
+    if(this.pagination.paginationData.get(pageNumber)!.length > 0){
+      this.pagination.currentPage = pageNumber;
+      this.applicantsToBeSelected = this.pagination.getAPageOfPaginatedData<AnApplication>(pageNumber);
+      return;
+    }
+    this.pagination.currentPage = pageNumber;
+    this.getApplicantsForSelection(pageNumber);
   }
   handleApplicantsFromServer(val: ApplicantsSelectionResponse): void {
-    const { accepted, all, awaiting, pending, rejected, returned, data } = val;
+    const { accepted, all, awaiting, pending, rejected, returned, data, totalRecords, pageSize } = val;
     this.statistics = {accepted, all, awaiting, rejected, returned, pending};
     this.broadCast.broadCastStatistics(this.statistics);
+    this.pagination.paginationData.size > 0 && this.pagination.paginationData.get(1)!.length > 0 ? this.pagination.updatePaginationData = true : this.pagination.updatePaginationData = false;
+    this.pagination.calculatePagination<AnApplication>(data, totalRecords);
+    this.pagination.generatePagesForView();
     this.isLoading = false;
-    this.applicantsToBeSelected = data;
-    console.log(this.applicantsToBeSelected);
+    this.noOfRecords = pageSize;
+    this.applicantsToBeSelected = this.pagination.getAPageOfPaginatedData<AnApplication>();
   }
   gotoApplicantView(applicant: AnApplication): void {
     const data: InformationForModal<AnApplication> = { 
@@ -103,15 +130,23 @@ export class PostAcceptanceSelectionComponent implements OnInit, SelectionMethod
       comment,
     }).subscribe({
       next:(val) => {
-        if(!val.hasError)this.acceptingWasSuccessful();
+        if(!val.hasError) null;
          }, 
       error: (err: HttpResponse<any>) => {
         const {status} = err;
         status == 403 ? this.sharedService.errorSnackBar('You are not authorized to accept this applicant') : this.sharedService.errorSnackBar('An error occured while trying to accept applicant!');
       }})
   }
-  acceptingWasSuccessful(): void {}
+  // acceptingWasSuccessful(): void {}
   trackByFn(index: number, applicant: AnApplication) {
     return applicant.applicationRefNo; // or item.id
+  }
+
+  downloadExcel(){
+    this.sharedService.downloadAsExcel(this.applicantsToBeSelected, 'applicants-with-uploaded-docs');
+  }
+
+  ngOnDestroy(): void {
+    this.pagination.clearPaginationStuff();
   }
 }

@@ -11,7 +11,11 @@ export const environment = {
     applyForJob: 'Application/AddApplication',
     updateApplicantApplication: 'Application/Upload',
     applicantJobs: 'Application/GetApplicantJobs',
-    getTestDetails:'Application/GetApplicantTestDetailByEmail' 
+    getTestDetails:'Application/GetApplicantTestDetailByEmail' ,
+    getOfferLetterDetails: 'Application/GetApplicantOfferDetailByEmail',
+    acceptOrRejectOffer: 'ApplicantOfferLetter/AddOfferLetter',
+    addReferences: 'PostAcceptanceDetails/AddApplication',
+    addDocumentsForAcceptance: 'PostAcceptanceDetails/Upload'
   },
 
   schedule:{

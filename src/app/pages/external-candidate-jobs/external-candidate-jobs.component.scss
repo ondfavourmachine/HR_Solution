@@ -23,6 +23,11 @@
     @apply overflow-visible;
 }
 
+.form_fields{
+    opacity: 1 !important;
+    transition: opacity 1s ease-in-out, height 350ms ease-in-out 1s;
+}
+
 
 .input_group{
     @apply relative;
@@ -89,7 +94,13 @@
 }
 
 .form_fields.disabled{
-    @apply opacity-30 pointer-events-none;
+    @apply opacity-30 pointer-events-none #{!important};
+} 
+
+.form_fields.hide_field{
+    opacity: 0 !important;
+    height: 0px !important;
+    // display: none;
 } 
 
 
