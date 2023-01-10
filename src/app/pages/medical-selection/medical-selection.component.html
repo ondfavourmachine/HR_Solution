@@ -176,7 +176,7 @@
             </div>
             <div 
             (click)="loadNextSetOfPages()"
-            [ngClass]="{'reducedIntensity': pagination.currentPageSet.length < 4 }"
+            [ngClass]="{'reducedIntensity':  pagination?.currentPageSet && pagination?.currentPageSet!.length < 4 }"
              class="next ">
                 <span class="h-5 flex items-center"><img class="max-w-[80%]" src="../../../assets/images/chevron_right.svg" alt="">
                 </span>

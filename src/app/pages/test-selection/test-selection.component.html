@@ -177,16 +177,16 @@
                 </div>
             <div class="pages flex gap-4">
                 <span 
-                *ngFor="let pageNumber of pagination.currentPageSet; index as i"
+                *ngFor="let pageNumber of pagination?.currentPageSet; index as i"
                 class="a_page_number"
                 (click)="selectAPageAndInformation(pageNumber)"
-                [ngClass]="{'current': pagination.currentPage == pageNumber }">
+                [ngClass]="{'current': pagination?.currentPage == pageNumber }">
                   {{ pageNumber }}
                </span>
             </div>
             <div 
             (click)="loadNextSetOfPages()"
-            [ngClass]="{'reducedIntensity': pagination.currentPageSet.length < 4 }"
+            [ngClass]="{'reducedIntensity':  pagination?.currentPageSet && pagination?.currentPageSet!.length < 4 }"
              class="next ">
                 <span class="h-5 flex items-center"><img class="max-w-[80%]" src="../../../assets/images/chevron_right.svg" alt="">
                 </span>
