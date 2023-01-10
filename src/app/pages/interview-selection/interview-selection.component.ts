@@ -143,7 +143,7 @@ export class InterviewSelectionComponent implements OnInit, SelectionMethods, Pa
       const dialog = this.dialog.open(ApprovalModalComponent, config);
       dialog.afterClosed().subscribe(
         (val: SpecialCandidate | string) => {
-          debugger;
+          // debugger;
           if(val instanceof SpecialCandidate){
             this.acceptAnApplicant(PreviewActions.CLOSEANDSUBMIT, val, acceptOrReject == 5 ? 2 : acceptOrReject == 2 ? 2 : 3)
             return;

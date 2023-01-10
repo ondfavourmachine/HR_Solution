@@ -91,11 +91,12 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
   }
 
   triggerApprovalModalForAcceptingApplicant(command: PreviewActions, acceptOrReject: ApplicationApprovalStatus){
+    // debugger;
     this.rejectionHasBeenTriggered = acceptOrReject == ApplicationApprovalStatus.Rejected ? true : false;
     if(command == 2){
     const data: InformationForApprovalModal<string, string> = {
     header: this.rejectionHasBeenTriggered ? 'Reject Applicant' : 'Accept Applicant', 
-    button: this.applicantAboutToBeAccepted.hR_Status == 'Pending' ? acceptOrReject == ApplicationApprovalStatus.Rejected ? 'Initiate Rejection' : 'Initiate Acceptance' : this.role == 'Approver' ? 'Approve Rejection' : 'Approve Applicant', 
+    button: this.applicantAboutToBeAccepted.hR_Status == 'Pending' ? acceptOrReject == ApplicationApprovalStatus.Rejected ? 'Initiate Rejection' : 'Initiate Acceptance' : this.role == 'Approver' && acceptOrReject == ApplicationApprovalStatus.Rejected ? 'Approve Rejection' : 'Approve Applicant', 
     callBack: this.acceptAnApplicant as unknown as Function} 
     const config: MatDialogConfig = {
       width: '28vw',

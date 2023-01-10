@@ -103,7 +103,7 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
     if(command == 2){
     const data: InformationForApprovalModal<string, string> = {
     header: acceptOrReject == 5  ? 'Pass Applicant' : acceptOrReject == 2 ? 'Approve Decision' : 'Fail Applicant', 
-    button: acceptOrReject == 5 ? 'Pass Applicant' :  acceptOrReject == 2 ? 'Approve Decision' : this.role == 'Approver' ? 'Approve Failure' : 'Fail Applicant', 
+    button: acceptOrReject == 5 ? 'Pass Applicant' :  acceptOrReject == 2 ? 'Approve Decision' : this.role == 'Approver' && acceptOrReject == ApplicationApprovalStatus.Rejected ? 'Approve Failure' : 'Fail Applicant', 
     shouldShowIsSpecialToggle: acceptOrReject == ApplicationApprovalStatus.Rejected ? false : true,
     // callBack: this.acceptAnApplicant as unknown as Function
   }
