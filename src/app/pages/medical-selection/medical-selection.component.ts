@@ -25,7 +25,7 @@ export class MedicalSelectionComponent implements OnInit, SelectionMethods, Pagi
   statistics: Partial<ApplicantSelectionStatistics> = {};
   applicantsToBeSelected: AnApplication[] = [];
   noOfrecords: number = 0
-  // stage: number | undefined
+  useCurrentPage: boolean = false;
   constructor(
     private applicationSelectionService: ApplicantSelectionService, 
     private broadCast: BroadCastService,
@@ -51,7 +51,7 @@ export class MedicalSelectionComponent implements OnInit, SelectionMethods, Pagi
       next: this.handleApplicantsFromServer,
       error: (err) => console.log(err)
     }
-    this.applicationSelectionService.getApplicants({ApplicationStage: ApplicationStage ?? 5, PageNumber: pageNumber ? pageNumber.toString() : '1', PageSize: noOfRecord ? noOfRecord.toString() : '10'}).subscribe(pObs);
+    this.applicationSelectionService.getApplicants({ApplicationStage: ApplicationStage ?? 5, PageNumber: pageNumber ? pageNumber.toString() : this.useCurrentPage ? this.pagination.currentPage.toString() : '1', PageSize: noOfRecord ? noOfRecord.toString() : '10'}).subscribe(pObs);
   }
   handleApplicantsFromServer(val: ApplicantsSelectionResponse): void {
     const { accepted, all, awaiting, pending, rejected, returned, data, pageSize, totalRecords } = val;
@@ -63,6 +63,7 @@ export class MedicalSelectionComponent implements OnInit, SelectionMethods, Pagi
     this.pagination.generatePagesForView();
     this.noOfrecords = pageSize;
     this.applicantsToBeSelected = this.pagination.getAPageOfPaginatedData<AnApplication>();
+    this.useCurrentPage = false;
   }
 
   loadNextSetOfPages(){
@@ -75,6 +76,7 @@ export class MedicalSelectionComponent implements OnInit, SelectionMethods, Pagi
   }
 
   fetchRequiredNoOfRecords(){
+    this.pagination.pageLimit = this.noOfrecords;
     this.getApplicantsForSelection(this.pagination.currentPage, this.noOfrecords)
   }
   selectAPageAndInformation(pageNumber: number){
@@ -84,7 +86,7 @@ export class MedicalSelectionComponent implements OnInit, SelectionMethods, Pagi
       return;
     }
     this.pagination.currentPage = pageNumber;
-    this.getApplicantsForSelection(pageNumber);
+    this.getApplicantsForSelection(5,pageNumber);
   }
   gotoApplicantView(applicant: AnApplication): void {
     const data: InformationForModal<AnApplication> = { 
@@ -144,19 +146,23 @@ export class MedicalSelectionComponent implements OnInit, SelectionMethods, Pagi
   }
   acceptingWasSuccessful(): void {
     if(this.applicantAboutToBeAccepted.hR_Status == 'Pending'){
+      this.useCurrentPage = true;
       this.sharedService.triggerSuccessfulInitiationModal('You have initiated to pass an applicant. You will be notified when it is approved', 'Continue to Applicant Selection', this.getApplicantsForSelection);
       return;
     }
 
     if(this.applicantAboutToBeAccepted.hR_Status == 'Approve'){
+      this.useCurrentPage = true;
       this.sharedService.triggerSuccessfulInitiationModal('You have successfully approve the decision to "Pass" the applicant to move to the next stage.', 'Continue to Applicant Selection', this.getApplicantsForSelection);
       return;
     }
     if(this.applicantAboutToBeAccepted.hR_Status == 'Awaiting'){
+      this.useCurrentPage = true;
       this.sharedService.triggerSuccessfulInitiationModal('Applicant has been approved Successfully!', 'Continue to Applicant Selection', this.getApplicantsForSelection);
     }
 
     if(this.applicantAboutToBeAccepted.approverStatus == 'Awaiting'){
+      this.useCurrentPage = true;
       this.sharedService.triggerSuccessfulInitiationModal('Applicant has been approved Successfully!', 'Continue to Applicant Selection', this.getApplicantsForSelection);
     }
   }

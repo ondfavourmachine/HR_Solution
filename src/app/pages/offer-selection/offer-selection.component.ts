@@ -24,6 +24,7 @@ export class OfferSelectionComponent implements OnInit, SelectionMethods, Pagina
   statistics: Partial<ApplicantSelectionStatistics> = {};
   applicantsToBeSelected: AnApplication[] = [];
   noOfRecords: number = 0;
+  useCurrentPage: boolean = false;
   constructor(
     private applicationSelectionService: ApplicantSelectionService, 
     private broadCast: BroadCastService,
@@ -50,7 +51,7 @@ export class OfferSelectionComponent implements OnInit, SelectionMethods, Pagina
       next: this.handleApplicantsFromServer,
       error: (err) => console.log(err)
     }
-    this.applicationSelectionService.getApplicants({ApplicationStage: ApplicationStage ?? 6, PageNumber: pageNumber ? pageNumber.toString() : '1', PageSize: noOfRecord ? noOfRecord.toString() : '10'}).subscribe(pObs);
+    this.applicationSelectionService.getApplicants({ApplicationStage: ApplicationStage ?? 6, PageNumber: pageNumber ? pageNumber.toString() : this.useCurrentPage ? this.pagination.currentPage.toString() : '1', PageSize: noOfRecord ? noOfRecord.toString() : '10'}).subscribe(pObs);
   }
   handleApplicantsFromServer(val: ApplicantsSelectionResponse): void {
     const { accepted, all, awaiting, pending, rejected, returned, data, totalRecords, pageSize } = val;
@@ -62,6 +63,7 @@ export class OfferSelectionComponent implements OnInit, SelectionMethods, Pagina
     this.isLoading = false;
     this.noOfRecords = pageSize;
     this.applicantsToBeSelected = this.pagination.getAPageOfPaginatedData<AnApplication>();
+    this.useCurrentPage = false;
   }
   loadNextSetOfPages(){
     const res = this.pagination.loadNextSetOfPages<AnApplication>({ApplicationStage: 6, noOfRecord: this.noOfRecords},this.getApplicantsForSelection);
@@ -73,6 +75,7 @@ export class OfferSelectionComponent implements OnInit, SelectionMethods, Pagina
   }
 
   fetchRequiredNoOfRecords(){
+    this.pagination.pageLimit = this.noOfRecords;
     this.getApplicantsForSelection(this.pagination.currentPage, this.noOfRecords)
   }
   selectAPageAndInformation(pageNumber: number){
@@ -82,7 +85,7 @@ export class OfferSelectionComponent implements OnInit, SelectionMethods, Pagina
       return;
     }
     this.pagination.currentPage = pageNumber;
-    this.getApplicantsForSelection(pageNumber);
+    this.getApplicantsForSelection(6, pageNumber);
   }
   gotoApplicantView(applicant: AnApplication): void {
     const data: InformationForModal<AnApplication> = { 
@@ -141,19 +144,23 @@ export class OfferSelectionComponent implements OnInit, SelectionMethods, Pagina
   }
   acceptingWasSuccessful(): void {
     if(this.applicantAboutToBeAccepted.hR_Status == 'Pending'){
+      this.useCurrentPage = true;
       this.sharedService.triggerSuccessfulInitiationModal('You have triggered initiation for pickup of offer letter. You will be notified when it is approved', 'Continue to Applicant Selection', this.getApplicantsForSelection);
       return;
     }
 
     if(this.applicantAboutToBeAccepted.hR_Status == 'Approve'){
+      this.useCurrentPage = true;
       this.sharedService.triggerSuccessfulInitiationModal('You have successfully approved the decision for applicant to pickup offer letter.', 'Continue to Applicant Selection', this.getApplicantsForSelection);
       return;
     }
     if(this.applicantAboutToBeAccepted.hR_Status == 'Awaiting'){
+      this.useCurrentPage = true;
       this.sharedService.triggerSuccessfulInitiationModal('Applicant has been approved Successfully!', 'Continue to Applicant Selection', this.getApplicantsForSelection);
     }
 
     if(this.applicantAboutToBeAccepted.approverStatus == 'Awaiting'){
+      this.useCurrentPage = true;
       this.sharedService.triggerSuccessfulInitiationModal('Applicant has been approved Successfully!', 'Continue to Applicant Selection', this.getApplicantsForSelection);
     }
   }

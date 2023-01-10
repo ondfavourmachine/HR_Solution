@@ -153,6 +153,33 @@
        </div>
     </header>
 
+    <header *ngIf="(data?.applicantData?.applicationStage! == 0 || data?.applicantData?.applicationStage! == 1 || data?.applicantData?.applicationStage! == 2
+       || data?.applicantData?.applicationStage! == 3 ) && data?.applicantData?.hR_Status== 'Rejected' && (data?.applicantData?.approverStatus == 'Pending' || data?.applicantData?.approverStatus == 'Awaiting')">
+        <div class="first_part" [ngClass]="{'gap-20': !data?.applicantData?.hR_Admin, 'gap-5': data?.applicantData?.hR_Admin }">
+         Applicant Information 
+         <!-- testing -->
+         <span class="status_container" [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen }">Status: 
+             <span class="status"
+             [ngClass]="
+             {'Pending': data?.applicantData?.hR_Status == 'Pending',
+               'Waiting': data?.applicantData?.approverStatus == 'Awaiting' && data?.applicantData?.hR_Status == 'Approve', 
+              'Approved': data?.applicantData?.hR_Status == 'Approve', 
+              'Rejected' : data?.applicantData?.hR_Status == 'Rejected' || data?.applicantData?.hR_Status == 'Returned'}" 
+             > {{ data?.applicantData?.hR_Status }} 
+           </span>
+         </span>
+         <span  class="status_container initiator" *ngIf="data?.applicantData?.hR_Admin &&  (data?.applicantData?.hR_Status == 'Pending' || data?.applicantData?.hR_Status == 'Rejected'),">
+                 <span class="text-black">Initiator:</span> {{ data?.applicantData?.hR_Admin }}
+         </span>
+         <span class="status_container decision" *ngIf="(data?.applicantData?.approverStatus == 'Pending' || data?.applicantData?.approverStatus == 'Awaiting') &&  data?.applicantData?.hR_Status == 'Rejected'">
+             <span class="text-red-400">Decision: </span> {{ data?.applicantData?.hR_Status == 'Rejected' ? 'Rejection' : '' }} 
+          </span>
+        </div>
+        <div class="second_part" >
+         <span  [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen}" ><img (click)="closeBtn()" src="../../../assets/images/close-icon.svg" alt=""></span>
+        </div>
+     </header>
+
     <header *ngIf="data?.applicantData?.approverStatus! == 'Awaiting' && data?.applicantData?.hR_Status == 'Approve'">
         <div class="first_part" [ngClass]="{'gap-20': !data?.applicantData?.hR_Admin, 'gap-5': data?.applicantData?.hR_Admin }">
          Applicant Information
@@ -285,6 +312,10 @@
         <section>
             <div class="main_content">
                 <div *ngIf="hrCommentIsPresent && data?.applicantData?.applicationStage! > 0" class="hr_comment">
+                    <h3>Comment</h3>
+                    <p>{{data?.applicantData?.hR_Comment}}</p>
+                </div>
+                <div *ngIf="hrCommentIsPresent && data?.applicantData?.applicationStage! == 0" class="hr_comment">
                     <h3>Comment</h3>
                     <p>{{data?.applicantData?.hR_Comment}}</p>
                 </div>
@@ -824,7 +855,22 @@
                     </button>
                 </div>
 
-                <div *ngIf="data?.applicantData?.testAssessed == 3 && role == 'Approver' && data?.applicantData?.applicationStage == 1" [ngClass]="{'!flex': data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
+                <div *ngIf="(data?.applicantData?.approverStatus == 'Pending' || data?.applicantData?.approverStatus == 'Awaiting') 
+                   && data?.applicantData?.hR_Status == 'Rejected' && role == 'Approver' && (data?.applicantData?.applicationStage == 0 || data?.applicantData?.applicationStage == 1 || data?.applicantData?.applicationStage == 2)" [ngClass]="{'!flex': data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
+                    <button
+                     class="btn-red-custom">
+                        Return
+                    </button>
+                    <button
+                     (click)="triggerAcceptanceOrRejection(3)"
+                     class="btn-red-custom green">
+                        Approve Decision
+                    </button>
+                </div>
+
+                <div *ngIf="data?.applicantData?.testAssessed == 3 && role == 'Approver' 
+                    && data?.applicantData?.hR_Status == 'Approve'
+                    && data?.applicantData?.applicationStage == 1" [ngClass]="{'!flex': data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
                     <button
                      class="btn-red-custom">
                         Return
@@ -838,6 +884,7 @@
 
                 <div *ngIf="data?.applicantData?.testAssessed == 2 && role == 'HRAdmin'" [ngClass]="{'!flex': data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
                     <button
+                    (click)="triggerAcceptanceOrRejection(3)"
                      class="btn-red-custom">
                         Fail
                     </button>

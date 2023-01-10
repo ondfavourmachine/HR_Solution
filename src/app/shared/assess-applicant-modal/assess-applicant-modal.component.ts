@@ -131,6 +131,7 @@ export class AssessApplicantModalComponent implements OnInit {
      this.assessment.addRatingForAnApplicantDuringInterview(formToSubmit)
     .subscribe({
       next: (val) => {
+        debugger;
         this.sharedService.loading4button(btn, 'done', prevText as string);
         this.sharedService.triggerSuccessfulInitiationModal('You have successfully Graded this applicant', 'Continue', this.data.extraInfo?.callBack);
         this.dialogRef.close(PreviewActions.CLOSEANDDONOTHING);
@@ -284,7 +285,7 @@ export class AssessApplicantModalComponent implements OnInit {
       .subscribe({
         next: (val) => {
           this.sharedService.loading4button(btn, 'done', prevText as string);
-          this.sharedService.triggerSuccessfulInitiationModal('You have successfully Graded this applicant', 'Continue');
+          this.sharedService.triggerSuccessfulInitiationModal('You have successfully Graded this applicant', 'Continue', this.data.extraInfo?.callBack);
           this.dialogRef.close(PreviewActions.CLOSEANDSUBMIT);
         },
         error: (error) => {

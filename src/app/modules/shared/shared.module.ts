@@ -36,6 +36,7 @@ import { LoadingSpinnerComponent } from '../../shared/loading-spinner/loading-sp
 import { NoContentComponent } from '../../shared/no-content/no-content.component';
 import { TestInviteDescriptionViewComponent } from 'src/app/shared/test-invite-description-view/test-invite-description-view.component';
 import { PostAcceptanceInformationComponent } from '../../shared/post-acceptance-information/post-acceptance-information.component';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
@@ -79,7 +80,8 @@ import { PostAcceptanceInformationComponent } from '../../shared/post-acceptance
     MatDatepickerModule,
     MatNativeDateModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatSlideToggleModule
   ],
   exports: [
     NavigationBarComponent,
@@ -106,6 +108,7 @@ import { PostAcceptanceInformationComponent } from '../../shared/post-acceptance
     InterviewAssessmentDetailsComponent,
     LoadingSpinnerComponent,
     NoContentComponent,
+    MatSlideToggleModule
   ], 
   providers: [TitleStringDisplayForGradingPipe]
 })

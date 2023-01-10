@@ -64,7 +64,7 @@ export class PreviewApplicationComponent implements OnInit {
     if(this.data.applicantData.approverStatus == 'Awaiting') return 'Awaiting Approval';
     else if(this.data?.applicantData?.approverStatus == 'Approve') return 'Accepted';
     else if (this.data.applicantData?.approverStatus == 'Pending') return 'Pending';
-    // else if(this.data.applicantData?.approverStatus == 'Rejected') return 'Rejected';
+    // else if(this.data.applicantData?.hR_Status == 'Rejected') return 'Rejected';
     return 'Rejected'
   }
 

@@ -2162,12 +2162,29 @@ table{
     transform: scale(0.1) !important;
 }
 
-// .assessment_applicant__container.shrinkUp .mat-dialog-container{
-//     transform: scale(0.1) !important;
-// }
+.mat-slide-toggle.mat-accent#mat-slide-toggle-1, .mat-slide-toggle#mat-slide-toggle-2 {
+        @apply overflow-visible #{!important};
 
+        & *, *::before, *::after{
+            @apply overflow-visible #{!important};
+        }
 
-// assessment sheet
+        & .mat-slide-toggle-label{
+            @apply overflow-x-visible #{!important};
+        }
+}
+
+.mat-slide-toggle.mat-checked .mat-slide-toggle-thumb{
+    @apply bg-hrms-slightRed;
+}
+
+.mat-slide-toggle.mat-checked .mat-slide-toggle-bar{
+    @apply bg-red-400;
+}
+
+.mat-slide-toggle-content{
+    @apply font-hrmsCamptonMedium  text-hrms-black-text;
+}
 
 
 

@@ -3,7 +3,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute, Params } from '@angular/router';
 import { PartialObserver } from 'rxjs';
-import { ApplicantSelectionStatistics, ApplicantsSelectionResponse, SelectionMethods } from 'src/app/models/applicant-selection.models';
+import { ApplicantSelectionStatistics, ApplicantsSelectionResponse, SelectionMethods, SpecialCandidate } from 'src/app/models/applicant-selection.models';
 import { AnApplication, PreviewActions, PaginationMethodsForSelectionAndAssessments, ApplicationApprovalStatus, RequiredQuarterFormat, InformationForModal, InformationForApprovalModal } from 'src/app/models/generalModels';
 import { ApplicantSelectionService } from 'src/app/services/applicant-selection.service';
 import { BroadCastService } from 'src/app/services/broad-cast.service';
@@ -25,6 +25,7 @@ export class InterviewSelectionComponent implements OnInit, SelectionMethods, Pa
   statistics: Partial<ApplicantSelectionStatistics> = {};
   applicantsToBeSelected: AnApplication[] = [];
   noOfrecords: number = 0;
+  useCurrentPage: boolean = false;
   stage: number | undefined
   
   constructor(
@@ -54,7 +55,11 @@ export class InterviewSelectionComponent implements OnInit, SelectionMethods, Pa
       next: this.handleApplicantsFromServer,
       error: (err) => console.log(err)
     }
-    this.applicationSelectionService.getApplicants({ApplicationStage: ApplicationStage ?? this.stage ? this.stage : 2, PageNumber: pageNumber ? pageNumber.toString() : '1', PageSize: noOfRecord ? noOfRecord.toString() : '10'}).subscribe(pObs);
+    this.applicationSelectionService.getApplicants({
+      ApplicationStage: ApplicationStage ?? this.stage ? this.stage : 2, 
+      PageNumber: pageNumber ? pageNumber.toString() : this.useCurrentPage ? this.pagination.currentPage.toString() : '1', 
+      PageSize: noOfRecord ? noOfRecord.toString() : '10'})
+      .subscribe(pObs);
   }
 
   loadNextSetOfPages(){
@@ -67,6 +72,7 @@ export class InterviewSelectionComponent implements OnInit, SelectionMethods, Pa
   }
 
   fetchRequiredNoOfRecords(){
+    this.pagination.pageLimit = this.noOfrecords;
     this.getApplicantsForSelection(this.pagination.currentPage, this.noOfrecords)
   }
   selectAPageAndInformation(pageNumber: number){
@@ -76,7 +82,7 @@ export class InterviewSelectionComponent implements OnInit, SelectionMethods, Pa
       return;
     }
     this.pagination.currentPage = pageNumber;
-    this.getApplicantsForSelection(pageNumber);
+    this.getApplicantsForSelection(this.stage ? this.stage : 2, pageNumber);
   }
 
   handleExtraStages(val: Params){
@@ -106,6 +112,7 @@ export class InterviewSelectionComponent implements OnInit, SelectionMethods, Pa
     this.isLoading = false;
     this.noOfrecords = pageSize;
     this.applicantsToBeSelected = this.pagination.getAPageOfPaginatedData<AnApplication>();
+    this.useCurrentPage = false;
   }
   gotoApplicantView(applicant: AnApplication): void {
     const data: InformationForModal<AnApplication> = { 
@@ -125,6 +132,7 @@ export class InterviewSelectionComponent implements OnInit, SelectionMethods, Pa
       const data: InformationForApprovalModal<string, string> = {
       header: acceptOrReject == 5  ? 'Pass Applicant' : acceptOrReject == 2 ? 'Approve Decision' : 'Fail Applicant', 
       button: acceptOrReject == 5 ? 'Pass Applicant' :  acceptOrReject == 2 ? 'Approve Decision' : 'Fail Applicant', 
+      shouldShowIsSpecialToggle: this.stage ?  false : acceptOrReject == ApplicationApprovalStatus.Rejected ? false :  true,
       callBack: () => {}}
       const config: MatDialogConfig = {
         width: '28vw',
@@ -134,26 +142,32 @@ export class InterviewSelectionComponent implements OnInit, SelectionMethods, Pa
       };
       const dialog = this.dialog.open(ApprovalModalComponent, config);
       dialog.afterClosed().subscribe(
-        val => {
-          // this is wrong,i am calling this twice and it shouldn't be so. Please fix;
+        (val: SpecialCandidate | string) => {
+          debugger;
+          if(val instanceof SpecialCandidate){
             this.acceptAnApplicant(PreviewActions.CLOSEANDSUBMIT, val, acceptOrReject == 5 ? 2 : acceptOrReject == 2 ? 2 : 3)
+            return;
+          }
+          this.acceptAnApplicant(PreviewActions.CLOSEANDSUBMIT, val, acceptOrReject == 5 ? 2 : acceptOrReject == 2 ? 2 : 3);
         }
       )
       }
   }
   
-  acceptAnApplicant(command: PreviewActions, comment: string, specificTypeOfApproval?:ApplicationApprovalStatus): void {
-    if(command == 2 && comment.length < 1){
+  acceptAnApplicant(command: PreviewActions, comment: string | SpecialCandidate, specificTypeOfApproval?:ApplicationApprovalStatus): void {
+    const str: string = comment instanceof SpecialCandidate ? comment.comment : comment
+    if(command == 2 && str.length < 1){
       this.sharedService.errorSnackBar('Please enter a comment before accepting or rejecting!');
       return;
     }
     this.applicationSelectionService.selectAnApplicant({
-      jobId: this.applicantAboutToBeAccepted.jobId,
+      // jobId: this.applicantAboutToBeAccepted.jobId,
       applicantId: this.applicantAboutToBeAccepted.applicationId,
       applicationRefNo: this.applicantAboutToBeAccepted.applicationRefNo,
-      applicationStage: this.applicantAboutToBeAccepted.applicationStage,
+      applicationStage: comment instanceof SpecialCandidate ? parseInt(comment.stageSelected) : this.applicantAboutToBeAccepted.applicationStage,
       status: specificTypeOfApproval ? specificTypeOfApproval : ApplicationApprovalStatus.Approve,
-      comment,
+      comment : comment instanceof  SpecialCandidate ? comment.comment : str,
+      isSpecial: comment instanceof SpecialCandidate && this.applicantAboutToBeAccepted.applicationStage == 2  ? comment.isSpecial : false
     }).subscribe({
       next:(val) => {
         if(!val.hasError)this.acceptingWasSuccessful();
@@ -165,24 +179,28 @@ export class InterviewSelectionComponent implements OnInit, SelectionMethods, Pa
   }
   acceptingWasSuccessful(): void {
     if(this.applicantAboutToBeAccepted.hR_Status == 'Pending'){
+      this.useCurrentPage = true;
       this.sharedService.triggerSuccessfulInitiationModal('You have initiated to pass an applicant. You will be notified when it is approved', 'Continue to Applicant Selection', this.getApplicantsForSelection);
       return;
     }
 
     if(this.applicantAboutToBeAccepted.hR_Status == 'Approve'){
+      this.useCurrentPage = true;
       this.sharedService.triggerSuccessfulInitiationModal('You have successfully approve the decision to "Pass" the applicant to move to the next stage.', 'Continue to Applicant Selection', this.getApplicantsForSelection);
       return;
     }
     if(this.applicantAboutToBeAccepted.hR_Status == 'Awaiting'){
+      this.useCurrentPage = true;
       this.sharedService.triggerSuccessfulInitiationModal('Applicant has been approved Successfully!', 'Continue to Applicant Selection', this.getApplicantsForSelection);
     }
 
     if(this.applicantAboutToBeAccepted.approverStatus == 'Awaiting'){
+      this.useCurrentPage = true;
       this.sharedService.triggerSuccessfulInitiationModal('Applicant has been approved Successfully!', 'Continue to Applicant Selection', this.getApplicantsForSelection);
     }
   }
 
-  trackByFn(index: number, applicant: AnApplication) {
+  trackByFn(_: number, applicant: AnApplication) {
     return applicant.applicationRefNo; // or item.id
   }
 

@@ -83,7 +83,7 @@ export class PaginationService  implements Pagination {
  clearPaginationStuff(): void{
   this.paginationData = new Map();
   this.page = 1;
-  this.pageLimit = 7;
+  this.pageLimit = 10;
   this.endNumber = this.pageLimit;
   this.currentPage = 1;
   this.currentPageSet = [];

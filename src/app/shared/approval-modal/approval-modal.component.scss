@@ -1,0 +1,5 @@
+
+
+button:disabled{
+    @apply pointer-events-none bg-red-200 #{!important};
+}

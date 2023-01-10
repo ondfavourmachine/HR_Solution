@@ -30,11 +30,12 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
   quartersToUse: RequiredQuarterFormat[] = [];
   globusBranches: AGlobusBranch[] = [];
   noOfrecords: number = 0
-  // range!: FormGroup;
-  
+  useCurrentPage : boolean =false; 
   selectedQuarter!: number;
   applicantsToBeSelected: AnApplication[] = [];
   applicantAboutToBeAccepted!: AnApplication;
+  rejectionHasBeenTriggered: boolean = false;
+  role!: string;
   constructor(
     public  sharedService: SharedService, 
     private dialog: MatDialog,
@@ -54,6 +55,7 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
     this.quartersToUse = this.sdm.presentQuartersInHumanReadableFormat(res);    
     this.getApplicantsForSelection();
     this.getGlobusBranchLocations();
+    this.role = this.sharedService.getRole() as string;
     
   }
 
@@ -63,7 +65,7 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
       next: this.handleApplicantsFromServer,
       error: (err) => console.log(err)
     }
-    this.applicationSelectionService.getApplicants({ApplicationStage: ApplicationStage ?? 0,  PageNumber: pageNumber ? pageNumber.toString() : '1', PageSize: noOfRecord ? noOfRecord.toString() : '10'}).subscribe(pObs);
+    this.applicationSelectionService.getApplicants({ApplicationStage: ApplicationStage ?? 0,  PageNumber: pageNumber ? pageNumber.toString() : this.useCurrentPage ? this.pagination.currentPage.toString() : '1', PageSize: noOfRecord ? noOfRecord.toString() : '10'}).subscribe(pObs);
   }
 
   getGlobusBranchLocations(){
@@ -78,21 +80,23 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
     const { accepted, all, awaiting, pending, rejected, returned, data, pageSize, totalRecords } = val;
     const statistics = {accepted, all, awaiting, rejected, returned, pending};
     this.broadCast.broadCastStatistics(statistics);
+    // debugger;
     this.pagination.paginationData.size > 0 && this.pagination.paginationData.get(1)!.length > 0 ? this.pagination.updatePaginationData = true : this.pagination.updatePaginationData = false;
     this.pagination.calculatePagination<AnApplication>(data, totalRecords);
     this.pagination.generatePagesForView();
     this.isLoading = false;
     this.noOfrecords = pageSize
     this.applicantsToBeSelected = this.pagination.getAPageOfPaginatedData<AnApplication>();
-    console.log(this.applicantsToBeSelected);
+    this.useCurrentPage = false;
   }
 
   triggerApprovalModalForAcceptingApplicant(command: PreviewActions, acceptOrReject: ApplicationApprovalStatus){
+    this.rejectionHasBeenTriggered = acceptOrReject == ApplicationApprovalStatus.Rejected ? true : false;
     if(command == 2){
     const data: InformationForApprovalModal<string, string> = {
-    header: 'Accept Applicant', 
-    button: this.applicantAboutToBeAccepted.hR_Status == 'Pending' ? acceptOrReject == ApplicationApprovalStatus.Rejected ? 'Initiate Rejection' : 'Initiate Acceptance' : 'Approve Applicant', 
-    callBack: this.acceptAnApplicant as unknown as Function}
+    header: this.rejectionHasBeenTriggered ? 'Reject Applicant' : 'Accept Applicant', 
+    button: this.applicantAboutToBeAccepted.hR_Status == 'Pending' ? acceptOrReject == ApplicationApprovalStatus.Rejected ? 'Initiate Rejection' : 'Initiate Acceptance' : this.role == 'Approver' ? 'Approve Rejection' : 'Approve Applicant', 
+    callBack: this.acceptAnApplicant as unknown as Function} 
     const config: MatDialogConfig = {
       width: '28vw',
       height: '38vh',
@@ -113,7 +117,7 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
       applicantId: this.applicantAboutToBeAccepted.applicationId,
       applicationRefNo: this.applicantAboutToBeAccepted.applicationRefNo,
       applicationStage: 0,
-      status: ApplicationApprovalStatus.Approve,
+      status: this.rejectionHasBeenTriggered ? ApplicationApprovalStatus.Rejected :  ApplicationApprovalStatus.Approve,
       comment,
     }).subscribe({
         next:(val) => {
@@ -121,21 +125,33 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
            }, 
         error: (err: HttpResponse<any>) => {
           const {status} = err;
-          status == 403 ? this.sharedService.errorSnackBar('You are not authorized to accept this applicant') : this.sharedService.errorSnackBar('An error occured while trying to accept applicant!');
+          status == 403 ? this.sharedService.errorSnackBar('You are not authorized to accept or reject this applicant') : this.sharedService.errorSnackBar('An error occured while trying to accept applicant!');
       }
     })
   }
 
   acceptingWasSuccessful(){
     if(this.applicantAboutToBeAccepted.hR_Status == 'Pending'){
-      this.sharedService.triggerSuccessfulInitiationModal('You have initiated selection of an applicant. You will be notified when it is approved', 'Continue to Applicant Selection', this.getApplicantsForSelection);
+      this.useCurrentPage = true;
+      const message = this.rejectionHasBeenTriggered ? 'You have initiated rejection of an applicant. You will be notified when it is approved' : 'You have initiated selection of an applicant. You will be notified when it is approved';
+      this.sharedService.triggerSuccessfulInitiationModal(message, 'Continue to Applicant Selection', this.getApplicantsForSelection);
       return;
     }
     if(this.applicantAboutToBeAccepted.hR_Status == 'Awaiting'){
-      this.sharedService.triggerSuccessfulInitiationModal('Applicant has been approved Successfully!', 'Continue to Applicant Selection', this.getApplicantsForSelection);
+      this.useCurrentPage = true;
+      const message = this.rejectionHasBeenTriggered ? 'Applicant has been rejected Successfully!' : 'Applicant has been approved Successfully!';
+      this.sharedService.triggerSuccessfulInitiationModal(message, 'Continue to Applicant Selection', this.getApplicantsForSelection);
     }
     if(this.applicantAboutToBeAccepted.approverStatus == 'Awaiting'){
-      this.sharedService.triggerSuccessfulInitiationModal('Applicant has been approved Successfully!', 'Continue to Applicant Selection', this.getApplicantsForSelection);
+      this.useCurrentPage = true;
+      const message = this.rejectionHasBeenTriggered ? 'Applicant has been rejected Successfully!' : 'Applicant has been approved Successfully!';
+      this.sharedService.triggerSuccessfulInitiationModal(message, 'Continue to Applicant Selection', this.getApplicantsForSelection);
+    }
+    if(this.applicantAboutToBeAccepted.hR_Status == 'Rejected'){
+      this.useCurrentPage = true;
+      const message = 'You have approved rejection of an applicant';
+      this.sharedService.triggerSuccessfulInitiationModal(message, 'Continue to Applicant Selection', this.getApplicantsForSelection);
+      return;
     }
   }
 
@@ -154,7 +170,7 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
       maxWidth: '85vw',
       data
     }
-     const dialogRef = this.dialog.open(PreviewApplicationComponent, config);
+     this.dialog.open(PreviewApplicationComponent, config);
 
 
     // this.applicantAboutToBeAccepted = applicant;
@@ -182,10 +198,11 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
       return;
     }
     this.pagination.currentPage = pageNumber;
-    this.getApplicantsForSelection(pageNumber);
+    this.getApplicantsForSelection(0, pageNumber);
   }
 
   fetchRequiredNoOfRecords(){
+    this.pagination.pageLimit = this.noOfrecords;
     this.getApplicantsForSelection(this.pagination.currentPage, this.noOfrecords)
   }
 
@@ -198,7 +215,9 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
     if (applicant.approverStatus == 'Pending' && applicant.hR_Status == 'Approve') return 'Awaiting';
     if(applicant.approverStatus == 'Awaiting') return 'Awaiting';
     if (applicant.approverStatus == 'Approve' && applicant.hR_Status == 'Approve') return 'Approve';
-     else return 'Pending';
+    if (applicant.hR_Status == 'Rejected' && applicant.approverStatus == 'Pending') return 'Awaiting';
+    if (applicant.hR_Status == 'Rejected' && applicant.approverStatus == 'Rejected') return 'Rejected';
+    else return 'Pending';
   }
   downloadExcel(){
     this.sharedService.downloadAsExcel(this.applicantsToBeSelected, 'applicants-selected');
@@ -226,7 +245,7 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
       textColor: 'black'
     }
   }
-  autoTable(doc, options)
+  autoTable(doc, options);
   doc.save('applicants_selected.pdf');
   }
   ngOnDestroy(): void {

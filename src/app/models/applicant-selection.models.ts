@@ -63,3 +63,14 @@ export interface FullInterviewerDetailsAndInterviewResponse{
   recommendation: null | string,
   comment: null | string
 }
+
+export class SpecialCandidate{
+  comment!: string; 
+  isSpecial!: boolean; 
+  stageSelected!: string;
+  constructor(comment: string, isSpecial: boolean, stageSelected: string){
+    this.comment = comment,
+    this.isSpecial = isSpecial,
+    this.stageSelected = stageSelected
+  }
+}

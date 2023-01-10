@@ -53,7 +53,6 @@ export const environment = {
     getAssessments: 'Assessment/AssessmentSelection',
     uploadATestScore: 'ApplicantTest/UploadTest',
     addApplicationTest: 'ApplicantTest/AddApplicantTest',
-    // approveTestScore: 'ApplicantTest/Approve',
     approveTestScore: 'Application/ApproveApplication',
     addInterviewChairDetailsForAnInterview: 'ApplicantInterviewInfo/AddApplicantInterviewInfo',
     addInterviewerRatingsForAnApplicant: 'InterviewerSummary/AddInterviewerSummary',

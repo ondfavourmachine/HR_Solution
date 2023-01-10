@@ -2,7 +2,7 @@ import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { PartialObserver } from 'rxjs';
-import { ApplicantSelectionStatistics, ApplicantsSelectionResponse, SelectionMethods } from 'src/app/models/applicant-selection.models';
+import { ApplicantSelectionStatistics, ApplicantsSelectionResponse, SelectionMethods, SpecialCandidate } from 'src/app/models/applicant-selection.models';
 import { AnApplication, ApplicationApprovalStatus, InformationForApprovalModal, InformationForModal, PaginationMethodsForSelectionAndAssessments, PreviewActions, RequiredQuarterFormat } from 'src/app/models/generalModels';
 import { ApplicantSelectionService } from 'src/app/services/applicant-selection.service';
 import { BroadCastService } from 'src/app/services/broad-cast.service';
@@ -25,6 +25,8 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
   applicantsToBeSelected: AnApplication[] = []
   applicantAboutToBeAccepted!: AnApplication;
   noOfRecords: number = 0;
+  useCurrentPage: boolean = false;
+  role!: string
   constructor(private sdm: SchedulerDateManipulationService,
      private applicationSelectionService: ApplicantSelectionService, 
      private broadCast: BroadCastService,
@@ -42,6 +44,7 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
       const res = this.sdm.generateQuartersOfCurrentYear();
       this.quartersToUse = this.sdm.presentQuartersInHumanReadableFormat(res); 
       this.getApplicantsForSelection();   
+      this.role = this.sharedService.getRole() as string;
     }
 
      loadNextSetOfPages(){
@@ -54,7 +57,8 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
     }
  
     fetchRequiredNoOfRecords(){
-      this.getApplicantsForSelection(this.pagination.currentPage, this.noOfRecords)
+      this.pagination.pageLimit = this.noOfRecords;
+      this.getApplicantsForSelection(this.pagination.currentPage, this.noOfRecords);
     }
     selectAPageAndInformation(pageNumber: number){
       if(this.pagination.paginationData.get(pageNumber)!.length > 0){
@@ -63,7 +67,7 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
         return;
       }
       this.pagination.currentPage = pageNumber;
-      this.getApplicantsForSelection(pageNumber);
+      this.getApplicantsForSelection(1,pageNumber);
     }
 
  
@@ -78,7 +82,7 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
       next: this.handleApplicantsFromServer,
       error: (err) => console.log(err)
     }
-    this.applicationSelectionService.getApplicants({ApplicationStage: ApplicationStage ?? 1, PageNumber: pageNumber ? pageNumber.toString() : '1', PageSize: noOfRecord ? noOfRecord.toString() : '10'}).subscribe(pObs);
+    this.applicationSelectionService.getApplicants({ApplicationStage: ApplicationStage ?? 1, PageNumber: pageNumber ? pageNumber.toString() : this.useCurrentPage ? this.pagination.currentPage.toString() : '1', PageSize: noOfRecord ? noOfRecord.toString() : '10'}).subscribe(pObs);
   }
 
   handleApplicantsFromServer(val: ApplicantsSelectionResponse){
@@ -91,6 +95,7 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
     this.isLoading = false;
     this.noOfRecords = pageSize;
     this.applicantsToBeSelected = this.pagination.getAPageOfPaginatedData<AnApplication>();
+    this.useCurrentPage = false;
   }
 
   triggerApprovalModalForAcceptingApplicant(command: PreviewActions, acceptOrReject: ApplicationApprovalStatus){
@@ -98,7 +103,8 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
     if(command == 2){
     const data: InformationForApprovalModal<string, string> = {
     header: acceptOrReject == 5  ? 'Pass Applicant' : acceptOrReject == 2 ? 'Approve Decision' : 'Fail Applicant', 
-    button: acceptOrReject == 5 ? 'Pass Applicant' :  acceptOrReject == 2 ? 'Approve Decision' : 'Fail Applicant', 
+    button: acceptOrReject == 5 ? 'Pass Applicant' :  acceptOrReject == 2 ? 'Approve Decision' : this.role == 'Approver' ? 'Approve Failure' : 'Fail Applicant', 
+    shouldShowIsSpecialToggle: acceptOrReject == ApplicationApprovalStatus.Rejected ? false : true,
     // callBack: this.acceptAnApplicant as unknown as Function
   }
     const config: MatDialogConfig = {
@@ -109,9 +115,12 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
     };
     const dialog = this.dialog.open(ApprovalModalComponent, config);
     dialog.afterClosed().subscribe(
-      val => {
-        // debugger;
+      (val: SpecialCandidate | string) => {
+        if(val instanceof SpecialCandidate){
           this.acceptAnApplicant(PreviewActions.CLOSEANDSUBMIT, val, acceptOrReject == 5 ? 2 : acceptOrReject == 2 ? 2 : 3)
+          return;
+        }
+        this.acceptAnApplicant(PreviewActions.CLOSEANDSUBMIT, val, acceptOrReject == 5 ? 2 : acceptOrReject == 2 ? 2 : 3);
       }
     )
     }
@@ -132,21 +141,23 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
   }
 
 
-  acceptAnApplicant(command: PreviewActions, comment: string, specificTypeOfApproval?:ApplicationApprovalStatus){
-    if(command == 2 && comment.length < 1){
+  acceptAnApplicant(command: PreviewActions, comment: string | SpecialCandidate, specificTypeOfApproval?:ApplicationApprovalStatus){
+    const str: string = comment instanceof SpecialCandidate ? comment.comment : comment
+    if(command == 2 && str.length < 1){
       this.sharedService.errorSnackBar('Please enter a comment before accepting or rejecting!');
       return;
     }
     this.applicationSelectionService.selectAnApplicant({
-      jobId: this.applicantAboutToBeAccepted.jobId,
-      applicantId: this.applicantAboutToBeAccepted.applicationId,
+      // jobId: this.applicantAboutToBeAccepted.jobId,
+      // applicantId: this.applicantAboutToBeAccepted.applicationId,
       applicationRefNo: this.applicantAboutToBeAccepted.applicationRefNo,
-      applicationStage: this.applicantAboutToBeAccepted.applicationStage,
+      applicationStage: comment instanceof SpecialCandidate ? parseInt(comment.stageSelected) : this.applicantAboutToBeAccepted.applicationStage,
       status: specificTypeOfApproval ? specificTypeOfApproval : ApplicationApprovalStatus.Approve,
-      comment,
+      comment : comment instanceof  SpecialCandidate ? comment.comment : str,
+      isSpecial: comment instanceof SpecialCandidate ? comment.isSpecial : false
     }).subscribe({
       next:(val) => {
-        if(!val.hasError)this.acceptingWasSuccessful();
+        if(!val.hasError)this.acceptingWasSuccessful(specificTypeOfApproval);
          }, 
       error: (err: HttpResponse<any>) => {
         const {status} = err;
@@ -154,28 +165,51 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
       }})
   }
 
-  acceptingWasSuccessful(){
+  acceptingWasSuccessful(approvalType?: ApplicationApprovalStatus){
     // debugger;
     if(this.applicantAboutToBeAccepted.hR_Status == 'Pending'){
-      this.sharedService.triggerSuccessfulInitiationModal('You have initiated to pass an applicant. You will be notified when it is approved', 'Continue to Applicant Selection', this.getApplicantsForSelection);
+      this.useCurrentPage = true;
+      const message = approvalType == (ApplicationApprovalStatus.Rejected || ApplicationApprovalStatus.Fail) ? 'You have initiated the failing of an applicant. You will be notified when it is approved' : 'You have initiated to pass an applicant. You will be notified when it is approved';
+      this.sharedService.triggerSuccessfulInitiationModal(message, 'Continue to Applicant Selection', this.getApplicantsForSelection);
       return;
     }
 
     if(this.applicantAboutToBeAccepted.hR_Status == 'Approve'){
-      this.sharedService.triggerSuccessfulInitiationModal('You have successfully approve the decision to "Pass" the applicant to move to the next stage.', 'Continue to Applicant Selection', this.getApplicantsForSelection);
+      this.useCurrentPage = true;
+      const message = approvalType == (ApplicationApprovalStatus.Rejected || ApplicationApprovalStatus.Fail) ? 'You have approved the decision to Fail the applicant.' : 'You have successfully approved the decision to "Pass" the applicant and move to the next stage.';
+      this.sharedService.triggerSuccessfulInitiationModal(message, 'Continue to Applicant Selection', this.getApplicantsForSelection);
       return;
     }
     if(this.applicantAboutToBeAccepted.hR_Status == 'Awaiting'){
-      this.sharedService.triggerSuccessfulInitiationModal('Applicant has been approved Successfully!', 'Continue to Applicant Selection', this.getApplicantsForSelection);
+      this.useCurrentPage = true;
+      const message = approvalType == (ApplicationApprovalStatus.Rejected || ApplicationApprovalStatus.Fail) ? 'Applicant Failure has been approved successfully!' : 'Applicant has been approved Successfully!';
+      this.sharedService.triggerSuccessfulInitiationModal(message, 'Continue to Applicant Selection', this.getApplicantsForSelection);
     }
 
     if(this.applicantAboutToBeAccepted.approverStatus == 'Awaiting'){
-      this.sharedService.triggerSuccessfulInitiationModal('Applicant has been approved Successfully!', 'Continue to Applicant Selection', this.getApplicantsForSelection);
+      this.useCurrentPage = true;
+      const message = approvalType == (ApplicationApprovalStatus.Rejected || ApplicationApprovalStatus.Fail) ? 'Applicant Failure has been approved Successfully!' : 'Applicant has been approved Successfully!';
+      this.sharedService.triggerSuccessfulInitiationModal(message, 'Continue to Applicant Selection', this.getApplicantsForSelection);
+    }
+
+    if(this.applicantAboutToBeAccepted.hR_Status == 'Rejected'){
+      this.useCurrentPage = true;
+      const message = 'You have approved Failure of an applicant';
+      this.sharedService.triggerSuccessfulInitiationModal(message, 'Continue to Applicant Selection', this.getApplicantsForSelection);
+      return;
     }
   }
 
   downloadExcel(){
     this.sharedService.downloadAsExcel(this.applicantsToBeSelected, 'applicants-with-test-invites');
+  }
+
+  getClassToDisplay(applicant: AnApplication) : string{
+   
+    if((applicant.approverStatus == 'Awaiting' && applicant.hR_Status == 'Rejected') || applicant.hR_Status == 'Rejected' || applicant.hR_Status == 'Returned') return 'Rejected';
+    if(applicant.approverStatus == 'Awaiting') return 'Waiting';
+    if(applicant.approverStatus == 'Pending' || applicant.hR_Status == 'Pending' || applicant.hR_Status == '') return 'Pending';
+    return 'Approved';
   }
 
   ngOnDestroy(): void {

@@ -147,17 +147,12 @@
                                             </span>
                                          </td>
                                          <td class="individual_tableCell_data">
-                                            <span [ngClass]="
-                                              {
-                                             'Approved': applicant.approverStatus == 'Approve', 
-                                             'Waiting': applicant.approverStatus == 'Awaiting', 
-                                             'Rejected' : applicant.hR_Status == 'Fail' || applicant.hR_Status == 'Returned',
-                                             'Pending': applicant.approverStatus == 'Pending' || applicant.hR_Status == 'Pending' || applicant.hR_Status == ''
-                                             }" 
+                                            <span [ngClass]="getClassToDisplay(applicant)" 
                                               class="status">{{  applicant?.approverStatus }}</span>
                                         </td>
                                         <td class="individual_tableCell_data align-middle">
-                                            <img  (click)="gotoApplicantView(applicant)" src="../../../assets/images/eye_view.svg" alt="">
+                                            <!--triggerApprovalModalForAcceptingApplicant  -->
+                                            <img  (click)="gotoApplicantView(applicant) " src="../../../assets/images/eye_view.svg" alt="">
                                         </td>    
                                     </tr>  
                                 </ng-container>   

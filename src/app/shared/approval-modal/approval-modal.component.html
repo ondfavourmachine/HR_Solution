@@ -1,4 +1,4 @@
-<main class="main_container approve_job">
+<main class="main_container approve_job !overflow-hidden">
     <div class="header">
         <span> {{ data?.header }} </span>
         <!-- <span><img src="../../../assets/images/centered_globus_logo.svg" alt=""></span> -->
@@ -7,9 +7,32 @@
     <div class="body">
         <textarea name="comment" [(ngModel)]="comment" placeholder="Enter some comment"  id="" cols="30" rows="10"></textarea>
     </div>  
+     <div class="px-4 !overflow-visible" *ngIf="data?.shouldShowIsSpecialToggle && roleOfLoggedInUser == 'Approver'">
+        <mat-slide-toggle (change)="toggleSpecialCandidate($event)">Applicant Is Special!</mat-slide-toggle>
+     </div>
+    <div class="footer flex !justify-between !px-1 !items-center ">
+       <div [ngClass]="{'!-translate-x-[0px]': isSpecialCandidate}" 
+        class="transition-all basis-[55%] -translate-x-[1000px] pr-3">
+        <select name="stage_selector" id="" 
+          [(ngModel)]="stageSelector"
+          class="focus:!p-1 !text-[0.95em] oldstyle-nums 
+          !font-hrmsCamptonLight cursor-pointer !rounded-lg border-[#BECCDC]
+          placeholder:font-hrmsCamptonLight placeholder:py-2 focus:outline-0 focus:ring-0 focus:ring-offset-0 focus:ring-transparent
+          ">
+            <option value="" selected>Select Stage</option>
+            <option value="1">Test Stage</option>
+            <option value="2">Interview 01 Stage</option>
+            <option value="3">Interview 02 Stage</option>
+            <option value="4">Interview 03 Stage</option>
+            <option value="5">Medical Stage</option>
+            <option value="6">Offer Stage</option>
+            <option value="7">Post Acceptance Stage</option>
+        </select>
+       </div>
 
-    <div class="footer">
-        <button (click)="close(comment)" class="">
+        <button
+           [disabled]="disableButtonWhenNoStageForSpecialCandidateHasBeenSelected"
+           (click)="close(comment)" class="">
             {{ data?.button }}
         </button>
     </div>

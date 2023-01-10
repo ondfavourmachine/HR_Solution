@@ -113,11 +113,12 @@ export interface AGlobusBranch {
       department: null | string
   }
   export interface ApprovalRequestBody{
-    jobId: number,
-    applicantId: any,
+    jobId?: number,
+    applicantId?: any,
     applicationStage: number,
     status: number,
     comment: string,
+    isSpecial?: boolean,
     applicationRefNo: string
   }
 
@@ -402,7 +403,8 @@ export interface AGlobusBranch {
   export enum PreviewActions {
     CLOSEANDEDIT=1,
     CLOSEANDSUBMIT,
-    CLOSEANDDONOTHING
+    CLOSEANDDONOTHING,
+    
   }
 
 
@@ -490,6 +492,7 @@ export interface AGlobusBranch {
     header?: S,
     button: B,
     message?: S,
+    shouldShowIsSpecialToggle?: boolean,
     callBack?: F 
   }
 
