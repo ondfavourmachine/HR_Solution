@@ -109,7 +109,7 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
   }
 
   acceptAnApplicant(command: PreviewActions, comment: string){
-    if(command == 2 && comment.length < 1){
+    if(command == 2 &&  comment.length < 1){
       this.sharedService.errorSnackBar('Please enter a comment before accepting or rejecting!');
       return;
     }

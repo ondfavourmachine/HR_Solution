@@ -1,7 +1,7 @@
 import { ElementRef, Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http'
 import { environment } from 'src/environments/environment';
-import { AGlobusBranch, BaseResponse, ClassOfDegree, DepartmentsInGlobus, GRADES, InformationForApprovalModal, JobCategories, JobToBeCreated, JobToBeCreatedKeys, JobType, NYSCStrings, UnitsInGlobus } from '../models/generalModels';
+import { AGlobusBranch, AnApplication, BaseResponse, ClassOfDegree, DepartmentsInGlobus, GRADES, InformationForApprovalModal, JobCategories, JobToBeCreated, JobToBeCreatedKeys, JobType, NYSCStrings, UnitsInGlobus } from '../models/generalModels';
 import { Observable } from 'rxjs';
 import { MatSnackBarConfig, MatSnackBar } from '@angular/material/snack-bar';
 import { ages, convertToBytesToMB } from './small_reusable_functions';
@@ -232,6 +232,13 @@ generateExcelFile(dataToConvertToExcel: Array<any>): any{
 
 covertDateToHumanFreiendlyFormat(date: string | Date, format: string): string | null{
   return this.datePipe.transform(date, format);
+}
+
+getClassToDisplay(applicant: AnApplication) : string{ 
+  if((applicant.approverStatus == 'Awaiting' && applicant.hR_Status == 'Rejected') || applicant.hR_Status == 'Rejected' || applicant.hR_Status == 'Returned') return 'Rejected';
+  if(applicant.approverStatus == 'Awaiting') return 'Waiting';
+  if(applicant.approverStatus == 'Pending' || applicant.hR_Status == 'Pending' || applicant.hR_Status == '') return 'Pending';
+  return 'Approved';
 }
 
 

@@ -32,7 +32,7 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
      private broadCast: BroadCastService,
      private dialog: MatDialog,
      public pagination: PaginationService,
-     private sharedService: SharedService
+     public sharedService: SharedService
      ) { 
       this.handleApplicantsFromServer = this.handleApplicantsFromServer.bind(this);
       this.triggerApprovalModalForAcceptingApplicant = this.triggerApprovalModalForAcceptingApplicant.bind(this);
@@ -143,7 +143,7 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
 
   acceptAnApplicant(command: PreviewActions, comment: string | SpecialCandidate, specificTypeOfApproval?:ApplicationApprovalStatus){
     const str: string = comment instanceof SpecialCandidate ? comment.comment : comment
-    if(command == 2 && str.length < 1){
+    if(command == 2 && str && str.length < 1){
       this.sharedService.errorSnackBar('Please enter a comment before accepting or rejecting!');
       return;
     }
@@ -204,13 +204,7 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
     this.sharedService.downloadAsExcel(this.applicantsToBeSelected, 'applicants-with-test-invites');
   }
 
-  getClassToDisplay(applicant: AnApplication) : string{
-   
-    if((applicant.approverStatus == 'Awaiting' && applicant.hR_Status == 'Rejected') || applicant.hR_Status == 'Rejected' || applicant.hR_Status == 'Returned') return 'Rejected';
-    if(applicant.approverStatus == 'Awaiting') return 'Waiting';
-    if(applicant.approverStatus == 'Pending' || applicant.hR_Status == 'Pending' || applicant.hR_Status == '') return 'Pending';
-    return 'Approved';
-  }
+ 
 
   ngOnDestroy(): void {
     this.pagination.clearPaginationStuff();

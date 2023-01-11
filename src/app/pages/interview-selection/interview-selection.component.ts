@@ -33,7 +33,7 @@ export class InterviewSelectionComponent implements OnInit, SelectionMethods, Pa
     private broadCast: BroadCastService,
     private dialog: MatDialog,
     private sdm: SchedulerDateManipulationService,
-    private sharedService: SharedService,
+    public sharedService: SharedService,
     public pagination: PaginationService,
     private router: ActivatedRoute,
   ) {
@@ -156,7 +156,7 @@ export class InterviewSelectionComponent implements OnInit, SelectionMethods, Pa
   
   acceptAnApplicant(command: PreviewActions, comment: string | SpecialCandidate, specificTypeOfApproval?:ApplicationApprovalStatus): void {
     const str: string = comment instanceof SpecialCandidate ? comment.comment : comment
-    if(command == 2 && str.length < 1){
+    if(command == 2 && str && str.length < 1){
       this.sharedService.errorSnackBar('Please enter a comment before accepting or rejecting!');
       return;
     }
@@ -170,33 +170,37 @@ export class InterviewSelectionComponent implements OnInit, SelectionMethods, Pa
       isSpecial: comment instanceof SpecialCandidate && this.applicantAboutToBeAccepted.applicationStage == 2  ? comment.isSpecial : false
     }).subscribe({
       next:(val) => {
-        if(!val.hasError)this.acceptingWasSuccessful();
+        if(!val.hasError)this.acceptingWasSuccessful(specificTypeOfApproval);
          }, 
       error: (err: HttpResponse<any>) => {
         const {status} = err;
         status == 403 ? this.sharedService.errorSnackBar('You are not authorized to accept this applicant') : this.sharedService.errorSnackBar('An error occured while trying to accept applicant!');
       }})
   }
-  acceptingWasSuccessful(): void {
+  acceptingWasSuccessful(approvalType?: ApplicationApprovalStatus): void {
     if(this.applicantAboutToBeAccepted.hR_Status == 'Pending'){
       this.useCurrentPage = true;
-      this.sharedService.triggerSuccessfulInitiationModal('You have initiated to pass an applicant. You will be notified when it is approved', 'Continue to Applicant Selection', this.getApplicantsForSelection);
+      const message = approvalType == (ApplicationApprovalStatus.Rejected || ApplicationApprovalStatus.Fail) ? 'You have initiated the failing of an applicant. You will be notified when it is approved' : 'You have initiated to pass an applicant. You will be notified when it is approved';
+      this.sharedService.triggerSuccessfulInitiationModal(message, 'Continue to Applicant Selection', this.getApplicantsForSelection);
       return;
     }
 
     if(this.applicantAboutToBeAccepted.hR_Status == 'Approve'){
       this.useCurrentPage = true;
-      this.sharedService.triggerSuccessfulInitiationModal('You have successfully approve the decision to "Pass" the applicant to move to the next stage.', 'Continue to Applicant Selection', this.getApplicantsForSelection);
+      const message = approvalType == (ApplicationApprovalStatus.Rejected || ApplicationApprovalStatus.Fail) ? 'You have approved the decision to Fail the applicant.' : 'You have successfully approved the decision to "Pass" the applicant and move to the next stage.';
+      this.sharedService.triggerSuccessfulInitiationModal(message, 'Continue to Applicant Selection', this.getApplicantsForSelection);
       return;
     }
     if(this.applicantAboutToBeAccepted.hR_Status == 'Awaiting'){
       this.useCurrentPage = true;
-      this.sharedService.triggerSuccessfulInitiationModal('Applicant has been approved Successfully!', 'Continue to Applicant Selection', this.getApplicantsForSelection);
+      const message = approvalType == (ApplicationApprovalStatus.Rejected || ApplicationApprovalStatus.Fail) ? 'Applicant Failure has been approved Successfully!' : 'Applicant has been approved Successfully!';
+      this.sharedService.triggerSuccessfulInitiationModal(message, 'Continue to Applicant Selection', this.getApplicantsForSelection);
     }
 
     if(this.applicantAboutToBeAccepted.approverStatus == 'Awaiting'){
       this.useCurrentPage = true;
-      this.sharedService.triggerSuccessfulInitiationModal('Applicant has been approved Successfully!', 'Continue to Applicant Selection', this.getApplicantsForSelection);
+      const message = approvalType == (ApplicationApprovalStatus.Rejected || ApplicationApprovalStatus.Fail) ? 'Applicant Failure has been approved Successfully!' : 'Applicant has been approved Successfully!';
+      this.sharedService.triggerSuccessfulInitiationModal(message, 'Continue to Applicant Selection', this.getApplicantsForSelection);
     }
   }
 

@@ -33,6 +33,11 @@ export class ApplicantImageCvDetailsComponent implements OnInit, AfterViewInit {
     reader.readAsDataURL(passport as File);
   }
 
+  downloadCV(){
+    // debugger;
+    this.sharedService.downloadFile(this.data?.applicantData!.cV_URL);
+  }
+
 
   
   

@@ -1,3 +1,4 @@
+import { CurrencyPipe } from '@angular/common';
 import {  Component, Inject, OnInit, } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FullInterviewerDetailsAndInterviewResponse } from 'src/app/models/applicant-selection.models';
@@ -11,7 +12,8 @@ import { ExternalCandidateJobsComponent } from '../external-candidate-jobs/exter
 @Component({
   selector: 'app-preview-application',
   templateUrl: './preview-application.component.html',
-  styleUrls: ['./preview-application.component.scss']
+  styleUrls: ['./preview-application.component.scss'],
+  providers: [CurrencyPipe]
 })
 export class PreviewApplicationComponent implements OnInit {
   role!: string;
@@ -19,6 +21,7 @@ export class PreviewApplicationComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: InformationForModal<AnApplication & RequiredApplicantDetails & PostAcceptanceInfo>,
     private sharedService: SharedService,
     private dialog: MatDialog,
+    private currencypipe:CurrencyPipe,
     private matDialogRef: MatDialogRef<ExternalCandidateJobsComponent>
   ) { }
 
@@ -93,6 +96,15 @@ export class PreviewApplicationComponent implements OnInit {
 
   download<T extends AnApplication & RequiredApplicantDetails & PostAcceptanceInfo>(nameOfDoc: keyof T, applicantData?: T){
     const file = (applicantData as T)[nameOfDoc];
+  }
+
+  convertToCurrency(num?: number | string): string | null{
+    if(!num) return ''
+    if(typeof num ==  'string' ){
+      const amount = num.replace(/,/g, '');
+      return this.currencypipe.transform(amount, '₦')
+    }
+    return this.currencypipe.transform(num, '₦');
   }
 
 }

@@ -144,11 +144,11 @@
                                                  {{ applicant?.dateApplied | date: 'mediumDate' }}
                                              </td>
                                              <td class="individual_tableCell_data">
-                                                <span [ngClass]="
-                                                  {'Pending': applicant.hR_Status == 'Pending' , 
+                                                <!-- {'Pending': applicant.hR_Status == 'Pending' , 
                                                  'Approved': applicant.hR_Status == 'Approve', 
                                                  'Waiting': (applicant.approverStatus == 'Pending' && applicant.hR_Status == 'Approve') ||applicant.approverStatus == 'Awaiting', 
-                                                 'Rejected' : applicant.hR_Status == 'Rejected' || applicant.hR_Status == 'Returned'}" 
+                                                 'Rejected' : applicant.hR_Status == 'Rejected' || applicant.hR_Status == 'Returned'} -->
+                                                <span [ngClass]="sharedService.getClassToDisplay(applicant)" 
                                                   class="status">{{ statusToShow(applicant) }}</span>
                                             </td>
                                             <td class="individual_tableCell_data align-middle">

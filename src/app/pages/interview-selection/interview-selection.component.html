@@ -148,13 +148,13 @@
                                             </div>
                                          </td>
                                          <td class="individual_tableCell_data">
-                                            <span [ngClass]="
-                                              {
-                                             'Approved': applicant.approverStatus == 'Approve', 
-                                             'Waiting': applicant.approverStatus == 'Awaiting', 
-                                             'Rejected' : applicant.hR_Status == 'Fail' || applicant.hR_Status == 'Returned',
-                                             'Pending': applicant.approverStatus == 'Pending' || applicant.hR_Status == 'Pending' || applicant.hR_Status == ''
-                                             }" 
+                                            <!-- {
+                                                'Approved': applicant.approverStatus == 'Approve', 
+                                                'Waiting': applicant.approverStatus == 'Awaiting', 
+                                                'Rejected' : applicant.hR_Status == 'Fail' || applicant.hR_Status == 'Returned',
+                                                'Pending': applicant.approverStatus == 'Pending' || applicant.hR_Status == 'Pending' || applicant.hR_Status == ''
+                                                } -->
+                                            <span [ngClass]="sharedService.getClassToDisplay(applicant)" 
                                               class="status">{{  applicant?.approverStatus == 'Pending' ? 'Pending' : applicant?.approverStatus == 'Approve' ? 'Passed' :  applicant?.approverStatus == 'Awaiting' ? 'Awaiting' : 'Failed'  }}</span>
                                         </td>
                                         <td class="individual_tableCell_data align-middle">
