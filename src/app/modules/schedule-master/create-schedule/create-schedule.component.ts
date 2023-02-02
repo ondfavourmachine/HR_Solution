@@ -69,8 +69,6 @@ export class CreateScheduleComponent implements OnInit, NecessaryModalMethods {
       let response: CreateInviteDS = {
         interviewers: [...this.interviewers],
         interviewees: [...this.interviewInvitees],
-        dept: this.departmentsInGlobus.find(elem => elem.name == this.selectedDept)?.id,
-        departmentName: this.selectedDept,
         description: this.description,
         stageOfCreation: StageOfCreation.Initiation,
         interviewChairPerson: this.mainInterviewer as StaffName,
@@ -82,6 +80,8 @@ export class CreateScheduleComponent implements OnInit, NecessaryModalMethods {
         interviewType: this.typeOfInvite,
     }
     this.hospitalName && this.hospitalName.length > 2 ? response = {...response, hospitalName: this.hospitalName} : null;
+    this.typeOfInvite != (InterviewTypes.Medical_Invite || InterviewTypes.Offer_Letter_Invite) ?  response.dept = this.departmentsInGlobus.find(elem => elem.name == this.selectedDept)?.id : null,
+    this.typeOfInvite != (InterviewTypes.Medical_Invite || InterviewTypes.Offer_Letter_Invite) ? response.departmentName = this.selectedDept : null
     this.dialogRef.close(response)
     return;
     }

@@ -14,6 +14,10 @@
                  </li>
             </ul>
         </div>
+        <button (click)="getApplicants(undefined, $event)" 
+         class="addition_button" [ngClass]="{'!flex !right-40': showMultiSelectApplicantsButton}">
+            <img src="../../../assets/images/add_white_version.svg" alt=""> Load Applicants
+        </button>
         <button (click)="sendUpListOfSelecteedApplicantsToParent()" 
            [disabled]="selectedApplicants.size < 1" class="addition_button" [ngClass]="{'!flex': showAdditionButton}">
             <img src="../../../assets/images/add_white_version.svg" alt=""> Add

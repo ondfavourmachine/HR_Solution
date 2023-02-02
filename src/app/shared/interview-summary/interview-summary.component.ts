@@ -61,7 +61,8 @@ appropriateDateTimeToDisplay!:string
       dateTime, description, testTime, testInvigilators, interviewers, interviewChairPerson, departmentId, inviteType: !inviteType ? 6 : inviteType // lazy way of setting offer letter type. Will refactor later
       };
     'hospitalName' in this.data && this.data.hospitalName!.length > 2 ? schedule = {...schedule, hospitalName: this.data.hospitalName} : null;
-    // debugger;
+    'hospitalName' in this.data && this.data.hospitalName!.length > 2 ? delete schedule.departmentId : null;
+    
     this.sharedService.loading4button(btn, 'yes', 'Creating Schedule...');
     this.scheduleService.createSchedule(schedule)
     .subscribe({

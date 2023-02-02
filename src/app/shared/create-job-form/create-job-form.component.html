@@ -1,6 +1,7 @@
 <main class="creat_job_container">
     <div class="title_section">
-        <h5>Create Job</h5> <div (click)="closeDialog()"><img src="../../../assets/images/close-icon.svg" alt=""></div>
+        <h5>Create Job</h5> 
+        
     </div>
     <section class="body_content">
         <h5 class="job_heading mt-30">
@@ -225,8 +226,16 @@
       </div>
     </section>
     <div class="footer_section">
-      <div>
-        <button class="btn-red-custom" (click)="showPreview()">
+      <div class="flex gap-3">
+        <button class="btn-red-custom footer_buttons transparent" (click)="closeDialog()">
+           Cancel
+        </button>
+        <button [disabled]="!disableOrEnableButton"
+          (click)="sendDraftToParentComp()"
+          class="btn-red-custom footer_buttons transparent red_font">
+          Cancel & Save Job As Draft
+        </button>
+        <button class="btn-red-custom footer_buttons" (click)="showPreview()">
           Preview Job
         </button>
       </div>

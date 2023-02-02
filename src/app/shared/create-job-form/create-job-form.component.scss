@@ -67,3 +67,20 @@
         }
     }
 }
+
+
+.footer_buttons{
+    @apply w-max py-2 px-7 cursor-pointer #{!important};
+
+    &.transparent{
+        @apply bg-transparent text-hrms-slightRed border border-hrms-slightRed #{!important};
+    }
+
+    &.red_font{
+        @apply text-hrms-slightRed hover:bg-hrms-slightRed hover:text-white #{!important}
+    }
+
+    &:disabled{
+        @apply opacity-30 pointer-events-none #{!important};
+    }
+}

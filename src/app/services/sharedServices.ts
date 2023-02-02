@@ -149,6 +149,10 @@ export class SharedService {
     return convertToBytesToMB(filesize) <= this.fileSizeLimit;
   }
 
+  getUnitName(unitName: string): string | undefined{
+    if(!unitName) return undefined;
+    return unitName && typeof unitName == 'string' ?  unitName.split('/')![0] : '';
+  }
 
   triggerSuccessfulInitiationModal(message: string, buttonText?: string, callBack?: Function){
    const data:InformationForApprovalModal<string, string, Function> = {message, button: buttonText as any, callBack}

@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { PartialObserver } from 'rxjs';
+import { PartialObserver, Subscription } from 'rxjs';
 import { AGlobusBranch, BaseResponse, RequiredQuarterFormat, tabs } from 'src/app/models/generalModels';
+import { BroadCastService } from 'src/app/services/broad-cast.service';
 import { SchedulerDateManipulationService } from 'src/app/services/scheduler-date-manipulation.service';
 import { SharedService } from 'src/app/services/sharedServices';
 
@@ -10,20 +11,29 @@ import { SharedService } from 'src/app/services/sharedServices';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   tabList: tabs[] = ['Test Assessments', 'Interview Assessments'];
   globusBranches: AGlobusBranch[] = [];
   agesToUse: number[] = [];
-  quartersToUse: RequiredQuarterFormat[] = []
+  quartersToUse: RequiredQuarterFormat[] = [];
+  destroyObs!: Subscription;
+  showBackButton!: boolean;
   constructor(
     private sdm: SchedulerDateManipulationService, 
     private router: Router,
+    private broadCastService: BroadCastService,
     private sharedService: SharedService) { }
 
   ngOnInit(): void {
     const res = this.sdm.generateQuartersOfCurrentYear();
     this.quartersToUse = this.sdm.presentQuartersInHumanReadableFormat(res); 
     this.agesToUse = this.sharedService.generateAges();
+    this.destroyObs = this.broadCastService.changeInViewSubject$.subscribe({next: val => val == 'Single View' ? this.showBackButton = true : this.showBackButton = false,})
+  }
+
+  goBackToBatchView(){
+    this.broadCastService.notifyParentComponentOfChangeInView('Batch View');
+    this.showBackButton = false;
   }
 
   getGlobusBranchLocations(){
@@ -43,6 +53,10 @@ export class HomeComponent implements OnInit {
       default:
       this.router.navigateByUrl('dashboard/assessment/all/test-assessments');
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroyObs ? this.destroyObs.unsubscribe() : null;
   }
 
 }

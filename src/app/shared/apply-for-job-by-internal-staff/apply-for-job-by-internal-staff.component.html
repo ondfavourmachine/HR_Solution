@@ -1,0 +1,193 @@
+<main class="create_schedule__container">
+    <header>
+       <div class="first_part"> Apply For Job    </div>
+       <div class="second_part" >
+        <span (click)="closeBtn(false)" ><img  src="../../../assets/images/close-icon.svg" alt=""></span>
+       </div>
+    </header>
+
+    <div class="main_body">
+        <div class="main_body__content overflow-visible">
+            <section class="passport_and_address flex gap-3 my-2">
+                <div class=" py-4 px-4 flex">
+                  
+                    <div class="overflow-visible flex flex-col gap-1"> 
+                        <!-- i will use javascript to handle click events to the input -->
+                        <!-- (change)="insertImageIntoFileStorage($event)" -->
+                      <div #InternalCandidatePassport class="front_facing my-2">
+                        <small (click)="triggerUpload('trigger_passport')" class="upload_trigger"><img src="../../../assets/images/edit_button.svg" alt=""></small>
+                      </div>
+                       <input type="file" (change)="insertImageIntoFileStorage($event, 'passport')" accept=".jpeg, .jpg, .png"  class="an_input trigger_passport hidden" placeholder="">
+                       <small class="self-center text-black font-hrmsCamptonLight inline-block w-2/3 text-center">Maximum size allowed is <strong class="text-hrms-slightRed">2mb</strong></small>
+                    </div>
+                 </div>
+                 <div class="form_contents overflow-visible flex-grow">
+                        <div class="form-group parent_input_control ">
+                            <label for="State_internal" class="form-labels">State of Residence</label>
+                            <select [(ngModel)]="jobApplicationRequirements.residential_State"  name="State" id="State_internal" class="form-control">
+                                <option selected>Select State</option>
+                                <option [value]="state.name" *ngFor="let state of (states$ | async)">
+                                    {{ state?.name }}
+                                </option>
+                            </select>     
+                        </div>
+                        <div class="form-group parent_input_control">
+                            <label for="residential_address" class="form-labels">
+                            Residential Address
+                        </label>
+                            <input [(ngModel)]="jobApplicationRequirements.residentialAddress" 
+                            name="residential_address"
+                            type="text" placeholder="Enter your course of study" class="form-control" id="residential_address">  
+                      </div>  
+                 </div>
+            </section>
+
+            <section class="form_contents overflow-visible flex gap-4">
+                <div class="form-group parent_input_control">
+                      <label for="dob" class="form-labels">
+                         Date of Birth
+                    </label>
+                      <input [(ngModel)]="jobApplicationRequirements.dob" 
+                        (ngModelChange)="handleAgeCalculation($event)"
+                        name="courseofStudy"
+                       type="date"  class="form-control" id="dob">  
+               </div> 
+               <div class="form-group parent_input_control">
+                <label for="age" class="form-labels">
+                   Age
+                </label>
+                <input [(ngModel)]="jobApplicationRequirements.age" 
+                  name="courseofStudy"
+                 type="text" disabled class="form-control" id="age">  
+                </div> 
+            </section>
+             <section class="form_contents overflow-visible" >
+                  <div class="form-group parent_input_control">
+                        <label for="university_internal" class="form-labels">University Degree (First Degree)</label>
+                        <select [(ngModel)]="jobApplicationRequirements.universityBSc"  name="universityBSc" id="university_internal" class="form-control">
+                            <option selected>Select University</option>
+                            <option [value]="university.name" *ngFor="let university of (universities$ | async)">
+                                {{ university?.name }}
+                              </option>
+                        </select>     
+                 </div> 
+             </section>
+
+            <section  class ="form_contents overflow-visible">
+                <div class="form-group parent_input_control">
+                    <label for="degree_internal" class="form-labels">Degree</label>
+                    <select [(ngModel)]="jobApplicationRequirements.degree"  name="degree" id="degree_internal" class="form-control">
+                        <option selected>Select Degree</option>
+                        <option [value]="degree.name" *ngFor="let degree of (degrees$ | async)">
+                            {{ degree?.name }}
+                          </option>
+                    </select>     
+             </div>
+            </section>
+
+            <section  class ="form_contents overflow-visible">
+                <div class="form-group parent_input_control">
+                    <label for="class_of_degree_internal" class="form-labels">Class of Degree</label>
+                    <select [(ngModel)]="jobApplicationRequirements.classOfDegree"  name="classOfDegree" id="class_of_degree_internal" class="form-control">
+                        <option selected>Select Degree</option>
+                        <option [value]="classOfDegree" *ngFor="let classOfDegree of sharedService.convertClassOfDegreeToArray()">
+                            {{ classOfDegree }}
+                          </option>
+                    </select>     
+             </div>
+            </section>
+
+            <section class="form_contents overflow-visible">
+                <div class="form-group parent_input_control">
+                      <label for="course_of_study" class="form-labels">
+                         Course of Study
+                    </label>
+                      <input [(ngModel)]="jobApplicationRequirements.courseofStudy" 
+                        name="courseofStudy"
+                       type="text" placeholder="Enter your course of study" class="form-control" id="course_of_study">  
+               </div> 
+            </section>
+
+            <section  class ="form_contents overflow-visible">
+                <div class="form-group parent_input_control">
+                    <label for="university_for_master_internal" class="form-labels">University (Master Degree - optional)</label>
+                    <select [(ngModel)]="jobApplicationRequirements.universityMSc"  name="universityMSc" id="university_for_master_internal" class="form-control">
+                        <option selected>Select Degree</option>
+                        <option [value]="university.name" *ngFor="let university of (universities$ | async)">
+                            {{ university?.name }}
+                          </option>
+                    </select>     
+             </div>
+            </section>
+
+            <section class="form_contents overflow-visible">
+                <div class="form-group parent_input_control">
+                      <label for="course_of_study_master" class="form-labels">
+                         Course of Study (Master Degree - optional)
+                    </label>
+                      <input 
+                       [(ngModel)]="jobApplicationRequirements.courseMsc" name="courseMsc"
+                       type="text" placeholder="Enter your course of study" class="form-control" id="course_of_study_master">  
+               </div> 
+            </section>
+
+            <section class="form_contents overflow-visible">
+                <div *ngFor="let certificate of jobApplicationRequirements.certification; index as i " class="form-group parent_input_control relative">
+                      <label for="professional_certificates" class="form-labels">
+                         Professional Certificate(s)
+                      </label>
+                      <input type="text" [(ngModel)]="certificate.name" 
+                        [attr.name]="certificate.name"  class="form-control" 
+                        placeholder="Enter your professional certificates" id="professional_certificates">  
+                      <span  (click)="removeCertificates(i)" class="absolute right-1 top-9" ><img  src="../../../assets/images/close-icon.svg" alt=""></span>
+                </div>
+               <div class="addition_panel">
+                <span class="-mt-2"><img src="../../../assets/images/add.svg" alt=""></span>
+                <span (click)="addCertification()" class="hover:border hover:border-hrms-read-notification cursor-pointer
+                   px-3 py-1 rounded-3xl"  >Add Another certificate</span>
+              </div> 
+            </section>
+
+
+             <section class="form_contents overflow-visible my-5">
+                <div class="content_wrapper">
+                    <div class="upload_test_record_container">
+                      <div class="test_record_contents">
+                        <h5 [ngClass]="{'!text-hrms-bgBlue-1': hasUploadedScore}">Curriculum Vitae(Optional)</h5>
+                        <p *ngIf="!hasUploadedScore">
+                          <span (click)="triggerUpload('trigger_cv')" class="trigger cursor-pointer">Upload</span>
+                          <span class="test">Click here to upload your updated CV</span>
+                          <input (change)="insertImageIntoFileStorage($event, 'cv')" id="uploadScore" type="file" class="hidden trigger_cv">
+                        </p>
+                        <p class="!flex-row !gap-0" *ngIf="hasUploadedScore">
+                          <span class="trigger !px-1 !border-0 !bg-transparent">
+                            <img [src]="uploadedMimeType" alt="">
+                          </span>
+                          <span class="test flex-grow inline-flex items-center basis-full overflow-visible gap-2">
+                            <span class="inline-flex flex-grow items-center gap-2">
+                              <small class="text-xl basis-full whitespace-nowrap text-ellipsis border-b border-dashed border-hrms-bgBlue-1 !text-hrms-bgBlue-1">  {{ jobApplicationRequirements.cv?.name}} </small>
+                              <small class="text-xl size_of_file font-bold w-4/12">{{ sharedService.convertToHumanReadableFileSize(jobApplicationRequirements.cv?.size) }}</small>
+                            </span>
+                            <span class="w-[60%] cancelBtn_container"><small (click)="removeUploadedFile()" class="cancelBtn"></small></span>
+                          </span>
+                        </p>
+                      </div>
+                      <div class="image_container" *ngIf="!hasUploadedScore">
+                        <span><img src="../../../assets/images/no_uploaded_data.svg" alt=""></span>
+                      </div>
+                      <div class="image_container" *ngIf="hasUploadedScore">
+                        <span><img src="../../../assets/images/no_uploaded_data.svg" alt=""></span>
+                      </div>
+                    </div>
+                  </div>
+             </section>
+        </div>
+
+    </div>
+
+    <footer>
+        <button (click)="submitForm($event)" class="btn-red-custom">
+            Submit
+        </button>
+    </footer>
+</main>

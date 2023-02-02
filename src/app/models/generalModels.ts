@@ -68,7 +68,7 @@ export enum FormTypesForJobApplication {
 }
 
 export interface BaseResponse<T = undefined>{
-    hasError: boolean,
+  hasError: boolean,
   message: string,
   statusCode: number | string,
   info: null | string,
@@ -202,7 +202,7 @@ export interface AGlobusBranch {
 
   export type Views = 'jobs' | 'preview' | 'approve' | 'apply' | 'track application';
   export type tabs = 
-  'Test Assessments' | 'Interview Assessments' |
+  'Test Assessments' | 'Interview Assessments' | 'Available Jobs' | 'Your Job Application' | 'Job Details' |  'Track application' |
   'Approved' | 'Pending' | 'All Invites' | 'Interview Invites' | 'Test Invites' | 'All Applications' | 'Tests' | 'Interview 01' | 'Interview 02' | 'Interview 03' | 'Medical' | 'Offer' | 'Post Acceptance';
 
 
@@ -213,6 +213,7 @@ export interface AGlobusBranch {
     position: string,
     department: number,
     unit: number,
+    unitName: string,
     reportTo: string,
     supervises: string,
     location: number,
@@ -233,13 +234,21 @@ export interface AGlobusBranch {
     personSpecification: string,
     educationalQualifications: string,
     experience: number,
-    createdBy?: string
+    createdBy?: string,
+    draftId?: string,
+    id: number,
+    applications?: number,
+    isActive?: boolean
   }
 
   export type JobToBeCreatedKeys = keyof JobToBeCreated
 
   export interface AJob extends JobToBeCreated{
-    createdBy: string, id: number, createdDate: string, slot: number,yearOfExperience: number, departmentName: string, locationName: string, typeName: string,
+    createdBy: string,  hasApplied: number, createdDate: string,  slot: number,yearOfExperience: number, departmentName: string, locationName: string, typeName: string,
+  }
+
+  export interface PreviewJobDS{
+    job:any, extraInfo: {currentBranchInView: string, headerText: string, showHeaderText: boolean}
   }
 
   export type otherRelevantData = {
@@ -526,6 +535,19 @@ export interface AGlobusBranch {
     masters: string | File
     certificate?: string | File
     nameChange?: string | File
+  }
+
+ export type EditorStringNames = 'jobObjectives' | 'accountabilities' | 'professionalCompetencies'
+| 'behavioralCompetencies' | 'organisationalCompetencies' | 'personSpecification' 
+| 'educationalQualifications' | 'experience';
+
+ export type AddJobStringNames = 'jobTitle' | 'reportTo' | 'supervise' | 'grade' | 'type' | 'category'
+| 'department' | 'unit' | 'location' | 'testIsRequired' | 'interviewIsRequired' | 'location'
+| 'deadline' | 'classOfDegree' | 'age' | 'nysc'
+
+  export interface JobDraft{
+    // job: {[k in AddJobStringNames & EditorStringNames]: string}
+    job: Record<AddJobStringNames | EditorStringNames, string>
   }
 
   

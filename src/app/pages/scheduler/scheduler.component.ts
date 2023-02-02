@@ -79,8 +79,8 @@ export class SchedulerComponent extends ScheduleSwitching implements OnInit {
         applicants: val.interviewees.map(applicant => ({
           firstName: applicant.firstName, lastName: applicant.lastName,
           email: applicant.email as string, applicatiionRef: applicant.applicationRefNo as string, courseofStudy: applicant.courseofStudy, position: applicant.position})),
-        departmentId: val.dept,
-        departmentName: val.departmentName,
+        departmentId: val.hasOwnProperty('dept') ? val.dept : 0,
+        departmentName: val.hasOwnProperty('departmentName')? val.departmentName : '',
         stageOfCreation: val.stageOfCreation,
         location: val.location,
         interviewers: parseInt(interviewType) >= 2  ? val.interviewers.map(interviewer => ({email: interviewer.mail as string, name: interviewer.displayName as string})): [],
@@ -116,10 +116,6 @@ export class SchedulerComponent extends ScheduleSwitching implements OnInit {
     }
   }
 
-  // insertCreatedScheduleIntoView(schduleDateFormatForDisplay: string){
-  //  const element = document.getElementById(schduleDateFormatForDisplay);
-  //  console.log(element);
-  // }
   setUpDaysOfWeekAsHeadersOfScheduler(daysOfCurrentWeek: Date[]){
     const dayNamesForHeader = this.sdm.getDayNames(daysOfCurrentWeek);
     this.dayHeaderNames = dayNamesForHeader.map((elem, index) => {
@@ -208,7 +204,10 @@ export class SchedulerComponent extends ScheduleSwitching implements OnInit {
         let modifiedTime = time.split(':').slice(0,2).join(':');
         let timeConvertedToScheduleFormat = convertDateAndTimeToScheduleFormat(date, modifiedTime);
         const [timeOfDay, year, month, day] = timeConvertedToScheduleFormat.split('--');
-        month == '01' ? timeConvertedToScheduleFormat = `${timeOfDay}--${year}--1--${day}` : null;
+        // debugger;
+        if(parseInt(month) <= 9){
+          timeConvertedToScheduleFormat = `${timeOfDay}--${year}--${parseInt(month)}--${day}`
+        }
         const actual = matrixOfDate.find(schedule => schedule.startOfBusinessHour == timeConvertedToScheduleFormat);
         const targetBusinessHourBox = matrixOfDate.find(schedule => schedule.startOfBusinessHour == actual?.endOfBusinessHour );
         targetBusinessHourBox!.schedule = elem;

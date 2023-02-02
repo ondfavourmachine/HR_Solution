@@ -1,0 +1,124 @@
+// make this css reusable.
+
+.scroll_enabled{
+    &::-webkit-scrollbar{
+        width: 0;
+    }
+    @apply h-[68vh] relative overflow-scroll;
+
+    & .top_display{
+        @apply h-32 bg-[#F4F5FA] rounded-md w-full sticky -top-4 py-3 right-0 left-0 z-[800] pl-6 flex justify-start items-center gap-16;
+
+        & .button{
+            font-size: .9em;
+            @apply transition-all bg-transparent font-extralight cursor-pointer rounded-3xl px-7 py-3 text-black;
+        }
+
+        & .button.selected{
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            @apply bg-hrms-tab-color-selected text-white;
+        }
+    }
+
+    & .application_levels{
+        counter-reset: my-counter;
+        & .a_level{
+            counter-increment: my-counter;
+            @apply pl-5 overflow-visible pt-7 pb-6;
+
+            &::before{
+                content: counter(my-counter);
+                font-size: 1em;
+                @apply text-white  inline-grid place-content-center leading-8 w-10 p-1 bg-black rounded-full;
+            }
+
+            &::after{
+                content: '';
+                display: block;
+                height: 90%; 
+                width: 1rem;
+                top: 20px;
+                left: 2.35rem;
+                position: absolute;
+                z-index: -1;
+                border-width: 3px;
+                border-style: dashed;
+                border-top: none;
+                border-right: none;
+                @apply border-hrms-read-notification;
+            }
+
+            &.last::after{
+                content: unset;
+            }
+        }
+
+        & .content{
+            @apply pl-10 inline-flex gap-4 flex-col;
+
+            & > span{
+                @apply flex gap-7 items-center;
+
+                & a{
+                    font-size: .775em;
+                    @apply font-hrmsCamptonBook py-2 px-3 flex justify-center items-center text-black bg-[#EAEAEA] rounded-3xl;
+                }
+            }
+            & .date_submitted, small{
+                @apply font-hrmsCamptonExtraLightItalic
+            }
+
+            & .last_text{
+                @apply font-hrmsCamptonLight;
+            }
+        }
+ // rubbish css starts here. Do make sure to clean it up
+        & .a_level.current_stage{
+            &::before{
+                content: counter(my-counter);
+                font-size: 1em;
+                @apply bg-orange-500;
+            }
+
+            &.completed::before{
+                content: url(../../../assets/images/checkmark--filled.svg);
+                @apply bg-transparent;
+            }
+
+            & .content{
+                @apply pl-10 inline-flex gap-4 flex-col;
+    
+                & > span{
+                    @apply flex gap-7 items-center;
+    
+                    & a{
+                        font-size: .775em;
+                        @apply font-hrmsCamptonBook py-2 px-3 flex justify-center items-center text-orange-500 bg-orange-100 rounded-3xl;
+                    }
+                }
+            }
+
+            &.completed .content > span a{
+                @apply text-hrms-green bg-[#E6F5EF];
+            }
+        }
+
+        & .a_level{
+            &.completed::before{
+                content: url(../../../assets/images/checkmark--filled.svg);
+                @apply bg-transparent;
+            }
+
+
+            &.completed .content > span a{
+                @apply text-hrms-green bg-[#E6F5EF];
+            }
+        }
+    }
+
+    ol li::marker{
+        @apply text-red-400;
+    }
+
+    
+}

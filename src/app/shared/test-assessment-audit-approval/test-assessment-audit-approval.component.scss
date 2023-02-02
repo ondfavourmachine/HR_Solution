@@ -1,0 +1,58 @@
+.main_container::before{
+    display: none !important;
+}
+
+header{
+    font-size: 1.2em;
+    @apply justify-between  font-hrmsCamptonMedium text-hrms-genBlueColor-1 font-semibold pl-10 pr-5 py-5 border-b-2 items-center border-b-[#DADADA] flex overflow-visible;
+
+    & .first_part{
+        @apply flex;
+    }
+
+    & .second_part{
+        @apply flex items-center;
+        & img{
+            @apply cursor-pointer;
+        }
+    }
+}
+
+.content_wrapper{
+   @apply px-10 mt-7 mb-5;
+}
+
+
+.cancelBtn{
+    @apply relative w-7 -top-1 overflow-visible cursor-pointer;
+
+    &::after, &::before{
+        content: '';
+        @apply absolute inset-0 bg-hrms-slightRed h-[2px];
+    }
+
+    &::after{
+        @apply  rotate-45;
+    }
+
+    &::before{
+        @apply -rotate-45;
+    }
+}
+
+.footer_wrapper{
+    @apply border-t-2 items-center py-5 border-b-[#DADADA];
+}
+
+button:disabled{
+    @apply pointer-events-none bg-red-200 #{!important};
+}
+
+textarea{
+    font-size: 1em;
+    @apply h-40 w-full border border-hrms-read-notification rounded-md placeholder:text-hrms-read-notification placeholder:opacity-40 placeholder:font-hrmsCamptonExtraLight placeholder:font-semibold;
+
+    &:focus{
+        @apply ring-0 ring-transparent outline-0 outline-transparent pl-3 pt-1;
+    }
+}

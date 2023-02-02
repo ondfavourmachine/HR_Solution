@@ -264,6 +264,7 @@ export class AssessApplicantModalComponent implements OnInit {
     this.assessment.calculateScore(formToSubmit)
     .subscribe({
       next: (val) => {
+        
         this.sharedService.loading4button(btn, 'done', prevText as string);
         this.answers.totalScore = val.toString();
       },
@@ -274,29 +275,20 @@ export class AssessApplicantModalComponent implements OnInit {
   }
 
 
- async uploadApplicantTestScore(event: Event){
-    const btn = event.target as HTMLButtonElement;
+  uploadApplicantTestScore(event: Event){
+     const btn = event.target as HTMLButtonElement;
     const prevText = btn.textContent;
-    this.sharedService.loading4button(btn, 'yes', 'Adding Score....');
-    try {
-      const res = await lastValueFrom(this.assessment.addApplicantTest({applicationRef: this.data.applicantData.applicationRefNo, score: this.score as any, status: '', comment: ''}));
-      this.sharedService.loading4button(btn, 'yes', 'Uploading Score sheet....');
-      this.assessment.uploadATestScore({AppRef: this.data.applicantData.applicationRefNo, scoreSheet: this.file as File})
-      .subscribe({
-        next: (val) => {
-          this.sharedService.loading4button(btn, 'done', prevText as string);
-          this.sharedService.triggerSuccessfulInitiationModal('You have successfully Graded this applicant', 'Continue', this.data.extraInfo?.callBack);
-          this.dialogRef.close(PreviewActions.CLOSEANDSUBMIT);
-        },
-        error: (error) => {
-          this.sharedService.loading4button(btn, 'done', prevText as string);
-          this.sharedService.errorSnackBar('Error occured while trying to grade this applicant');
-        }
-      })
-    } catch (error) {
-      this.sharedService.errorSnackBar('An Error occured while saving test score!');
-    }
-   
-  }
+    this.sharedService.loading4button(btn, 'yes', 'Uploading Score...');
+    this.assessment.addApplicantTest({score: this.score as any, applicationRef: this.data.applicantData.applicationRefNo as any, status: ApprovalProcessStatuses.Approve})
+    .subscribe({
+      next: val => {
+        this.sharedService.loading4button(btn, 'done', prevText as string);
+        this.sharedService.triggerSuccessfulInitiationModal('You have successfully uploaded score for this applicant', 'Continue', this.data.extraInfo?.callBack);
+      },
+      error: error => {
+        this.sharedService.loading4button(btn, 'done', prevText as string) ;
+      }
+    })
+ }
 
 }

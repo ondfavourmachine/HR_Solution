@@ -37,6 +37,11 @@ import { NoContentComponent } from '../../shared/no-content/no-content.component
 import { TestInviteDescriptionViewComponent } from 'src/app/shared/test-invite-description-view/test-invite-description-view.component';
 import { PostAcceptanceInformationComponent } from '../../shared/post-acceptance-information/post-acceptance-information.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { NoContentToShowComponent } from '../../shared/no-content-to-show/no-content-to-show.component';
+import { BatchScoreUploadComponent } from '../../shared/batch-score-upload/batch-score-upload.component';
+import { PreviewJobDetailsComponent } from '../../shared/preview-job-details/preview-job-details.component';
+import { ApplyForJobByInternalStaffComponent } from '../../shared/apply-for-job-by-internal-staff/apply-for-job-by-internal-staff.component';
+import { TestAssessmentAuditApprovalComponent } from '../../shared/test-assessment-audit-approval/test-assessment-audit-approval.component';
 
 @NgModule({
   declarations: [
@@ -67,6 +72,11 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     LoadingSpinnerComponent,
     NoContentComponent,
     PostAcceptanceInformationComponent,
+    NoContentToShowComponent,
+    BatchScoreUploadComponent,
+    PreviewJobDetailsComponent,
+    ApplyForJobByInternalStaffComponent,
+    TestAssessmentAuditApprovalComponent,
 
   ],
   imports: [
@@ -108,7 +118,9 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     InterviewAssessmentDetailsComponent,
     LoadingSpinnerComponent,
     NoContentComponent,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    NoContentToShowComponent,
+    PreviewJobDetailsComponent
   ], 
   providers: [TitleStringDisplayForGradingPipe]
 })

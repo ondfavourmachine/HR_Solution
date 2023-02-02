@@ -69,13 +69,16 @@
                 </div>
              </section>
 
-             <section class="form_contents overflow-visible">
+             <section 
+               class="form_contents overflow-visible">
                 <div class="form-group parent_input_control">                       
                     <label for="description" class="form-labels">Give a description</label> 
                     <textarea [(ngModel)]="description" name="description" id="description"  class="a_textarea full" placeholder="Enter description here"></textarea>
                   </div>
              </section>
-             <section class="form_contents overflow-visible">
+             <section class="form_contents overflow-visible"
+             *ngIf="selectedInviteType == 'Test_invites_1' || selectedInviteType == 'Interview_invites_2' 
+             || selectedInviteType == 'Interview_invites_3' || selectedInviteType == 'Interview_invites_4'" >
                   <div class="form-group parent_input_control">
                         <label for="classOfDegree" class="form-labels">Department</label>
                         <select [(ngModel)]="selectedDept" name="selectedDept" name="" id="selectedDept" class="form-control">
@@ -88,7 +91,7 @@
              <section class="multi_select_wrapper overflow-visible">  
               <app-multi-select 
                [interviewType]="typeOfInvite"
-               (sendUpApplicants)="showApplicantsSelected($event)" [labelName]="'Add Applicant'"></app-multi-select>
+               (sendUpApplicants)="showApplicantsSelected($event)" [showMultiSelectApplicantsButton]="true" [labelName]="'Add Applicant'"></app-multi-select>
             </section>
 
             <section class="applicant_display">
@@ -126,13 +129,32 @@
                </div> 
              </section>
 
-             <section *ngIf="selectedInviteType == 'Medical_invites_5'" class="form_contents overflow-visible">
+             <!-- <section *ngIf="selectedInviteType == 'Medical_invites_5'" class="form_contents overflow-visible">
                 <div class="form-group parent_input_control">
                     <label for="interviewLink" class="form-labels">Enter Hospital Name <small class="text-[0.788em] text-hrms-border-line-dull">(This is where applicants go to do their medical tests)</small> </label>
                     <input type="text"  [(ngModel)]="hospitalName" name="hospitalName"  placeholder="Example Echolab" 
                     class="form-control" id="interviewLink">  
                </div> 
-             </section>
+             </section> -->
+
+             <section  *ngIf="selectedInviteType == 'Medical_invites_5'" 
+                      class="form_contents overflow-visible">
+                <div class="form-group parent_input_control">
+                      <label  for="hospitalName_address" class="form-labels"> Select Hospital Address <small class="text-[0.788em] text-hrms-border-line-dull">(This is where applicants go to do their medical tests)</small>  </label>
+                      <select [(ngModel)]="hospitalName" name="hospitalName" id="hospitalName_address" class="form-control">
+                          <option value="" selected>Select a suitable address</option>
+                          <option value="Echolab Hospital: 88, Opebi Road, Ikeja, Lagos" > Echolab Hospital: 88, Opebi Road, Ikeja, Lagos  </option>
+                          <option value="Echolab Hospital: 99, Ajose Adeogun VI  Lagos" > Echolab Hospital: 99, Ajose Adeogun VI  Lagos  </option>
+                          <option value="Echolab Hospital: 39 Shasha Road, Akowonjo, Lagos" > Echolab Hospital: 39 Shasha Road, Akowonjo, Lagos  </option>
+                          <option value="Echolab Hospital: 2 second East circular road, Off sapele Road, Benin City" > Echolab Hospital: 2 second East circular road, Off sapele Road, Benin City  </option>
+                          <option value="Echolab Hospital: 21 Otukpo Street,  Area 11, Ahmed bello way, Garki Abuja" > Echolab Hospital: 21 Otukpo Street,  Area 11, Ahmed bello way, Garki Abuja </option>
+                          <option value="Echolab Hospital: 4 Katsina Road, Off Independence Way, Kaduna" > Echolab Hospital: 4 Katsina Road, Off Independence Way, Kaduna</option>
+                          <option value="Echolab Hospital: Opposite Mararaba Medical Centre, Tipper Garage, Mararaba" > Echolab Hospital: Opposite Mararaba Medical Centre, Tipper Garage, Mararaba </option>
+                          <option value="Echolab Hospital: Plot 280, foreign Affairs Quarters,  Karu site, Karu,  Abuja" > Echolab Hospital: Plot 280, foreign Affairs Quarters,  Karu site, Karu,  Abuja </option>
+                          <option value="Echolab Hospital: 375B, Nnebisi Road, Opposite Glo- mobile office , Asaba, Delta state" > Echolab Hospital: 375B, Nnebisi Road, Opposite Glo- mobile office , Asaba, Delta state </option>
+                      </select>     
+               </div> 
+            </section>
 
             <section class="form_contents overflow-visible">
                 <div class="form-group parent_input_control">

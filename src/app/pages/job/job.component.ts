@@ -18,6 +18,7 @@ export class JobComponent implements OnInit {
   @Input('otherRelevantData') otherRelevantData!: otherRelevantData;
   constructor() { }
 
+
   ngOnInit(): void {
     
   }

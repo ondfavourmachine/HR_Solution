@@ -5,7 +5,8 @@
 }
 
 .jobs_wrapper .jobs_section .jobs.one{
-    grid-template-columns: repeat(auto-fit, minmax(26vw, 1fr));
+    // grid-template-columns: repeat(auto-fit, minmax(26vw, 1fr));
+    grid-template-columns: 45%
 }
 
 .apply_contents{

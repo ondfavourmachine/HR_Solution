@@ -125,7 +125,7 @@
                                                <span class="thumbnail">
                                                 <img  [src]="applicant?.passport_URL || '../../../assets/images/place_holder_img.svg'" alt="">
                                               </span> 
-                                               <span class="name_display">{{ applicant?.firstName + ' ' + applicant?.middleName + ' ' + applicant?.lastName }}</span>
+                                               <span class="name_display">{{ applicant?.firstName + ' ' + (applicant?.middleName ? applicant?.middleName : '') + ' ' + applicant?.lastName }}</span>
                                             </td>
                                             <td  class="individual_tableCell_data !text-ro-black-text !opacity-90 font-semibold">
                                                 <span class="w-40 text-ellipsis">{{ applicant?.email }}</span>

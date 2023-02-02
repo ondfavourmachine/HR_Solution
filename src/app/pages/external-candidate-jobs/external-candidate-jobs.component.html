@@ -224,6 +224,8 @@
                         <small class="text-hrms-slightRed">Maximum Size is 2mb</small>
                       </label>
                       <div class="input_group passport_input"> 
+                        <!-- i used css to take the input behind this front_facing element and then set the front_facing pointer events to none, 
+                             so that the back_facing elements will receive pointer events. -->
                         <div #PassportInsertionPoint class="front_facing"><small>Click here to Upload</small></div>
                         <input type="file" accept=".jpeg, .jpg, .png" (change)="insertImageIntoFileStorage($event)" class="an_input back_facing" placeholder="">
                       </div>

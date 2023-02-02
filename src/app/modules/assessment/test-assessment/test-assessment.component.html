@@ -14,7 +14,7 @@
         <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div class="inline-block min-w-full sm:px-6 lg:px-8">
                 <div class="overflow-hidden">
-                    <table class="min-w-full table-fixed">
+                    <table [ngClass]="{'!hidden': view == 'Batch View'}" class="min-w-full table-fixed">
                         <thead class="bg-transparent border-b">
                             <tr>
                                 <th scope="col" class="individual_table_header">
@@ -36,12 +36,145 @@
                                   Assessment Status
                                 </th>
 
+                                <!-- <th scope="col" class="individual_table_header">
+                                    Audit Approval 
+                                </th> -->
+
+                                <th scope="col" class="individual_table_header">
+                                    View
+                                </th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr *ngIf="isLoading">
+                                <td  class="px-4">   
+                                    <ng-container >
+                                        <ngx-skeleton  borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                      </ng-container>
+                      
+                                   
+                                </td>
+                                <td class="px-4"> 
+                                    <ng-container >
+                                        <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                      </ng-container>
+                      
+                                  
+                                </td>
+                                <td class="px-4">
+                                    <ng-container >
+                                        <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                      </ng-container>
+                      
+                                </td>
+                                <td class="px-4">
+                                    <ng-container >
+                                        <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                      </ng-container>
+                      
+                                
+                                </td>
+                                <td class="px-4">
+                                    <ng-container >
+                                        <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                      </ng-container>
+                      
+                                  
+                                </td>
+                                <td class="px-4">
+                                    <ng-container >
+                                        <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                      </ng-container>
+                      
+                                 
+                                </td>
+                                <!-- <td class="px-4"> 
+                                
+                                    <ng-container >
+                                        <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                      </ng-container>
+                      
+                                </td> -->
+                                <td class="px-4" > 
+                                    <ng-container >
+                                        <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                      </ng-container>
+                                </td>
+                                
+                            </tr>
+                            <ng-container *ngFor="let assessment of assessments; index as i">
+                                <tr  class="bg-white cursor-pointer border-b">
+                                    <td class="individual_tableCell_data !text-ro-black-text !opacity-90 font-semibold">
+                                        {{ i < 9 ? '0' + (i + 1) : i + 1 }}
+                                    </td>
+                                    <td class="individual_tableCell_data !text-ro-black-text flex gap-2 justify-start items-center !opacity-90 font-semibold">
+                                       <span class="thumbnail">
+                                        <img  src="../../../../assets/images/place_holder_img.svg" alt="">
+                                      </span> 
+                                       <span class="name_display"> {{ assessment?.applicantName }} </span>
+                                    </td>
+                                    <td  class="individual_tableCell_data !text-ro-black-text !opacity-90 font-semibold">
+                                        <span class="w-40 text-ellipsis"> {{assessment?.position }} </span>
+                                    </td>
+                                    <td class="individual_tableCell_data !text-ro-black-text !opacity-90 font-semibold">
+                                         {{assessment?.invigilator }}
+                                    </td>
+                                    <td class="individual_tableCell_data !text-ro-black-text !opacity-90 font-semibold">
+                                         {{ assessment?.score == null ? '---' : assessment?.score }}
+                                     </td>
+                                     <td class="individual_tableCell_data !text-ro-black-text !opacity-90 font-semibold">
+                                        <span [ngClass]="
+                                        {'NotAssessed': !assessment?.assessmentStatus, 'Assessed': assessment?.assessmentStatus }" 
+                                        class="status">  {{ assessment?.assessmentStatus ? 'Assessed' : 'Not Assessed' }} </span>
+                                     </td>
+                                     
+                                     <!-- <td class="individual_tableCell_data">
+                                        <span [ngClass]="
+                                        {'Pending': assessment.auditApproval == 'Pending', 'Rejected': assessment.auditApproval == 'Fail', 'Approved': assessment?.auditApproval == 'Approve' }" 
+                                        class="status">{{ assessment?.auditApproval == 'Pass' ? 'Successful' : assessment.auditApproval == 'Fail' ? 'Failed' : assessment.auditApproval }}</span>
+                                     </td> -->
+                                     
+                                    <td class="individual_tableCell_data align-middle">
+                                        <img class="inline-flex" (click)="getAAnAssessment(assessment)" src="../../../assets/images/eye_view.svg" alt="">
+                                    </td>    
+                                </tr>  
+                            </ng-container>   
+                        </tbody>
+                    </table>
+                    <table [ngClass]="{'!hidden': view == 'Single View'}" class="min-w-full table-fixed">
+                        <thead class="bg-transparent border-b">
+                            <tr>
+                                <th scope="col" class="individual_table_header">
+                                    S/N
+                                </th>
+                                <th scope="col" class="individual_table_header">
+                                    Batch Date
+                                </th>
+                                <th scope="col"   class="individual_table_header !min-w-[10rem]">
+                                    Test Date
+                                </th>
+                                <th scope="col" class="individual_table_header">
+                                    Invigilator
+                                </th>
+                                <th scope="col" class="individual_table_header">
+                                  Applicants
+                                </th>
+                                <th scope="col"  class="individual_table_header">
+                                  Score Record
+                                </th>
+
+                                <th scope="col" class="individual_table_header">
+                                  Assessment 
+                                </th>
+
                                 <th scope="col" class="individual_table_header">
                                     Audit Approval 
                                 </th>
 
                                 <th scope="col" class="individual_table_header">
-                                    View
+                                    Action
                                 </th>
                                 
                             </tr>
@@ -97,6 +230,13 @@
                                       </ng-container>
                       
                                 </td>
+                                <td class="px-4"> 
+                                
+                                    <ng-container >
+                                        <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
+                                      </ng-container>
+                      
+                                </td>
                                 <td class="px-4" > 
                                     <ng-container >
                                         <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
@@ -104,40 +244,77 @@
                                 </td>
                                 
                             </tr>
-                            <ng-container *ngFor="let assessment of assessments; index as i">
+                            <ng-container *ngFor="let batch of testBatches; index as i">
                                 <tr  class="bg-white cursor-pointer border-b">
-                                    <td class="individual_tableCell_data !text-ro-black-text !opacity-90 font-semibold">
+                                    <td class="individual_tableCell_data align-top !text-ro-black-text !opacity-90 font-semibold">
                                         {{ i < 9 ? '0' + (i + 1) : i + 1 }}
                                     </td>
-                                    <td class="individual_tableCell_data !text-ro-black-text flex gap-2 justify-start items-center !opacity-90 font-semibold">
-                                       <span class="thumbnail">
-                                        <img  src="../../../../assets/images/place_holder_img.svg" alt="">
-                                      </span> 
-                                       <span class="name_display"> {{ assessment?.applicantName }} </span>
+                                    <td class="individual_tableCell_data align-top !text-ro-black-text  items-center !opacity-90 font-semibold">
+                                        {{batch?.createdDate  | date: 'mediumDate' }} 
                                     </td>
-                                    <td  class="individual_tableCell_data !text-ro-black-text !opacity-90 font-semibold">
-                                        <span class="w-40 text-ellipsis"> {{assessment?.position }} </span>
+                                    <td  class="individual_tableCell_data align-top !text-ro-black-text !opacity-90 font-semibold">
+                                        {{batch?.testDate  | date: 'medium' }}
+                                    </td>
+                                    <td class="individual_tableCell_data flex gap-2 justify-start items-center !text-ro-black-text !opacity-90 font-semibold">
+                                        <span class="thumbnail">
+                                            <img  src="../../../../assets/images/place_holder_img.svg" alt="">
+                                          </span> 
+                                        <span class="name_display"> {{ batch?.invigilator }} </span>
                                     </td>
                                     <td class="individual_tableCell_data !text-ro-black-text !opacity-90 font-semibold">
-                                         {{assessment?.invigilator }}
-                                    </td>
-                                    <td class="individual_tableCell_data !text-ro-black-text !opacity-90 font-semibold">
-                                         {{ assessment?.score == null ? '---' : assessment?.score }}
+                                        <div class="applicant">
+                                            <div *ngIf="batch?.applicants! > 2" class="applicant__passport_container">
+                                                <img  class="passport" src="../../../../assets/images/person_2.png" alt="">
+                                                <img  class="passport" src="../../../../assets/images/person_2.png" alt="">
+                                                <img  class="passport" src="../../../../assets/images/person_2.png" alt="">       
+                                            </div>
+
+                                            <div *ngIf="batch?.applicants! == 2" class="applicant__passport_container">
+                                                <img  class="passport" src="../../../../assets/images/person_2.png" alt="">
+                                                <img  class="passport" src="../../../../assets/images/person_2.png" alt="">       
+                                            </div>
+                                            <div *ngIf="batch?.applicants! == 1" class="applicant__passport_container">
+                                                <img  class="passport" src="../../../../assets/images/person_2.png" alt="">    
+                                            </div>
+                                            <div class="applicant__number !text-hrms-genBlueColor-1 !font-bold">  {{batch?.applicants }} </div>
+                                        </div>
                                      </td>
-                                     <td class="individual_tableCell_data !text-ro-black-text !opacity-90 font-semibold">
+                                     <td class="individual_tableCell_data align-top !text-ro-black-text !opacity-90 font-semibold">
                                         <span [ngClass]="
-                                        {'NotAssessed': !assessment?.assessmentStatus, 'Assessed': assessment?.assessmentStatus }" 
-                                        class="status">  {{ assessment?.assessmentStatus ? 'Assessed' : 'Not Assessed' }} </span>
+                                        { 'Pending': batch?.scoreUploaded == 'Pending', 'Approved': batch.scoreUploaded == 'Approved' || batch.scoreUploaded == 'Uploaded' }" 
+                                        class="status">  {{ batch?.scoreUploaded  }} </span>
                                      </td>
                                      
-                                     <td class="individual_tableCell_data">
+                                    
+
+                                     <td class="individual_tableCell_data align-top">
                                         <span [ngClass]="
-                                        {'Pending': assessment.auditApproval == 'Pending', 'Rejected': assessment.auditApproval == 'Fail', 'Approved': assessment?.auditApproval == 'Approve' }" 
-                                        class="status">{{ assessment?.auditApproval == 'Pass' ? 'Successful' : assessment.auditApproval == 'Fail' ? 'Failed' : assessment.auditApproval }}</span>
+                                        {'Pending': batch.assessmentStatus == 'Ongoing', 'NotAssessed': !batch?.assessmentStatus, 'Assessed': batch?.assessmentStatus == 'Assessed' || batch?.assessmentStatus == 'Completed' }" 
+                                        class="status">  {{ batch?.assessmentStatus  }} </span>
+                                     </td>
+
+                                     <td class="individual_tableCell_data align-top">
+                                        <span [ngClass]="
+                                        {'Pending': batch.auditApproval == 'Pending', 'Assessed': batch?.auditApproval == 'Approve', 'Rejected': batch.auditApproval == 'Rejected'}" 
+                                        class="status">  {{ batch?.auditApproval  }} </span>
                                      </td>
                                      
-                                    <td class="individual_tableCell_data align-middle">
-                                        <img class="inline-flex" (click)="getAAnAssessment(assessment)" src="../../../assets/images/eye_view.svg" alt="">
+                                    <td class="individual_tableCell_data align-top flex justify-center items-start relative overflow-visible">
+                                        <div (click)="toggleDropDown(i)" class="three_dots">
+                                            <svg width="21" height="20" viewBox="0 0 21 75" fill="none"  >
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M10.5675 52.7145C14.4125 52.7529 18.1565 55.1632 19.8923 58.7528C21.3389 61.7437 21.3703 65.4314 19.9767 68.4488C17.9863 72.7589 13.1055 75.4203 8.44785 74.4561C5.26497 73.7971 2.43457 71.504 1.02317 68.4488C-0.359611 65.4556 -0.340694 61.7934 1.07939 58.812C2.80063 55.1981 6.49969 52.7535 10.4323 52.7145H10.5669H10.5675ZM10.568 26.3573C14.4153 26.3962 18.1587 28.8116 19.8923 32.395C21.3389 35.3864 21.3703 39.0741 19.9766 42.0916C17.9862 46.4016 13.1055 49.0631 8.44784 48.0988C5.26496 47.4398 2.43455 45.1468 1.02315 42.0916C-0.359628 39.0984 -0.34071 35.4361 1.07937 32.4547C2.7973 28.8477 6.50023 26.3968 10.4318 26.3573H10.568ZM10.5675 0C14.4114 0.0383659 18.1586 2.45431 19.8923 6.0377C21.3389 9.02918 21.3703 12.7169 19.9767 15.7343C17.9928 20.0302 13.1557 22.6843 8.5122 21.7546C5.29846 21.1114 2.44218 18.806 1.02372 15.7343C-0.359058 12.7417 -0.34014 9.07886 1.07994 6.0975C2.79731 2.49157 6.52723 0.0389986 10.4329 0H10.5675Z" fill="black"/>
+                                            </svg>
+                                        </div>
+
+                                        <div [ngClass]="{'!block': i == current &&  showDropDown}" class="dropDownMenu">
+                                            <ul>
+                                                <li (click)="fetchASingleBatchOfTestApplicants(batch, $event, 1, 10)">
+                                                  <img src="../../../../assets/images/eye_view.svg" alt="">  View Applicants
+                                                </li>
+                                                <li *ngIf="batch?.assessmentStatus != 'Completed'" (click)="triggerUploadScoreComp(batch)"><img src="../../../../assets/images/add.svg" alt="">  Upload Score record</li>
+                                                <li *ngIf="batch?.assessmentStatus == 'Completed'" (click)="triggerAuditApprovalComponent(batch)"><img src="../../../../assets/images/add.svg" alt="">  Add Audit Approval</li>
+                                            </ul>
+                                        </div>
                                     </td>    
                                 </tr>  
                             </ng-container>   

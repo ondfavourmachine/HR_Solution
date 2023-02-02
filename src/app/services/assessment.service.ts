@@ -25,7 +25,7 @@ export class AssessmentService {
     return this.http.get<BaseResponse<AssessmentDetails>>(url, {params});
   }
 
-  addApplicantTest(req: { applicationRef: string,score: number,status: string,comment: string}){
+  addApplicantTest(req: { applicationRef: string,score: number,status: string,comment?: string}){
     const token = sessionStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     const url = `${environment.baseUrl}${environment.assessment.addApplicationTest}`
@@ -39,9 +39,9 @@ export class AssessmentService {
     return this.http.post<any>(url, req, {headers});
   }
 
-  uploadATestScore(req: {AppRef: string, scoreSheet: File}){
+  uploadATestScore(req: {SchRef: string, scoreSheet: File}){
     const formData= new FormData();
-    formData.append('AppRef', req.AppRef);
+    formData.append('SchRef', req.SchRef);
     formData.append('ScoreSheet', req.scoreSheet)
     const token = sessionStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
@@ -75,6 +75,19 @@ export class AssessmentService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     const url = `${environment.baseUrl}${environment.assessment.getGradesByAnInterviewer}`
     return this.http.post<any>(url, req, {headers});
+  }
+
+  getAllTestBatches<T>(searchParams: Partial<SearchParams>): Observable<AssessmentResponseDS<T>>{
+    const params: HttpParams = Object.keys(searchParams).reduce((prev, curr) => prev.set(curr, (searchParams as SearchParams)[curr as keyof SearchParams]), new HttpParams());
+    const url = `${environment.baseUrl}${environment.assessment.getTestBatches}`
+    return this.http.get<AssessmentResponseDS<T>>(url);
+  }
+
+  fetchASingleBatch<T>(searchParams: Partial<SearchParams> & {scheduleRef: string}): Observable<AssessmentResponseDS<T>>{
+    //scheduleRef
+    const params: HttpParams = Object.keys(searchParams).reduce((prev, curr) => prev.set(curr, (searchParams as SearchParams)[curr as keyof SearchParams]), new HttpParams());
+    const url = `${environment.baseUrl}${environment.assessment.getApplicantsInOneBatch}`
+    return this.http.get<AssessmentResponseDS<T>>(url, {params});
   }
 
 }

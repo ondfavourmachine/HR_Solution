@@ -1,3 +1,4 @@
 <div class="tabs">
-    <a *ngFor="let tab of listOfTabs; index as i" (click)="changeTabs(tab)" class="tab" [ngClass]="{'selected': tabToSelect == tab }"> {{ tab + ' ' + tabGroupName}}   </a>
+    <a *ngFor="let tab of listOfTabs; index as i" (click)="changeTabs(tab)" 
+        class="tab" [ngClass]="{'selected': tabToSelect == tab }"> {{ tab + ' ' + tabGroupName}}   </a>
   </div>

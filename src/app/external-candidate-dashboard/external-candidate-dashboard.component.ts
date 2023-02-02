@@ -8,6 +8,7 @@ import { SharedService } from 'src/app/services/sharedServices';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { TestInviteDescriptionViewComponent } from '../shared/test-invite-description-view/test-invite-description-view.component';
 import { PostAcceptanceInformationComponent } from '../shared/post-acceptance-information/post-acceptance-information.component';
+import { environment } from 'src/environments/environment';
 // import { TestInviteDescriptionViewComponent } from '../pages/shared/test-invite-description-view/test-invite-description-view.component';
 
 @Component({
@@ -52,7 +53,7 @@ export class ExternalCandidateDashboardComponent implements OnInit {
 
   getApplicantJobs(email: string){
     this.isLoading = true;
-    this.externalCandidateService.getApplicantJobs(email)
+    (this.externalCandidateService.getApplicantJobs<JobAppliedForByApplicant[]>(environment.externalCandidateBaseUrl, email))
     .subscribe({next: this.handleJobApplicantJobs,error: console.error})
   }
 

@@ -1,0 +1,52 @@
+
+<main class="main_container overflow-visible">
+  <header>
+    <div class="first_part gap-20">
+     Upload Test Score Record   
+    </div>
+    <div class="second_part" >
+     <span (click)="closeBtn()" >
+        <img  src="../../../assets/images/close-icon.svg" alt=""></span>
+    </div>
+ </header>
+
+<div class="content_wrapper">
+  <div class="upload_test_record_container">
+    <div class="test_record_contents">
+      <h5 [ngClass]="{'!text-hrms-bgBlue-1': hasUploadedScore}">Test Record</h5>
+      <p *ngIf="!hasUploadedScore">
+        <span (click)="triggerUpload()" class="trigger cursor-pointer">Upload</span>
+        <span class="test">Click here to upload Test Record</span>
+        <input (change)="catchSelectedFile($event)" id="uploadScore" type="file" class="hidden">
+      </p>
+      <p class="!flex-row !gap-0" *ngIf="hasUploadedScore">
+        <span class="trigger !px-1 !border-0 !bg-transparent">
+          <img [src]="uploadedMimeType" alt="">
+        </span>
+        <span class="test flex-grow inline-flex items-center basis-full overflow-visible gap-2">
+          <span class="inline-flex flex-grow items-center gap-2">
+            <small class="text-xl basis-full whitespace-nowrap text-ellipsis border-b border-dashed border-hrms-bgBlue-1 !text-hrms-bgBlue-1">  {{ file?.name}} </small>
+            <small class="text-xl size_of_file font-bold w-4/12">{{ sharedService.convertToHumanReadableFileSize(file?.size) }}</small>
+          </span>
+          <span class="w-[60%] cancelBtn_container"><small (click)="removeUploadedFile()" class="cancelBtn"></small></span>
+        </span>
+      </p>
+    </div>
+    <div class="image_container" *ngIf="!hasUploadedScore">
+      <span><img src="../../../assets/images/no_uploaded_data.svg" alt=""></span>
+    </div>
+    <div class="image_container" *ngIf="hasUploadedScore">
+      <span><img src="../../../assets/images/no_uploaded_data.svg" alt=""></span>
+    </div>
+  </div>
+</div>
+
+ <div class="footer_wrapper" *ngIf="hasUploadedScore">
+  <div 
+      class="w-full flex justify-end items-center gap-5 px-6">
+        <button
+       (click)="uploadApplicantTestScore($event)" 
+       class="btn-red-custom !mb-0 !w-max px-6 !py-4">Submit</button>
+     </div>
+ </div>
+</main>

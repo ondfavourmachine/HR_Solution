@@ -31,4 +31,103 @@
 }
 
 
+.btn-red-custom.draft_class{
+    @apply px-2 gap-2 #{!important};
+}
+
+.sideBarForDisplayingDraftsParentContainer{
+    backdrop-filter: blur(0.03em);
+    background-color: hsl(208 7% 97% / .325);
+    left: 1500px;
+    transform-origin: right;
+    display: none;
+    @apply absolute right-0 top-0 bottom-0 z-10;
+
+    &.moveBackDropIntoView{
+        display: block;
+        animation: 500ms linear both 500ms moveBackdropIn;
+    }
+
+    &.moveBackDropOutOfView{
+        animation: 500ms reverse both 500ms moveBackdropIn;
+    }
+}
+
+
+
+.sideBarForDisplayingDrafts{
+    background-color: white;
+    width: 0;
+    display: none;
+    transform-origin: right;
+    @apply absolute right-0 top-0 bottom-0 z-50 backdrop-blur-[0.45em];
+    &.comeIntoView{
+        display: block;
+        animation: 450ms linear both 750ms makeWidthWide;
+    }
+
+    &.goOutOfView{
+        animation: 450ms reverse both 750ms makeWidthWide;
+    }
+
+    & .draft_container{
+        // opacity: 0;
+        // display: none;
+        // transition: opacity 1s ease-in-out 10s;
+        @apply  px-4 py-3 w-full h-full;
+        // &.show{
+        //     opacity: 1;
+        //     display: block;
+        // }
+
+        & .draft{ 
+            
+            @apply rounded-md w-full h-[18rem] p-3 border-2 bg-hrms-banner-1 border-[#82ADD870] mb-7;
+
+            & .draft_content_container{
+                display:  grid;
+                grid-template-columns: 40% 60%;
+                grid-template-rows: repeat(2, 2em);
+                row-gap: 1em;
+                column-gap: .5em;
+                @apply h-[65%] mb-2;
+
+                & .title{
+                    grid-column: 1/2;
+                    grid-row: span 1;
+                }
+
+                & .content{
+                    grid-column: 2/3;
+                    grid-row: span 1;
+                }
+
+            }
+
+            & .button_container{
+                @apply flex gap-4;
+                & .trigger_buttons{
+                    @apply rounded-[1.5em] border-2 border-[#82ADD870] cursor-pointer w-max px-8 py-2 overflow-visible flex items-center;
+
+                    &.edit{
+                        @apply text-hrms-genBlueColor-1  text-center hover:bg-hrms-genBlueColor-1 hover:text-white;
+                    }
+
+                    &.delete{
+                        @apply border-hrms-slightRed text-hrms-slightRed text-center hover:bg-hrms-slightRed hover:text-white; 
+                    }
+                }
+            }
+        }
+    }
+}
+
+@keyframes makeWidthWide {
+    from { width: 0} to {width: 30vw}
+}
+
+
+@keyframes moveBackdropIn {
+    from {left: 1500px } to{left: 0px}
+}
 

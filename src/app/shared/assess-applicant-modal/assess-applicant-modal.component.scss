@@ -97,44 +97,44 @@
                     @apply border-l-0 border-transparent #{!important};
                 }
                 
-                & .upload_test_record_container{
-                    @apply w-full border border-hrms-read-notification px-3 py-3 flex gap-3 rounded-xl;
+                // & .upload_test_record_container{
+                //     @apply w-full border border-hrms-read-notification px-3 py-3 flex gap-3 rounded-xl;
     
-                    & .test_record_contents{
-                        @apply w-full; 
+                //     & .test_record_contents{
+                //         @apply w-full; 
     
-                        & h5{
-                            font-size: .899em;
-                            @apply text-hrms-read-notification font-bold;
-                        }
+                //         & h5{
+                //             font-size: .899em;
+                //             @apply text-hrms-read-notification font-bold;
+                //         }
     
-                        & .parent_input_control{
-                            @apply mt-3
-                        }
+                //         & .parent_input_control{
+                //             @apply mt-3
+                //         }
     
-                        p{
-                            @apply py-5 flex gap-3 items-center;
-                        }
+                //         p{
+                //             @apply py-5 flex gap-3 items-center;
+                //         }
     
-                        & span.trigger{
-                            font-size: .819em;
-                            @apply rounded-3xl border border-hrms-read-notification bg-hrms-dashboard-bg text-hrms-read-notification px-4 py-2;
-                        }
+                //         & span.trigger{
+                //             font-size: .819em;
+                //             @apply rounded-3xl border border-hrms-read-notification bg-hrms-dashboard-bg text-hrms-read-notification px-4 py-2;
+                //         }
     
-                        & span.text{
-                            font-size: .829em;
-                            @apply text-hrms-read-notification;
-                        }
-                    }
+                //         & span.text{
+                //             font-size: .829em;
+                //             @apply text-hrms-read-notification;
+                //         }
+                //     }
     
-                    & .image_container{
-                        @apply w-auto px-3 flex items-center;
+                //     & .image_container{
+                //         @apply w-auto px-3 flex items-center;
     
-                        & span{
-                            @apply w-44 rounded-lg border h-full border-[#E2ECF5] bg-[#E2ECF5] inline-flex justify-center items-center py-2 px-3;
-                        }
-                    }
-                }
+                //         & span{
+                //             @apply w-44 rounded-lg border h-full border-[#E2ECF5] bg-[#E2ECF5] inline-flex justify-center items-center py-2 px-3;
+                //         }
+                //     }
+                // }
             }
         }
 

@@ -33,7 +33,14 @@ export const environment = {
     creatJob: 'JobCreate/AddJob',
     getPendingJobs: 'JobCreate/GetJobsByStatus',
     approveJob: 'JobCreate/ApproveJob',
-    getAJob: 'JobCreate/GetJobById'
+    getAJob: 'JobCreate/GetJobById',
+    getJobByCategory: 'JobCreate/GetJobs',
+    createDraft: 'JobDraft/AddJobDraft',
+    getDraft: 'JobDraft/GetDrafts',
+    deleteDrafts: 'JobDraft/DeactivateJobDraft',
+    internalCandidateJobApplication: 'Application/AddApplication',
+    internalCandidateJobApplicationUpload: 'Application/Upload',
+    getJobOfAnInternalCandidate: 'Application/GetApplicantJobByJobId'
   },
   departments: {
     getDept: 'Department/GetDepartments'
@@ -51,13 +58,15 @@ export const environment = {
   },
   assessment: {
     getAssessments: 'Assessment/AssessmentSelection',
-    uploadATestScore: 'ApplicantTest/UploadTest',
+    uploadATestScore: 'Scheduler/UploadTest',
     addApplicationTest: 'ApplicantTest/AddApplicantTest',
     approveTestScore: 'Application/ApproveApplication',
     addInterviewChairDetailsForAnInterview: 'ApplicantInterviewInfo/AddApplicantInterviewInfo',
     addInterviewerRatingsForAnApplicant: 'InterviewerSummary/AddInterviewerSummary',
     calculateScore: 'InterviewerSummary/GetAverageScore',
-    getGradesByAnInterviewer: 'InterviewerSummary/InterviewerPerformanceSummary'
+    getGradesByAnInterviewer: 'InterviewerSummary/InterviewerPerformanceSummary',
+    getTestBatches: 'Scheduler/GetBatchApplicantsScheduled',
+    getApplicantsInOneBatch: 'Assessment/TestAssessmentByScheduleRef'
   },
   branches:{
     branchesInGlobus: 'Branch/GetBranches'

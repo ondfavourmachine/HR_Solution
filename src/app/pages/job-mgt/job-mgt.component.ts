@@ -1,7 +1,8 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { lastValueFrom } from 'rxjs';
-import { AGlobusBranch, AJob, DepartmentsInGlobus, InformationForApprovalModal, JobStatus, JobToBeCreated, JobType, tabs, Views } from 'src/app/models/generalModels';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import { lastValueFrom, throwError } from 'rxjs';
+import { AGlobusBranch, AJob, DepartmentsInGlobus, InformationForApprovalModal, JobCategories, JobDraft, JobStatus, JobToBeCreated, JobType, otherRelevantData, PreviewJobDS, tabs, Views, WhoIsViewing } from 'src/app/models/generalModels';
 import { JobsService } from 'src/app/services/jobs.service';
 import { SharedService } from 'src/app/services/sharedServices';
 import { ApprovalModalComponent } from 'src/app/shared/approval-modal/approval-modal.component';
@@ -14,14 +15,14 @@ import { SuccessfulInitiationComponent } from 'src/app/shared/successful-initiat
   styleUrls: ['./job-mgt.component.scss']
 })
 export class JobMgtComponent implements OnInit {
-  @ViewChild('PersonSpecifications') PersonSpecifications!: ElementRef<HTMLElement>;
-  @ViewChild('ProfessionalCompetencies') ProfessionalCompetencies!: ElementRef<HTMLElement>;
-  @ViewChild('Accountability') Accountability!: ElementRef<HTMLElement>;
-  @ViewChild('JobObjectives') JobObjectives!: ElementRef<HTMLElement>;
-  @ViewChild('BehavioralCompetencies') BehavioralCompetencies!:ElementRef<HTMLElement>;
-  @ViewChild('OrganisationalCompetencies') OrganisationalCompetencies!: ElementRef<HTMLElement>;
-  @ViewChild('EducationalQualifications') EducationalQualifications!: ElementRef<HTMLElement>;
-  @ViewChild('Experience') Experience!: ElementRef<HTMLElement>;
+  // @ViewChild('PersonSpecifications') PersonSpecifications!: ElementRef<HTMLElement>;
+  // @ViewChild('ProfessionalCompetencies') ProfessionalCompetencies!: ElementRef<HTMLElement>;
+  // @ViewChild('Accountability') Accountability!: ElementRef<HTMLElement>;
+  // @ViewChild('JobObjectives') JobObjectives!: ElementRef<HTMLElement>;
+  // @ViewChild('BehavioralCompetencies') BehavioralCompetencies!:ElementRef<HTMLElement>;
+  // @ViewChild('OrganisationalCompetencies') OrganisationalCompetencies!: ElementRef<HTMLElement>;
+  // @ViewChild('EducationalQualifications') EducationalQualifications!: ElementRef<HTMLElement>;
+  // @ViewChild('Experience') Experience!: ElementRef<HTMLElement>;
   //
   @ViewChild('PersonSpecificationsTwo') PersonSpecificationsTwo!: ElementRef<HTMLElement>;
   @ViewChild('ProfessionalCompetenciesTwo') ProfessionalCompetenciesTwo!: ElementRef<HTMLElement>;
@@ -34,7 +35,7 @@ export class JobMgtComponent implements OnInit {
   tabList: tabs[] = ['Approved', 'Pending'];
   currentBranchInView!: string;
   views: Views = 'jobs';
-  dataFromCreateJob: any={};
+  dataFromCreateJob: any ={};
   locationsOfGlobus: AGlobusBranch[] = [];
   deptInGlobus: DepartmentsInGlobus[] = [];
   tabToSelect: tabs = 'Approved';
@@ -42,11 +43,17 @@ export class JobMgtComponent implements OnInit {
   pendingJobs: AJob[] = [];
   approvedJobs: AJob[] = [];
   jobID!: number
-  constructor(private dialog: MatDialog, private sharedService: SharedService, private jobservice: JobsService) { 
+  isLoading: boolean = false;
+  showDraftSideBar: boolean = false;
+  savedDrafts: AJob[] = [];
+  relevantData!: otherRelevantData;
+  objForPreviewOfJob!: PreviewJobDS
+  constructor(private dialog: MatDialog, public sharedService: SharedService, private jobservice: JobsService) { 
     this.refresh = this.refresh.bind(this);
   }
 
   ngOnInit(): void {
+    this.relevantData = {category: JobCategories.INTERNAL, whoIsViewing: WhoIsViewing.OTHERPERSONS};
     this.getBranchLocationsInGlobus()
     this.getDept();
     this.getPendingJobs();
@@ -54,13 +61,18 @@ export class JobMgtComponent implements OnInit {
   }
 
   getApprovedJobs(){
+    this.isLoading = true;
     this.jobservice.getJobBasedOnStatus('Approve')
     .subscribe(
       {
         next: ({result}) => {
           this.approvedJobs = result ?? [];
+          this.isLoading = false;
         },
-        error: console.error
+        error: (err) => {
+          this.isLoading = false;
+          console.log(err);
+        }
       }
     )
   }
@@ -70,38 +82,135 @@ export class JobMgtComponent implements OnInit {
     this.tabToSelect == 'Approved' ? this.showPendingJobs = false : this.showPendingJobs = true;
   }
 
+  editJob(adraft: JobToBeCreated){
+    const config: MatDialogConfig = {
+      width: '80vw',
+      height: '80vh',
+      maxHeight: '80vh',
+      disableClose: true,
+      panelClass: 'createJob',
+      data: adraft
+    } 
+    const dialog = this.dialog.open(CreateJobFormComponent, config);
+    this.handleJobCreation(dialog);
+    this.showDraftSideBar =false;
+  }
+
   // changeTabs(tab: tabs){
     
   //   // tab == 'Approved' ? this.showPendingJobs = false : this.showPendingJobs = true;
   // }
 
-  startCreatingJob(event: Event){
+  startCreatingJob(event?: Event){
     const config: MatDialogConfig = {
       width: '80vw',
       height: '80vh',
       maxHeight: '80vh',
+      disableClose: true,
       panelClass: 'createJob'
-    }
+    } 
     const dialog = this.dialog.open(CreateJobFormComponent, config);
-    dialog.afterClosed()
-    .subscribe({next: (val: {viewToShow: Views, data: any}) => {
-      this.views = val.viewToShow;
-      this.dataFromCreateJob = {...val.data};
-      console.log(val.data);
-      this.currentBranchInView = this.locationsOfGlobus.find(elem => elem.id == parseInt(this.dataFromCreateJob?.location))?.branchName as string;
-      this.sharedService.insertIntoAdjacentHtmlOfElement<HTMLElement, ElementRef, string>([
-        {element: this.JobObjectives, content: this.sharedService.insertLisIntoUl(this.dataFromCreateJob.jobObjectives)},
-        {element: this.Accountability, content: this.sharedService.insertLisIntoUl(this.dataFromCreateJob.accountabilities)} ,
-        {element: this.ProfessionalCompetencies, content: this.sharedService.insertLisIntoUl( this.dataFromCreateJob.professionalCompetencies)},
-        {element: this.PersonSpecifications, content: this.sharedService.insertLisIntoUl( this.dataFromCreateJob.personSpecification)},
-        {element: this.BehavioralCompetencies, content: this.sharedService.insertLisIntoUl(this.dataFromCreateJob.behavioralCompetencies)},
-        {element: this.OrganisationalCompetencies, content: this.sharedService.insertLisIntoUl( this.dataFromCreateJob.organisationalCompetencies)},
-        {element: this.EducationalQualifications, content: this.sharedService.insertLisIntoUl(this.dataFromCreateJob.educationalQualifications)},
-        {element:  this.Experience, content: this.sharedService.insertLisIntoUl(this.dataFromCreateJob.experience)}
-     ])
+    this.handleJobCreation(dialog);
+  }
 
-      this.sharedService.showAllChildren([this.JobObjectives, this.PersonSpecifications, this.Accountability, this.ProfessionalCompetencies, this.Experience, this.EducationalQualifications, this.OrganisationalCompetencies, this.BehavioralCompetencies])
-    }})
+  // this function leads to the display of the preview page/ saving draft functionality
+
+  handleJobCreation(dialog: MatDialogRef<CreateJobFormComponent>){
+    dialog.afterClosed()
+    .subscribe(
+      {next: (val: {viewToShow: Views, data: any, saveDraft?: boolean}) => {
+      if(val.data && !val.hasOwnProperty('saveDraft')){
+        this.views = val.viewToShow;
+        this.dataFromCreateJob = {...val.data};
+        this.currentBranchInView = this.locationsOfGlobus.find(elem => elem.id == parseInt(this.dataFromCreateJob?.location))?.branchName as string;
+        this.objForPreviewOfJob = {job: this.dataFromCreateJob, extraInfo: {currentBranchInView: this.currentBranchInView, headerText: 'Preview the Job Details Before Submitting for Approval', showHeaderText: true}}
+      //   this.sharedService.insertIntoAdjacentHtmlOfElement<HTMLElement, ElementRef, string>([
+      //     {element: this.JobObjectives, content: this.sharedService.insertLisIntoUl(this.dataFromCreateJob.jobObjectives)},
+      //     {element: this.Accountability, content: this.sharedService.insertLisIntoUl(this.dataFromCreateJob.accountabilities)} ,
+      //     {element: this.ProfessionalCompetencies, content: this.sharedService.insertLisIntoUl( this.dataFromCreateJob.professionalCompetencies)},
+      //     {element: this.PersonSpecifications, content: this.sharedService.insertLisIntoUl( this.dataFromCreateJob.personSpecification)},
+      //     {element: this.BehavioralCompetencies, content: this.sharedService.insertLisIntoUl(this.dataFromCreateJob.behavioralCompetencies)},
+      //     {element: this.OrganisationalCompetencies, content: this.sharedService.insertLisIntoUl( this.dataFromCreateJob.organisationalCompetencies)},
+      //     {element: this.EducationalQualifications, content: this.sharedService.insertLisIntoUl(this.dataFromCreateJob.educationalQualifications)},
+      //     {element:  this.Experience, content: this.sharedService.insertLisIntoUl(this.dataFromCreateJob.experience)}
+      //  ])
+      //   this.sharedService.showAllChildren([this.JobObjectives, this.PersonSpecifications, this.Accountability, this.ProfessionalCompetencies, this.Experience, this.EducationalQualifications, this.OrganisationalCompetencies, this.BehavioralCompetencies]);
+      //   return;
+       }
+       this.views = val.viewToShow;
+       if(val.hasOwnProperty('saveDraft') && val.saveDraft) this.createJobAsDraft(event as Event, val.data);
+        }
+       }
+     )
+  }
+
+  // calls the api that saves a job as a draft for later.
+
+  createJobAsDraft(event: Event, job: JobToBeCreated){
+    const button = this.retrievButton(event);
+    let prevInnerHtml = button.innerHTML;
+    this.transformButton(button, `<i class="fa fa-sync fa-spin ml-1"></i> Saving Job...`, true);
+    this.jobservice.saveJobAsADraft(job)
+    .subscribe({
+      next: (val) => {
+        if(!val.hasError && val.statusCode == '200'){
+          this.sharedService.successSnackBar('Draft successfully saved!');
+          this.transformButton(button, prevInnerHtml, false);
+          return;
+        }
+        return throwError(() => new Error('Unable to create draft. Please try again later!'));
+      },
+      error: (err) => {
+        console.log(err);
+        this.transformButton(button, prevInnerHtml, false);
+        this.sharedService.errorSnackBar('Unable to create draft. Please try again later');
+      }
+    })
+  }
+
+  transformButton(button: HTMLButtonElement, textToUse: string, transformInfo: boolean){
+    if(transformInfo){
+    button.classList.add('draft_class')
+    button.innerHTML = textToUse;
+    return;
+    }
+    button.innerHTML = textToUse;
+    button.classList.remove('draft_class');   
+  }
+
+  retrievButton(event: Event){
+    let button;
+    try {
+    const buttonParent = (event.target as HTMLElement).closest('.create_button') as HTMLDivElement;
+    button = buttonParent!.querySelector('button') as HTMLButtonElement;
+    } catch (error) {
+      const buttonParent = document.querySelector('.create_button') as HTMLDivElement;
+      button = buttonParent!.querySelector('button') as HTMLButtonElement;
+    }
+    return button;
+  }
+
+ async startJobCreationProcess(event: Event){
+    const button = this.retrievButton(event);
+    let prevInnerHtml = button.innerHTML;
+    this.transformButton(button, `<i class="fa fa-sync fa-spin ml-1"></i> Loading Drafts..`, true);
+    try {
+      const {result} = await lastValueFrom(this.jobservice.checkForDrafts());
+      if( !result ){
+        this.startCreatingJob(event);
+        this.transformButton(button, prevInnerHtml, false);
+        return;
+      }
+      this.transformButton(button, prevInnerHtml, false);
+      this.showDraftSideBar = true;
+      this.savedDrafts = result;
+      console.log(this.savedDrafts);
+     } catch (error) {
+      console.log(error);
+      this.sharedService.errorSnackBar('An error occured while trying to load drafts. Please try again later!');
+      this.transformButton(button, prevInnerHtml, false);
+      this.startCreatingJob(event);
+     }   
   }
 
   getBranchLocationsInGlobus(){
@@ -112,14 +221,11 @@ export class JobMgtComponent implements OnInit {
     })
   }
 
-  getUnitName(unitName: string): string{
-    return unitName ?  unitName.split('/')![0] : '';
-  }
-
+  // api call is made here for approval of job to take place. it is a function that is present on the preview page.
   sendJobForApproval(event: Event){
     const btn = event.target as HTMLButtonElement;
     const prevText = btn.textContent;
-    const form: Partial<JobToBeCreated> = {};
+    const form: Partial<JobToBeCreated> & Partial<AJob> = {};
     const {jobObjectives,accountabilities,jobTitle, department, unit, reportTo,supervise, location, deadline, grade, type, category, testIsRequired, interviewIsRequired, classOfDegree, age, nysc, professionalCompetencies, behavioralCompetencies, organisationalCompetencies, personSpecification, educationalQualifications, experience} 
      = this.dataFromCreateJob;
     form.objective = jobObjectives;
@@ -148,6 +254,7 @@ export class JobMgtComponent implements OnInit {
     form.educationalQualifications =educationalQualifications;
     form.experience = experience;
     form.createdBy = ''
+    this.dataFromCreateJob.hasOwnProperty('id') ? form.draftId =  this.dataFromCreateJob.id : null;
     this.sharedService.loading4button(btn, 'yes', 'Submitting, Please wait...');
     this.jobservice.createAJob(form)
     .subscribe({
@@ -163,7 +270,12 @@ export class JobMgtComponent implements OnInit {
         throw new Error(val.info as string);
       },
       error: (error) => {
-        this.sharedService.loading4button(btn, 'done', prevText as string)
+        if(error instanceof HttpErrorResponse && error.status == 403){
+          this.sharedService.errorSnackBar('You do not have the right role for job creation. Please contact admin')
+          this.sharedService.loading4button(btn, 'done', prevText as string);
+          return;
+        }
+        this.sharedService.loading4button(btn, 'done', prevText as string);
       }
     })
   }  
@@ -180,6 +292,7 @@ export class JobMgtComponent implements OnInit {
       const {position, accountablities, experience, department, objective, organisationalCompetencies, educationalQualifications, personSpecification, professionalCompetencies, behavioralCompetencies, 
         departmentName, unit: unitFromServer, supervises, id, classOfDegree, reportTo, locationName, deadline, grade, typeName, category, isInterviewRequired, isTestRequired} = event.data;
        try {
+        // continue from here
         const res = await lastValueFrom(this.sharedService.getUnits(department));
         const foundUnit = res.result.find(unit => unit.unitId == unitFromServer);
         this.jobID = id;
@@ -225,13 +338,18 @@ export class JobMgtComponent implements OnInit {
    }
 
    getPendingJobs(){
+    this.isLoading = true;
     this.jobservice.getJobBasedOnStatus('Pending')
     .subscribe(
       {
         next: ({result}) => {
           this.pendingJobs = result ?? [];
+          this.isLoading = false;
         },
-        error: console.error
+        error: (err) => {
+          this.isLoading = false;
+          console.log(err)
+        }
       }
     )
   }
@@ -281,6 +399,19 @@ export class JobMgtComponent implements OnInit {
     this.getPendingJobs();
     this.handleChangeOfTab('Pending');
     this.views = 'jobs';
+  }
+
+  deleteDraft(draftJob: JobToBeCreated, index: number){
+    this.jobservice.deleteDrafts(draftJob.id)
+    .subscribe({
+      next: (val) => {
+        this.savedDrafts.splice(index, 1);
+        this.sharedService.successSnackBar('Draft deleted successfully!');
+      },
+      error: (error) => {
+        this.sharedService.errorSnackBar('Unable to delete draft!');
+      }
+    })
   }
 
 }

@@ -93,13 +93,13 @@
                           
                                      
                                     </td>
-                                    <td class="px-4"> 
+                                    <!-- <td class="px-4"> 
                                     
                                         <ng-container >
                                             <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
                                           </ng-container>
                           
-                                    </td>
+                                    </td> -->
                                     <td class="px-4" > 
                                         <ng-container >
                                             <ngx-skeleton borderRadius="12px" height="10px" margin="15px 0 8px 0" width="100%"></ngx-skeleton>
@@ -143,7 +143,7 @@
                                               {
                                                 'Pending': applicant.audit_Status == '' || applicant.audit_Status == 'Pending', 'Approved': applicant?.audit_Status == 'Approve'}" 
                                               class="status">
-                                              {{ applicant?.audit_Status == '' ? 'Pending': 'Approved' }}
+                                              {{ applicant?.audit_Status == '' ? 'Pending': applicant?.audit_Status }}
                                             </span>
                                          </td>
                                          <td class="individual_tableCell_data">

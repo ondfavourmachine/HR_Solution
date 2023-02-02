@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { BaseResponse, JobAppliedForByApplicant, PostAcceptanceInfo, RequiredApplicantDetails, TestDetails } from '../models/generalModels';
+import { AJob, BaseResponse, JobAppliedForByApplicant, PostAcceptanceInfo, RequiredApplicantDetails, TestDetails } from '../models/generalModels';
 
 @Injectable({
   providedIn: 'root'
@@ -22,9 +22,16 @@ export class ExternalApplicantService {
     return this.http.post<BaseResponse<null>>(`${this.external_url}${environment.externalApplicationApis.updateApplicantApplication}`, candidateFileUploads);
   }
 
-  getApplicantJobs(email: string): Observable<BaseResponse<JobAppliedForByApplicant[]>>{
-    const params = new HttpParams().set('Email', email)
-    return this.http.get<BaseResponse<JobAppliedForByApplicant[]>>(`${this.external_url}${environment.externalApplicationApis.applicantJobs}`, {params});
+  getApplicantJobs<T>(urlToUse: string, email?: string, ): Observable<BaseResponse<T>>{
+    let params!: HttpParams;
+    email ? params = new HttpParams().set('Email', email as string) : null;
+    if(email) {
+      return this.http.get<BaseResponse<T>>(`${urlToUse}${environment.externalApplicationApis.applicantJobs}`, {params});
+    }
+    let token = sessionStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<BaseResponse<T>>(`${urlToUse}${environment.externalApplicationApis.applicantJobs}`, {headers});
+    
   }
 
   getTestDetailsSentToApplicantsEmail(email: string): Observable<BaseResponse<TestDetails>>{

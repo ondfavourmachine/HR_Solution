@@ -77,6 +77,7 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
   }
 
   handleApplicantsFromServer(val: ApplicantsSelectionResponse){
+
     const { accepted, all, awaiting, pending, rejected, returned, data, pageSize, totalRecords } = val;
     const statistics = {accepted, all, awaiting, rejected, returned, pending};
     this.broadCast.broadCastStatistics(statistics);

@@ -1,0 +1,117 @@
+import { Component, OnInit, Input, ViewChild, ElementRef, OnChanges, Output, EventEmitter } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { lastValueFrom } from 'rxjs';
+import { AnApplication, PreviewJobDS, tabs, Views } from 'src/app/models/generalModels';
+import { JobsService } from 'src/app/services/jobs.service';
+import { SharedService } from 'src/app/services/sharedServices';
+import { ApplyForJobByInternalStaffComponent } from '../apply-for-job-by-internal-staff/apply-for-job-by-internal-staff.component';
+
+@Component({
+  selector: 'app-preview-job-details',
+  templateUrl: './preview-job-details.component.html',
+  styleUrls: ['./preview-job-details.component.scss']
+})
+export class PreviewJobDetailsComponent implements OnInit, OnChanges {
+  currentBranchInView!: string;
+  today: Date = new Date(Date.now());
+  views!: Views;
+  applications: AnApplication[] = [];
+  tabList: tabs[] = ['Job Details', 'Track application']
+  @Output() goBack = new EventEmitter<Views>();
+  @Output() submitJob = new EventEmitter<Event>();
+  @Input('data')
+  data!: PreviewJobDS
+  @Input('buttonText') buttonText!: string
+  @Input('showTabs') showTabs: boolean = false;
+  
+
+  @ViewChild('PersonSpecifications', {static: true}) PersonSpecifications!: ElementRef<HTMLElement>;
+  @ViewChild('ProfessionalCompetencies', {static: true}) ProfessionalCompetencies!: ElementRef<HTMLElement>;
+  @ViewChild('Accountability', {static: true}) Accountability!: ElementRef<HTMLElement>;
+  @ViewChild('JobObjectives', {static: true}) JobObjectives!: ElementRef<HTMLElement>;
+  @ViewChild('BehavioralCompetencies', {static: true}) BehavioralCompetencies!:ElementRef<HTMLElement>;
+  @ViewChild('OrganisationalCompetencies', {static: true}) OrganisationalCompetencies!: ElementRef<HTMLElement>;
+  @ViewChild('EducationalQualifications', {static: true}) EducationalQualifications!: ElementRef<HTMLElement>;
+  @ViewChild('Experience', {static: true}) Experience!: ElementRef<HTMLElement>;
+  constructor(  public sharedService: SharedService,private dialog: MatDialog, private jobservice: JobsService) { }
+
+  ngOnChanges(){
+    if(!this.data || typeof this.data == 'object')console.log(`data input  is an: ${this.data}`);
+    if(typeof this.data == 'object' && 'job' in this.data){
+      console.log(`data input  is an:`, this.data);
+      this.sharedService.insertIntoAdjacentHtmlOfElement<HTMLElement, ElementRef, string>([
+        {element: this.JobObjectives, content: this.sharedService.insertLisIntoUl(this.data.job.jobObjectives)},
+        {element: this.Accountability, content: this.sharedService.insertLisIntoUl(this.data.job.accountabilities)} ,
+        {element: this.ProfessionalCompetencies, content: this.sharedService.insertLisIntoUl( this.data.job.professionalCompetencies)},
+        {element: this.PersonSpecifications, content: this.sharedService.insertLisIntoUl( this.data.job.personSpecification)},
+        {element: this.BehavioralCompetencies, content: this.sharedService.insertLisIntoUl(this.data.job.behavioralCompetencies)},
+        {element: this.OrganisationalCompetencies, content: this.sharedService.insertLisIntoUl( this.data.job.organisationalCompetencies)},
+        {element: this.EducationalQualifications, content: this.sharedService.insertLisIntoUl(this.data.job.educationalQualifications)},
+        {element:  this.Experience, content: this.sharedService.insertLisIntoUl(this.data.job.experience)}
+     ])
+      this.sharedService.showAllChildren([this.JobObjectives, this.PersonSpecifications, this.Accountability, this.ProfessionalCompetencies, this.Experience, this.EducationalQualifications, this.OrganisationalCompetencies, this.BehavioralCompetencies]);
+      return;
+    }
+  }
+
+  ngOnInit(): void {
+    this.views = 'jobs';
+  }
+
+
+  showAnotherView(){
+    this.views = 'jobs';
+    this.goBack.emit(this.views);
+  }
+
+  sendJobForApproval(event: Event){
+    this.submitJob.emit(event);
+  }
+
+  async handleChangeOfTab(event: any){
+    switch(event){
+      case 'Track application':
+      await this.getMyJob(this.data.job.id);
+      this.views = 'track application';
+      break;
+      default:
+      this.views = 'jobs'
+    }
+  }
+
+  takeAction(event: Event){
+    debugger;
+    if(!this.data.job.hasOwnProperty('id')){
+        this.sendJobForApproval(event);
+        return;
+    }
+    this.applyForJob();
+  }
+
+  applyForJob(){
+    console.log(this.data);
+    const config: MatDialogConfig = {
+      panelClass: 'create_a_schedule',
+      width: '75vw',
+      height: '75vh',
+      data: {jobId: this.data.job.id}
+    }
+    const d = this.dialog.open(ApplyForJobByInternalStaffComponent, config);
+    d.afterClosed().subscribe(val => {
+      if(val) this.data.job['hasApplied'] = 1;
+    })
+  }
+
+ async  getMyJob(jobId: any){
+    const res = await lastValueFrom(this.jobservice.getJobOfAnInternalCandidate(jobId))
+    this.applications.push(res.result[0]);
+  }
+
+  showTestDetails(event:Event, some: string){}
+  // startUploadingDocuments(){}
+
+  
+
+
+
+}

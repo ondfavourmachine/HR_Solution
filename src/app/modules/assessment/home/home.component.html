@@ -1,5 +1,5 @@
 <main class="px-4">
-
+    
     <div class="body_content w-full ">
         <section class="tab_container">
             <app-general-use-tabs
@@ -10,6 +10,11 @@
         </section>
     </div>
 
+    <div class="w-full my-3" *ngIf="showBackButton">
+        <a (click)="goBackToBatchView()" 
+          class="transition-all cursor-pointer inline-flex gap-3  hover:px-3 hover:py-2 hover:border hover:border-hrms-read-notification hover:rounded-xl pl-2"><img src="../../../assets/images/go_back.svg" alt=""> Go back</a>
+     </div>
+
     <section class="search_bar">
         <div class="search_bar__container"> 
             <app-general-search-bar
@@ -19,7 +24,7 @@
             ></app-general-search-bar>
         </div>
      </section>
-
+    
      <section class="applicant_selection_table">
         <router-outlet></router-outlet>
      </section>

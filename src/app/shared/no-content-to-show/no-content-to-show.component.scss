@@ -1,0 +1,28 @@
+.dontDisturbIsTrue{
+    @apply h-[50vh] w-full grid place-content-center border-red-400;
+
+    & .dontDisturb-content{
+        @apply w-full flex flex-col justify-center items-center;
+            & .first_part{
+                @apply  flex justify-center items-center w-auto h-auto overflow-visible;
+        
+                & .times{
+                @apply  absolute top-16 right-[1px] w-7 h-7 rounded-[50%] flex justify-center items-center bg-hrms-genBlueColor-1
+                }
+            }
+            
+            & .second_part{
+                @apply mt-4 text-center text-[#1A1A1A];
+        
+                & strong{
+                    @apply mb-1 block text-black;
+                }
+        
+                & .dontDisturbText{
+                    word-break: break-word;
+                    @apply font-hrmsCamptonExtraLight inline-block w-[75%] text-center break-words;
+                }
+            }
+        }
+
+}

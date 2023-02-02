@@ -7,15 +7,16 @@
     <div class="job_location">
       <span> {{ AnApprovedJob?.locationName}} </span>
       <span> {{ AnApprovedJob?.grade}} </span>
+      <span>{{ AnApprovedJob?.category}}</span>
     </div>
 
     <div class="job_dead_line">
-      <span>Deadline:</span>
+      <span>Posted on: {{ AnApprovedJob?.createdDate | date:'mediumDate'}}</span>
       <span>Deadline:  {{ AnApprovedJob?.deadline | date:'mediumDate'}} </span>
     </div>
 
-    <div class="approved_jobs_actions" *ngIf="otherRelevantData && otherRelevantData.category == 'Internal' && otherRelevantData.whoIsViewing == 'Others'">
-      <span>No of Applications: 0</span> <span>  {{AnApprovedJob?.status == 'Approve' ? 'Open' : 'Closed' }} </span>
+    <div class="approved_jobs_actions" *ngIf="otherRelevantData && otherRelevantData.whoIsViewing == 'Others'">
+      <span>No of Applications: {{AnApprovedJob?.applications }}</span> <span >  {{AnApprovedJob?.isActive ? 'Open' : 'Closed' }} </span>
     </div>
   </div>
 
@@ -60,7 +61,7 @@
       <span>Deadline:  {{ AnApprovedJob?.deadline | date:'mediumDate'}} </span>
     </div>
 
-    <div class="approved_jobs_actions" *ngIf="otherRelevantData && otherRelevantData.category == 'Internal' && otherRelevantData.whoIsViewing == 'Others'">
+    <div class="approved_jobs_actions" *ngIf="otherRelevantData && otherRelevantData.whoIsViewing == 'Others'">
       <span>No of Applications: 0</span> <span>  {{AnApprovedJob?.status == 'Approve' ? 'Open' : 'Closed' }} </span>
     </div>
   </div>

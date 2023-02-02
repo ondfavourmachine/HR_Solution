@@ -748,7 +748,7 @@ footer{
                 }
 
                 & .job_dead_line{
-                    @apply flex gap-2 items-center; 
+                    @apply flex gap-3 sm:gap-5 md:gap-7 lg:gap-12 xl:gap-14 items-center; 
 
                     & span{
                         @apply font-hrmsCamptonBook text-hrms-read-notification;
@@ -775,6 +775,10 @@ footer{
 
                 & .approved_jobs_actions span:last-child{
                     @apply text-hrms-green font-hrmsCamptonExtraLight font-semibold cursor-pointer;
+
+                    &:hover{
+                        @apply border-0 shadow-none p-0;
+                    }
                 }
             }
         }
@@ -927,6 +931,11 @@ input:focus, select:focus, textarea:focus {
 
 .successfulInitiationComponent mat-dialog-container, .ApprovalModal mat-dialog-container, .InviteApproval mat-dialog-container{
     padding: 8px;
+    overflow: visible;
+}
+
+.BatchUploadComp mat-dialog-container{
+    padding: 0px;
     overflow: visible;
 }
 

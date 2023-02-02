@@ -13,3 +13,5 @@ export const ages = (minAge: number, maxAge: number): Array<number> => {
 }
 
 export const convertDateAndTimeToScheduleFormat = (date: string, time: string): string => `${time}--${date.split('-')[0]}--${date.split('-')[1]}--${date.split('-')[2]}`
+
+export const calcAgeFromDob = (val: string) => new Date(Date.now()).getFullYear() - parseInt(val.split('-')[0]);

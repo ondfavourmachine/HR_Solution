@@ -9,3 +9,36 @@ input:focus{
     padding-block: .2rem !important;
 }
 
+.three_dots{
+    @apply cursor-pointer relative overflow-visible w-[35%] -top-[3px] isolate flex justify-center items-center;
+
+    &::before{
+        content: '';
+        @apply absolute -inset-4 rounded-full bg-hrms-banner-1 -z-[1] hidden;
+    }
+
+    &:hover::before{
+        @apply block;
+    }
+}
+
+.dropDownMenu{
+    @apply absolute w-max -top-10 hidden overflow-visible right-24;
+
+    & ul{
+        @apply p-0 bg-white;
+
+         & li{
+            @apply px-2 py-2 border-2 border-hrms-text-light flex items-center gap-1;
+         }
+    }
+}
+
+
+.applicant{
+    @apply justify-center gap-0 #{!important};
+
+     & .applicant__number{
+        @apply flex-initial #{!important};
+     }
+}

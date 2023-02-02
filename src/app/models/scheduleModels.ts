@@ -100,8 +100,8 @@ export type SearchedApplicant =  {
   export interface CreateInviteDS{
     interviewers: Array<Partial<StaffName & SearchedApplicant>>,
     interviewees: Array<Partial<StaffName & SearchedApplicant>>,
-    dept: any,
-    departmentName: string,
+    dept?: any,
+    departmentName?: string,
     interviewChairPerson?: StaffName | string | any,
     description: string
     date: string,

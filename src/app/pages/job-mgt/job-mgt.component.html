@@ -1,4 +1,4 @@
-<div [ngClass]="{'default': views == 'jobs'}" class=" dashboard_view"> 
+<div [ngClass]="{'default': views == 'jobs'}" class=" dashboard_view relative"> 
     <div class="body_content w-full ">
       <section class="tab_container">
         <app-general-use-tabs
@@ -55,7 +55,7 @@
         </form>
 
         <div class="create_button">
-          <button (click)="startCreatingJob($event)" class="btn-red-custom">
+          <button (click)="startJobCreationProcess($event)" class="btn-red-custom">
             <img src="../../../assets/images/add_white_version.svg" alt=""> Create Job
           </button>
         </div>
@@ -70,10 +70,11 @@
             <div [ngClass]="{'plenty': approvedJobs.length > 1, 'one': approvedJobs.length == 1}" class="jobs mb-20" >
               <ng-container *ngFor="let job of approvedJobs; index as i">
                 <app-job [showPending]="showPendingJobs"
+                [otherRelevantData]="relevantData"
                 [AnApprovedJob]="job"></app-job>
               </ng-container>
 
-              <ng-container *ngIf="approvedJobs.length < 1">
+              <ng-container *ngIf="approvedJobs.length < 1 && isLoading">
                 <ngx-skeleton  borderRadius="12px" height="30vh" margin="15px 0 8px 0" width="100%">
                   <div class="job" >
                     <div class="job_title">
@@ -119,6 +120,11 @@
                     </div>
                   </div>
                 </ngx-skeleton>
+              </ng-container>
+
+              <ng-container *ngIf="approvedJobs.length < 1 && !isLoading">
+                <app-no-content-to-show
+                  (refresh)="getApprovedJobs()"></app-no-content-to-show>
               </ng-container>
             </div>
           </div>
@@ -137,7 +143,7 @@
                 </app-job>
               </ng-container>
 
-              <ng-container *ngIf="pendingJobs.length  < 1">
+              <ng-container *ngIf="pendingJobs.length  < 1 && isLoading">
                 <ngx-skeleton  borderRadius="12px" height="30vh" margin="15px 0 8px 0" width="100%">
                   <div class="job" >
                     <div class="job_title">
@@ -184,16 +190,61 @@
                   </div>
                 </ngx-skeleton>
               </ng-container>
+
+              <ng-container *ngIf="pendingJobs.length < 1 && !isLoading">
+                <app-no-content-to-show
+                (refresh)="getPendingJobs()"></app-no-content-to-show>
+              </ng-container>
             </div>
           </div>
         </div>
       </div>
     </section>
     </div>
+    <div class="sideBarForDisplayingDraftsParentContainer" [ngClass]="{'moveBackDropIntoView': showDraftSideBar, 'moveBackDropOutOfView' : !showDraftSideBar}">
+       
+        <div class="sideBarForDisplayingDrafts" [ngClass]="{'comeIntoView': showDraftSideBar, 'goOutOfView':!showDraftSideBar }">
+          <div (click)="showDraftSideBar = false" class="flex justify-between px-5 items-center mb-5 mt-3">
+           <span class="font-hrmsCamptonMedium font-semibold">Saved Drafts</span> <img src="../../../assets/images/close-icon.svg" alt="" class="cursor-pointer">
+          </div>
+            <ul class="draft_container" [ngClass]="{'show': showDraftSideBar}">
+              <li *ngFor="let adraft of savedDrafts; index as i" 
+               class="draft" >
+              <!-- <li class="draft"></li> -->
+              <div class="draft_content_container">
+                <div class="title">
+                  Position:
+                </div>
+                <div class="content">
+                  {{ adraft?.position }}
+                </div>
+                <div class="title">
+                  Created On:
+                </div>
+                <div class="content">
+                  {{ adraft.createdDate | date: 'medium' }}
+                </div>
+              </div>
+              <div class="button_container">
+                <div class="">
+                  <a (click)="editJob(adraft)" class="trigger_buttons edit">
+                    Edit Draft
+                  </a>
+                </div>
+                <div class="">
+                  <a (click)="deleteDraft(adraft, i)" class="trigger_buttons delete">
+                    Delete Draft
+                  </a>
+                </div>
+              </div>
+            </li>
+            </ul>
+        </div>
+    </div>
  </div> 
 
  <div [ngClass]="{'default': views == 'preview'}" class="preview_page">
-   <div class="body_content w-full ">
+   <!-- <div class="body_content w-full ">
     <a (click)="views = 'jobs';" class="history"><img src="../../../assets/images/go_back.svg" alt=""> Go back</a>
 
     <section class="main_view">
@@ -342,7 +393,7 @@
             <span>Unit</span> 
             
           </p>
-          <p class="text"> {{ getUnitName(dataFromCreateJob?.unit) }} </p>
+          <p class="text"> {{ sharedService.getUnitName(dataFromCreateJob?.unit) }} </p>
         </li>
 
         <li class="">
@@ -368,12 +419,18 @@
         Submit for Approval
       </button>
     </aside>
-   </div>
- </div>
+   </div> -->
+ 
+   <app-preview-job-details
+    [data]="objForPreviewOfJob"
+    (goBack)="views = $event"
+    (submitJob)="sendJobForApproval($event)"
+    ></app-preview-job-details>
+  </div>
 
  <div [ngClass]="{'default': views == 'approve'}" class="preview_page relative">
   <div class="body_content w-full ">
-   <a (click)="views = 'preview'" class="history"><img src="../../../assets/images/go_back.svg" alt=""> Go back</a>
+   <!-- <a (click)="views = 'preview'" class="history"><img src="../../../assets/images/go_back.svg" alt=""> Go back</a> -->
 
    <section class="main_view">
      <h5>Preview the Job Details Before Submitting for Approval</h5>
@@ -521,7 +578,7 @@
             <span>Unit</span> 
             
           </p>
-          <p class="text"> {{ getUnitName(dataFromCreateJob?.unit) }} </p>
+          <p class="text"> {{ sharedService.getUnitName(dataFromCreateJob?.unit) }} </p>
         </li>
 
         <li class="">

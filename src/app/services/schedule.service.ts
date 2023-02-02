@@ -12,9 +12,9 @@ export class ScheduleService {
 
   constructor(private http: HttpClient) { }
 
-  getApplicants(interviewType: number, applicantName: string): Observable<BaseResponse<SearchedApplicant[]>>{
+  getApplicants(interviewType: number, applicantName?: string): Observable<BaseResponse<SearchedApplicant[]>>{
     const url = `${environment.baseUrl}${environment.applicationSelection.searchApplicantsDueSchedule}`
-    const params = new HttpParams().set('invitationType', interviewType).set('applicantName', applicantName)
+    const params = applicantName ? new HttpParams().set('invitationType', interviewType).set('applicantName', applicantName!) : new HttpParams().set('invitationType', interviewType);
     return this.http.get<BaseResponse<SearchedApplicant[]>>(url, {params})
   }
 

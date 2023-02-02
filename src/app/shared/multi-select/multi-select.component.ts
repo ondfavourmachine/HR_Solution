@@ -2,6 +2,7 @@ import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild }
 import { debounceTime, defer, fromEvent, lastValueFrom, } from 'rxjs';
 import { InterviewTypes, SearchedApplicant, StaffName } from 'src/app/models/scheduleModels';
 import { ScheduleService } from 'src/app/services/schedule.service';
+import { SharedService } from 'src/app/services/sharedServices';
 
 @Component({
   selector: 'app-multi-select',
@@ -24,13 +25,16 @@ export class MultiSelectComponent implements OnInit {
   @Input()
   interviewType!: InterviewTypes;
 
+  @Input()
+  showMultiSelectApplicantsButton: boolean = false;
+
   @ViewChild('searchFieldForApplicant', {read: ElementRef, static: true}) searchFieldForApplicant!: ElementRef<HTMLInputElement>
 
   @Output() sendUpApplicants = new EventEmitter<{target:string, data: Array<Partial<StaffName & SearchedApplicant>>}>();
   searchedPersons: Array<Partial<StaffName & SearchedApplicant>> = [];
   selectedApplicants: Set<string> = new Set();
   // searchedStaff: Array<Partial<StaffName & SearchedApplicant>> = [];
-  constructor(private scheduleService: ScheduleService) {this.searchForPerson = this.searchForPerson.bind(this)}
+  constructor(private scheduleService: ScheduleService, private sharedService: SharedService) {this.searchForPerson = this.searchForPerson.bind(this)}
 
   ngOnInit(): void {
     // using defer because i am accessing this viewChild in the ngOnInit life cyle hook and because i set static to true in the viewChild config.
@@ -47,10 +51,7 @@ export class MultiSelectComponent implements OnInit {
     try {
       switch(element.id){
         case 'Add Applicant':
-          // const brokenByUnderscore = this.interviewType.split('_');
-          const interviewtype = this.interviewType.split('_')[this.interviewType.split('_').length - 1] ?? 0
-          const {result} = await lastValueFrom(this.scheduleService.getApplicants(parseInt(interviewtype), element.value));
-          this.searchedPersons = result;
+          await this.getApplicants();
         break;
         case 'Invigilators':
         case 'Panel Chair (Main Interviewer)':
@@ -65,6 +66,27 @@ export class MultiSelectComponent implements OnInit {
       console.log(error);
       this.searchedPersons = [];
     } 
+  }
+
+  async getApplicants(value?: string, event?: Event){
+    let prevInnerHtml!: string;
+    let button!: HTMLButtonElement;
+    if(event) {
+      button = event.target instanceof HTMLImageElement ? event.target.closest('button') as HTMLButtonElement : event.target as HTMLButtonElement;
+      prevInnerHtml = button?.innerHTML;
+      this.sharedService.loading4button(button as HTMLButtonElement, 'yes', 'Loading Applicants...');
+    }
+    const interviewtype = this.interviewType.split('_')[this.interviewType.split('_').length - 1] ?? 0
+    const {result} = await lastValueFrom(this.scheduleService.getApplicants(parseInt(interviewtype), value ?? undefined));
+    this.sharedService.loading4button(button, 'done', prevInnerHtml as string);
+    this.searchedPersons = Array.isArray(result) ? [...result] : [];
+    this.searchedPersons.length > 0 ? this.loadSearchedApplicantsIntoSelectedApplicants(): null;
+    this.searchedPersons.length > 0 ? this.sendUpListOfSelecteedApplicantsToParent(): null;
+    Array.isArray(result) ? null : this.sharedService.successSnackBar(`No Applicants on queue for ${this.interviewType.split('_')[0]}`, 'close');
+  }
+
+  loadSearchedApplicantsIntoSelectedApplicants(){
+    this.searchedPersons.forEach(elem => this.selectedApplicants.add(`${elem?.firstName} ${elem.lastName}`));
   }
 
   selectAnApplicant(event: Event, applicant: Partial<StaffName & SearchedApplicant>){

@@ -3,13 +3,14 @@ import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, FormRe
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin, Observable , lastValueFrom, Subscription } from 'rxjs';
-import { AJob,GeneralLookUp,otherRelevantData, Gender, MaritalStatus, RequiredApplicantDetails, FormTypesForJobApplication, Views, WhoIsViewing, NYSCStrings, CandidateFiles, PreviewActions } from 'src/app/models/generalModels';
+import { AJob,GeneralLookUp,otherRelevantData, Gender, MaritalStatus, RequiredApplicantDetails, FormTypesForJobApplication, Views, WhoIsViewing, NYSCStrings, CandidateFiles, PreviewActions, JobCategories } from 'src/app/models/generalModels';
 import { ExternalApplicantService } from 'src/app/services/external-applicant.service';
 import { JobsService } from 'src/app/services/jobs.service';
 import { LookUpService } from 'src/app/services/look-up.service';
 import { SharedService } from 'src/app/services/sharedServices';
+import { calcAgeFromDob } from 'src/app/services/small_reusable_functions';
 import { PreviewApplicationComponent } from '../preview-application/preview-application.component';
-const calcAgeFromDob = (val: string) => new Date(Date.now()).getFullYear() - parseInt(val.split('-')[0]);
+
 
 @Component({
   selector: 'app-external-candidate-jobs',
@@ -211,7 +212,7 @@ export class ExternalCandidateJobsComponent implements OnInit, AfterViewInit {
 
 
   getApprovedJobs(){
-    this.jobservice.getJobBasedOnStatus('Approve')
+    this.jobservice.getJobBasedOnStatus('Approve', JobCategories.EXTERNAL)
     .subscribe(
       {
         next: ({result}) => {
@@ -437,3 +438,5 @@ export class ExternalCandidateJobsComponent implements OnInit, AfterViewInit {
    this.subscriptionsToClear.length > 0 && this.subscriptionsToClear.forEach(elem => elem?.unsubscribe())
   }
 }
+
+

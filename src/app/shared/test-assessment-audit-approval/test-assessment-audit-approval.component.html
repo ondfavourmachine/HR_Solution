@@ -1,0 +1,29 @@
+
+<main class="main_container overflow-visible">
+    <header>
+      <div class="first_part gap-20">
+       Approve Batch Score   
+      </div>
+      <div class="second_part" >
+       <span (click)="closeBtn()" >
+          <img  src="../../../assets/images/close-icon.svg" alt=""></span>
+      </div>
+   </header>
+  <div class="content_wrapper">
+    <textarea name="comment" [(ngModel)]="comment" placeholder="Enter some comment"  id="" cols="30" rows="10"></textarea>
+  </div>
+  
+   <div class="footer_wrapper" >
+    <!--(click)="uploadApplicantTestScore($event)"   -->
+    <div 
+        class="w-full flex justify-end items-center gap-5 px-6">
+        <!-- <button
+         class="btn-red-custom !mb-0 !w-max px-6 !py-4">Reject</button>
+          <button
+         class="btn-red-custom !mb-0 !w-max px-6 !py-4">Approve</button> -->
+
+         <button (click)="closeAndTriggerParent(3)"  class="btn-red-custom !mb-0 !w-max px-6 !py-4"> Reject</button>
+        <button (click)="closeAndTriggerParent(2)"  class="btn-red-custom green !mb-0 !w-max px-6 !py-4"> Approve </button>
+    </div>
+   </div>
+  </main>

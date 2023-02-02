@@ -1,9 +1,22 @@
 import {AnApplication, ApprovalProcessStatuses, JobCategories, PaginationFromBE, RequiredApplicantDetails } from "./generalModels";
-import { DBTypeOfInvigilator, InterviewTypesWithNumber } from "./scheduleModels";
+import { DBTypeOfInvigilator, InterviewTypes, InterviewTypesWithNumber } from "./scheduleModels";
 
 
 export type AssessmentResponseDS<T> = PaginationFromBE & StatusOfAssessment & {
     data: T
+}
+
+export interface BatchedSchedule{
+  scheduleRef:	string
+  applicationRef:	null | string
+  createdDate: string
+  testDate: string
+  invigilator	: string
+  scoreSheet: string
+  applicants: number
+  scoreUploaded: string
+  assessmentStatus:	string,
+  auditApproval: string
 }
 
 
@@ -32,6 +45,10 @@ export interface StatusOfAssessment{
       applicationStage: number,
       dateTime: string,
       scoreSheet_URL: null | string
+      applicationId?: number
+      hospitalName?:null | string
+      hrApproval?: ApprovalProcessStatuses
+
   }
 
   export interface AssessmentDetails{
