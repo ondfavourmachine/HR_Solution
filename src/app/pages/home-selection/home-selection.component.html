@@ -22,11 +22,11 @@
         <div class="statistics_container">
             <div class="statistics_text_and_image">
                 <span class="text">Statistics</span>
-                <span><img src="../../../assets/images/arrow_pointing_up.svg" alt=""></span>
+                <span class="cursor-pointer" (click)="toggleSlidingContainer()"><img src="../../../assets/images/arrow_pointing_up.svg" alt=""></span>
             </div>
         </div>
 
-        <div class="sliding_container">
+        <div class="sliding_container" [ngClass]="{'closed': hideCarousel}">
             <ngx-slick-carousel class="carousel" 
                             #slickModal="slick-carousel" 
                             [config]="slideConfig" 

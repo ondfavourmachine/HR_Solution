@@ -20,7 +20,9 @@ export class InterviewAssessmentComponent implements OnInit {
   constructor(
      private sdm: SchedulerDateManipulationService,
      private assessmentService: AssessmentService,
-     private dialog: MatDialog) { }
+     private dialog: MatDialog) {
+      this.getAssessments = this.getAssessments.bind(this);
+      }
 
   ngOnInit(): void {
     const res = this.sdm.generateQuartersOfCurrentYear();
@@ -40,7 +42,7 @@ export class InterviewAssessmentComponent implements OnInit {
       },
       error: console.error
     }
-    this.assessmentService.getAssesmentsByParameters<AssessmentDetails[]>({ ApplicationStage: InterviewTypesWithNumber.Interview_Invite }).subscribe(pObs)
+    this.assessmentService.getAssesmentsByParameters<AssessmentDetails[]>({ ApplicationStage: InterviewTypesWithNumber.Interview_Invite, PageNumber: '1', PageSize: '20' }).subscribe(pObs)
   }
 
   showAnInterview(assessment: AssessmentDetails){
@@ -49,7 +51,7 @@ export class InterviewAssessmentComponent implements OnInit {
       width: '84vw',
       maxWidth: '85vw',
       height: '85vh',
-      data: assessment
+      data: {...assessment, callBack: this.getAssessments}
     }
     this.dialog.open(InterviewAssessmentDetailsComponent, config)
   }

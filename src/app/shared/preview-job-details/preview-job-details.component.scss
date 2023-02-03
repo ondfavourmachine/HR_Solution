@@ -118,7 +118,22 @@
 
     ol li::marker{
         @apply text-red-400;
-    }
+    }   
+}
 
-    
+.applicant_panel{
+    @apply h-auto min-h-[6.25rem] border w-full border-hrms-read-notification rounded-md mt-2 mb-5 flex justify-between px-4 py-2 overflow-visible;
+
+    .applicants_number{
+        @apply flex flex-col gap-2 overflow-visible;
+        & span:first-child{
+            @apply font-hrmsCamptonMedium font-semibold text-[1.65em] text-hrms-black-text;
+        }
+        & span:last-child{
+            @apply font-hrmsCamptonLight font-medium text-[0.95em] text-hrms-black-text;
+        }
+    }
+    .btn-red-custom{
+        @apply mb-0 w-max px-8 py-1 #{!important};
+    }
 }

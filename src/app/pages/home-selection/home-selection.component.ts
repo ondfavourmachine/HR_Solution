@@ -20,6 +20,7 @@ export class HomeSelectionComponent implements OnInit, OnDestroy {
   tabList: tabs[] = ['All Applications', 'Tests', 'Interview 01', 'Interview 02', 'Interview 03', 'Medical', 'Offer', 'Post Acceptance'];
   slideConfig = {slidesToShow: 5, slidesToScroll: 5, arrows: true, variableWidth: true, infinite: false, swipeToSlide: true};
   slides = ['All Application','Pending','Accepted','Rejected','Awaiting Approval','Returned',];
+  hideCarousel: boolean = false;
   destroySub!: Subscription
   constructor(
     private sdm: SchedulerDateManipulationService,
@@ -33,6 +34,10 @@ export class HomeSelectionComponent implements OnInit, OnDestroy {
     this.quartersToUse = this.sdm.presentQuartersInHumanReadableFormat(res);    
     this.agesToUse = this.sharedService.generateAges();
     this.destroySub = this.broadCast.statistics$.subscribe(stats => this.statistics = stats)
+  }
+
+  toggleSlidingContainer(){
+    this.hideCarousel = !this.hideCarousel;
   }
 
   gotoAnotherRoute(event: string){

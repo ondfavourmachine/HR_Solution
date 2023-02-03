@@ -13,12 +13,12 @@ import { AssessApplicantModalComponent } from '../assess-applicant-modal/assess-
 export class InterviewAssessmentDetailsComponent implements OnInit, NecessaryModalMethods {
   isLoading: boolean = false;
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: AssessmentDetails,
+    @Inject(MAT_DIALOG_DATA) public data: AssessmentDetails & {callBack: Function},
     private dialog: MatDialog,
     ) { }
 
   ngOnInit(): void {
-    // console.log(this.data.applicants[0].chairPersonInfo);
+    // console.log(this.data);
   }
 
   closeBtn(){
@@ -44,7 +44,8 @@ export class InterviewAssessmentDetailsComponent implements OnInit, NecessaryMod
       dialog.afterClosed().subscribe({
         next: (val) => {
           componentToShrink.classList.remove('shrinkUp');
-          console.log(val)
+          this.closeBtn();
+          this.data.callBack();
         },
        })
       } catch (error) {

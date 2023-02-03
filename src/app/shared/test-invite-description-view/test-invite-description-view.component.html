@@ -41,7 +41,7 @@
     </span>
 </div>
 
-<div *ngIf="data?.isOfferLetterInformation && data?.stage! < 7" class="border-t-2 border-t-hrms-border-line-dull !mb-0 pr-6 pt-3  button_fields">
+<div *ngIf="data?.isOfferLetterInformation && data?.stage! < 7 && !turnButtonsOff && offerStatus != 'Approve'" class="border-t-2 border-t-hrms-border-line-dull !mb-0 pr-6 pt-3  button_fields">
     <button
      (click)="acceptOrRejectOffer($event)"
      class="btn-red-custom !py-3 !w-max !px-8">

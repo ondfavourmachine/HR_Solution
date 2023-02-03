@@ -55,7 +55,7 @@
                         <img *ngFor="let invigilator of data?.interviewers | slice:0:3; index as i" class="passport" src="../../../assets/images/person_2.png" alt="">
                         
                     </div>
-                    <div class="applicant__number !text-hrms-genBlueColor-1 !font-bold">  {{ data?.interviewers!.length }} </div>
+                    <div class="applicant__number !text-hrms-genBlueColor-1 !font-bold">  {{checkForInterviewersAndReturnNumber() }} </div>
                 </div>
 
             </div>

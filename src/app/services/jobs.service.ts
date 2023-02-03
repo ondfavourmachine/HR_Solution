@@ -94,5 +94,15 @@ get  getHeaders(){
     return headers;
   }
 
+  deleteJobs(req: {
+    jobId: number,
+    actionType: number,
+    status: number,
+    comment: string
+  }){
+    const url = `${environment.baseUrl}${environment.jobApis.deactivate}`;
+    return this.http.post<BaseResponse<null>>(`${url}`, req, {headers: this.getHeaders})
+  }
+
   
 }

@@ -1,10 +1,12 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, OnChanges, Output, EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
-import { AnApplication, PreviewJobDS, tabs, Views } from 'src/app/models/generalModels';
+import { AnApplication, ApplicationApprovalStatus, InformationForApprovalModal, PreviewJobDS, tabs, Views } from 'src/app/models/generalModels';
 import { JobsService } from 'src/app/services/jobs.service';
 import { SharedService } from 'src/app/services/sharedServices';
 import { ApplyForJobByInternalStaffComponent } from '../apply-for-job-by-internal-staff/apply-for-job-by-internal-staff.component';
+import { ApprovalModalComponent } from '../approval-modal/approval-modal.component';
 
 @Component({
   selector: 'app-preview-job-details',
@@ -23,6 +25,7 @@ export class PreviewJobDetailsComponent implements OnInit, OnChanges {
   data!: PreviewJobDS
   @Input('buttonText') buttonText!: string
   @Input('showTabs') showTabs: boolean = false;
+  @Input('showApplicantsPanel') showApplicantsPanel!: boolean;
   
 
   @ViewChild('PersonSpecifications', {static: true}) PersonSpecifications!: ElementRef<HTMLElement>;
@@ -33,7 +36,7 @@ export class PreviewJobDetailsComponent implements OnInit, OnChanges {
   @ViewChild('OrganisationalCompetencies', {static: true}) OrganisationalCompetencies!: ElementRef<HTMLElement>;
   @ViewChild('EducationalQualifications', {static: true}) EducationalQualifications!: ElementRef<HTMLElement>;
   @ViewChild('Experience', {static: true}) Experience!: ElementRef<HTMLElement>;
-  constructor(  public sharedService: SharedService,private dialog: MatDialog, private jobservice: JobsService) { }
+  constructor(  public sharedService: SharedService,private dialog: MatDialog, private jobservice: JobsService, private router: Router) { }
 
   ngOnChanges(){
     if(!this.data || typeof this.data == 'object')console.log(`data input  is an: ${this.data}`);
@@ -80,16 +83,22 @@ export class PreviewJobDetailsComponent implements OnInit, OnChanges {
   }
 
   takeAction(event: Event){
-    debugger;
     if(!this.data.job.hasOwnProperty('id')){
         this.sendJobForApproval(event);
         return;
     }
+    if(this.showApplicantsPanel){
+      this.routeToApplicantSelection();
+      return;
+    }
     this.applyForJob();
   }
 
+  routeToApplicantSelection(){
+    this.router.navigate(['dashboard','applicant-selection', 'all applications']);
+  }
+
   applyForJob(){
-    console.log(this.data);
     const config: MatDialogConfig = {
       panelClass: 'create_a_schedule',
       width: '75vw',
@@ -110,6 +119,38 @@ export class PreviewJobDetailsComponent implements OnInit, OnChanges {
   showTestDetails(event:Event, some: string){}
   // startUploadingDocuments(){}
 
+  closeJob(event: Event){
+    const btn = event.target as HTMLButtonElement;
+    const prevText = btn.textContent;
+    this.sharedService.loading4button(btn, 'yes', 'Closing Job...');
+      const data: InformationForApprovalModal<string, string> = {
+      header: 'Reason', 
+      button: 'Close Job', 
+      callBack: () => {}}
+      const config: MatDialogConfig = {
+        width: '28vw',
+        height: '38vh',
+        panelClass: 'ApprovalModal',
+        data
+      };
+      const dialog = this.dialog.open(ApprovalModalComponent, config);
+      dialog.afterClosed().subscribe( async val => {
+        if(!val || null){
+          this.sharedService.errorSnackBar('You must give a reason for closing Job!');
+          return;
+        }
+        try {
+        const res = await lastValueFrom(this.jobservice.deleteJobs({jobId: this.data.job.id, comment: val, status: ApplicationApprovalStatus.Approve, actionType: 1}));
+        console.log(res);
+        this.sharedService.loading4button(btn, 'done', prevText as string);
+        this.sharedService.successSnackBar('Job deleted successfully!');
+        this.showAnotherView();
+        } catch (error) {
+          this.sharedService.loading4button(btn, 'done', prevText as string);
+        }
+      })
+    // this.jobservice.
+  }
   
 
 

@@ -29,7 +29,6 @@ appropriateDateTimeToDisplay!:string
        private dialogRef: MatDialogRef<ScheduleSwitching>) { }
 
   ngOnInit(): void {
-    console.log(this.data);
     this.modifyDateForDisplay();
     this.role = this.sharedService.getRole();
   }
@@ -143,6 +142,17 @@ appropriateDateTimeToDisplay!:string
       }
     )
     
+  }
+  checkForInterviewersAndReturnNumber(): number{
+    let number = 0
+      if('interviewers' in this.data && this.data.interviewers!.length > 0){
+        number = this.data.interviewers!.length;
+      }
+      if(this.data.interviewChairPerson){
+        number++;
+      }
+
+    return number;
   }
 
   displayAppropriateString(getPosition: boolean, str?: string): string{

@@ -197,7 +197,8 @@ export interface AGlobusBranch {
     testDescription: string,
     testDate: string,
     testTime: string,
-    testLocation: string
+    testLocation: string,
+    offerStatus: ApprovalProcessStatuses
   }
 
   export type Views = 'jobs' | 'preview' | 'approve' | 'apply' | 'track application';

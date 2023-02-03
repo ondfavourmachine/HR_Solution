@@ -15,6 +15,16 @@
     <section [ngClass]="{'!hidden': views == 'track application' }" class="main_view">
       <h5 *ngIf="data?.extraInfo?.showHeaderText">{{data?.extraInfo?.headerText}}</h5>
 
+      <div class="applicant_panel" *ngIf="showApplicantsPanel">
+        <div class="applicants_number">
+          <span>{{ data?.job?.applications }}</span>
+          <span>No of Applicants</span>
+        </div>
+        <button (click)="routeToApplicantSelection()" class="btn-red-custom">
+            View Applicants
+        </button>
+      </div>
+
       <div class="main_view__content">
         <div class="heading_content">
           <div class="text">
@@ -27,6 +37,12 @@
               <small>Edit</small>
             </span>
           </div>
+          <button
+          *ngIf="showApplicantsPanel"
+           (click)="closeJob($event)"
+           class="btn-red-custom !mb-0 !w-max !px-6 !py-5 cursor-pointer hover:!bg-red-100 !bg-transparent !text-hrms-slightRed !border-2 !border-hrms-slightRed !font-hrmsCamptonMedium">
+            Close Job
+          </button>
         </div>
           
          <div class="reportTo_supervises">

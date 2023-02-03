@@ -70,6 +70,7 @@
             <div [ngClass]="{'plenty': approvedJobs.length > 1, 'one': approvedJobs.length == 1}" class="jobs mb-20" >
               <ng-container *ngFor="let job of approvedJobs; index as i">
                 <app-job [showPending]="showPendingJobs"
+                (displayJobDetails)="showPreviewPage($event)"
                 [otherRelevantData]="relevantData"
                 [AnApprovedJob]="job"></app-job>
               </ng-container>
@@ -423,7 +424,9 @@
  
    <app-preview-job-details
     [data]="objForPreviewOfJob"
-    (goBack)="views = $event"
+    (goBack)="handleCommunication($event)"
+    [buttonText]="'View Applicants'"
+    [showApplicantsPanel]="true"
     (submitJob)="sendJobForApproval($event)"
     ></app-preview-job-details>
   </div>

@@ -10,12 +10,15 @@ import { SharedService } from 'src/app/services/sharedServices';
   styleUrls: ['./test-invite-description-view.component.scss']
 })
 export class TestInviteDescriptionViewComponent implements OnInit {
-
+  turnButtonsOff!: boolean;
+  offerStatus: ApprovalProcessStatuses | undefined = undefined;
   constructor(@Inject(MAT_DIALOG_DATA) public data: TestDetails & {  isOfferLetterInformation: boolean, stage?: number, applicantRefNo: string },
   private externalService: ExternalApplicantService, private sharedService: SharedService,
   private dialog: MatDialog) { }
 
   ngOnInit(): void {
+    const {offerStatus} = this.data;
+    this.offerStatus = offerStatus;
   }
 
   close(){
@@ -30,7 +33,10 @@ export class TestInviteDescriptionViewComponent implements OnInit {
     .subscribe({
       next: (val) => {
         this.sharedService.loading4button(btn, 'done', prevText as string);
-        this.sharedService.successSnackBar('Your decision has been submitted successfully.')
+        this.sharedService.successSnackBar('Your decision has been submitted successfully.');
+        this.turnButtonsOff = true;
+        this.data['offerStatus'] = ApprovalProcessStatuses.Approve;
+        this.close();
       },
       error: (err) => {
         console.log(err);

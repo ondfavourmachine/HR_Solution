@@ -377,6 +377,18 @@ export class JobMgtComponent implements OnInit {
     )
   }
 
+  handleCommunication(event: Views){
+    this.views = event;
+    this.getApprovedJobs();
+    this.getPendingJobs();
+    // this.objForPreviewOfJob = {}
+  }
+
+  showPreviewPage(event: {view: Views, data: AJob}){
+    this.objForPreviewOfJob = {job:  event.data, extraInfo: {currentBranchInView: this.currentBranchInView, headerText: '', showHeaderText: false}};
+    this.views = event.view;
+  } 
+
   handleApprovalOfJob(btn: HTMLButtonElement, comment: string, prevText: string){
      this.jobservice.approveAJob(
       {jobId: this.jobID, comment, status: JobStatus.APPROVE}
