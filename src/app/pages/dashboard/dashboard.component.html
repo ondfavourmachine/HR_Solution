@@ -1,12 +1,25 @@
-<div class="w-screen h-screen max-w-full flex">
-    <div class="side_bar">
+<div class="w-screen h-screen max-w-full flex overflow-hidden">
+    
+  <div class="w-screen h-full main_half">
+    <!-- <div class="side_bar">
         <app-side-bar></app-side-bar>
-    </div>
-  <div class="w-screen sm:w-11/12 md:w-[82.8%] h-full main_half">
+    </div> -->
      <ng-container>
-      <app-nav-bar></app-nav-bar>
+       <app-nav-bar></app-nav-bar>
      </ng-container>
+<!-- close_up_big_side_bar -->
+     <div class="wrapper_around_sidebar_components " [ngClass]="{'close_up_big_side_bar': reduceSideBar}">
+        <div class="side_bar">
+            <app-side-bar></app-side-bar>
+            <div (click)="toggleBigSideBar()" class="toggle_slide">
+              <img src="../../../assets/images/arrow_pointing_up.svg" alt="">
+            </div>
+        </div>
+        <div class="main_content_for_components mt-4">
+          <router-outlet></router-outlet>
+        </div>
+     </div>
 
-     <router-outlet></router-outlet>
+     
   </div>
 </div>

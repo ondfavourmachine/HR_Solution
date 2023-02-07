@@ -1,7 +1,7 @@
 
 
 :host{
-    @apply flex-auto;
+    @apply flex-auto overflow-visible;
 }
 
 
@@ -23,4 +23,8 @@ input:focus{
     & select{
         @apply w-full px-3 #{!important};
     }
+}
+
+.refresh_btn{
+    @apply absolute w-16 h-auto -right-24 top-2 z-30 cursor-pointer;
 }

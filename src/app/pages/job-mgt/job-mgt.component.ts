@@ -47,12 +47,17 @@ export class JobMgtComponent implements OnInit {
   showDraftSideBar: boolean = false;
   savedDrafts: AJob[] = [];
   relevantData!: otherRelevantData;
-  objForPreviewOfJob!: PreviewJobDS
+  objForPreviewOfJob!: PreviewJobDS;
+  showApplicantsPanel: boolean = false;
+  buttonText: string = '';
+  roleOfUser!: string;
   constructor(private dialog: MatDialog, public sharedService: SharedService, private jobservice: JobsService) { 
     this.refresh = this.refresh.bind(this);
   }
 
   ngOnInit(): void {
+    this.roleOfUser = this.sharedService.getRole();
+    console.log(this.roleOfUser)
     this.relevantData = {category: JobCategories.INTERNAL, whoIsViewing: WhoIsViewing.OTHERPERSONS};
     this.getBranchLocationsInGlobus()
     this.getDept();
@@ -123,7 +128,9 @@ export class JobMgtComponent implements OnInit {
         this.views = val.viewToShow;
         this.dataFromCreateJob = {...val.data};
         this.currentBranchInView = this.locationsOfGlobus.find(elem => elem.id == parseInt(this.dataFromCreateJob?.location))?.branchName as string;
-        this.objForPreviewOfJob = {job: this.dataFromCreateJob, extraInfo: {currentBranchInView: this.currentBranchInView, headerText: 'Preview the Job Details Before Submitting for Approval', showHeaderText: true}}
+        this.objForPreviewOfJob = {job: this.dataFromCreateJob, extraInfo: {currentBranchInView: this.currentBranchInView, headerText: 'Preview the Job Details Before Submitting for Approval', showHeaderText: true}};
+        this.showApplicantsPanel = false;
+        this.buttonText = 'Submit For Approval';
       //   this.sharedService.insertIntoAdjacentHtmlOfElement<HTMLElement, ElementRef, string>([
       //     {element: this.JobObjectives, content: this.sharedService.insertLisIntoUl(this.dataFromCreateJob.jobObjectives)},
       //     {element: this.Accountability, content: this.sharedService.insertLisIntoUl(this.dataFromCreateJob.accountabilities)} ,
@@ -381,12 +388,16 @@ export class JobMgtComponent implements OnInit {
     this.views = event;
     this.getApprovedJobs();
     this.getPendingJobs();
+    this.showApplicantsPanel = false;
+    this.buttonText = '';
     // this.objForPreviewOfJob = {}
   }
 
   showPreviewPage(event: {view: Views, data: AJob}){
     this.objForPreviewOfJob = {job:  event.data, extraInfo: {currentBranchInView: this.currentBranchInView, headerText: '', showHeaderText: false}};
     this.views = event.view;
+    this.showApplicantsPanel = true;
+    this.buttonText = 'View Applicants';
   } 
 
   handleApprovalOfJob(btn: HTMLButtonElement, comment: string, prevText: string){

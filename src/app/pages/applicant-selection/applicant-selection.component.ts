@@ -1,9 +1,9 @@
 
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 // import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
 // import { MatDatepicker } from '@angular/material/datepicker';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { PartialObserver } from 'rxjs';
+import { PartialObserver, Subscription } from 'rxjs';
 import { AGlobusBranch, AnApplication, ApplicationApprovalStatus, BaseResponse, InformationForApprovalModal, InformationForModal, PaginationMethodsForSelectionAndAssessments, PreviewActions, RequiredQuarterFormat, tabs } from 'src/app/models/generalModels';
 import { ApplicantSelectionService } from 'src/app/services/applicant-selection.service';
 import { SharedService } from 'src/app/services/sharedServices';
@@ -36,6 +36,7 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
   applicantAboutToBeAccepted!: AnApplication;
   rejectionHasBeenTriggered: boolean = false;
   role!: string;
+  destroyObs!: Subscription;
   constructor(
     public  sharedService: SharedService, 
     private dialog: MatDialog,
@@ -56,6 +57,20 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
     this.getApplicantsForSelection();
     this.getGlobusBranchLocations();
     this.role = this.sharedService.getRole() as string;
+    this.destroyObs = this.broadCast.search$.subscribe(val =>{
+      if(val != null){
+        this.isLoading = true;
+       const pObs: PartialObserver<ApplicantsSelectionResponse> = {
+        next: this.handleApplicantsFromServer,
+        error: (err) => console.log(err)
+      }
+        this.applicationSelectionService.getApplicants({...val, ApplicationStage: 0, PageNumber: this.pagination.currentPage.toString(), PageSize: this.noOfrecords.toString()})
+        .subscribe(pObs)
+      }
+      else{
+        this.getApplicantsForSelection()
+      } 
+    })
     
   }
 
@@ -251,6 +266,7 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
   doc.save('applicants_selected.pdf');
   }
   ngOnDestroy(): void {
+    this.destroyObs ? this.destroyObs.unsubscribe() : null;
     this.pagination.clearPaginationStuff();
   }
 }

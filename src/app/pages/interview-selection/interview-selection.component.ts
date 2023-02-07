@@ -2,7 +2,7 @@ import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute, Params } from '@angular/router';
-import { PartialObserver } from 'rxjs';
+import { PartialObserver, Subscription } from 'rxjs';
 import { ApplicantSelectionStatistics, ApplicantsSelectionResponse, SelectionMethods, SpecialCandidate } from 'src/app/models/applicant-selection.models';
 import { AnApplication, PreviewActions, PaginationMethodsForSelectionAndAssessments, ApplicationApprovalStatus, RequiredQuarterFormat, InformationForModal, InformationForApprovalModal } from 'src/app/models/generalModels';
 import { ApplicantSelectionService } from 'src/app/services/applicant-selection.service';
@@ -27,6 +27,7 @@ export class InterviewSelectionComponent implements OnInit, SelectionMethods, Pa
   noOfrecords: number = 0;
   useCurrentPage: boolean = false;
   stage: number | undefined
+  destroyObs!:Subscription;
   
   constructor(
     private applicationSelectionService: ApplicantSelectionService, 
@@ -47,6 +48,20 @@ export class InterviewSelectionComponent implements OnInit, SelectionMethods, Pa
   ngOnInit(): void {
     const res = this.sdm.generateQuartersOfCurrentYear();
     this.quartersToUse = this.sdm.presentQuartersInHumanReadableFormat(res); 
+    this.destroyObs = this.broadCast.search$.subscribe(val =>{
+      if(val != null){
+        this.isLoading = true;
+       const pObs: PartialObserver<ApplicantsSelectionResponse> = {
+        next: this.handleApplicantsFromServer,
+        error: (err) => console.log(err)
+      }
+        this.applicationSelectionService.getApplicants({...val, ApplicationStage: this.stage ? this.stage : 2, PageNumber: this.pagination.currentPage.toString(), PageSize: this.noOfrecords.toString()})
+        .subscribe(pObs)
+      }
+      else{
+        this.getApplicantsForSelection();
+      } 
+    })
     
   }
   getApplicantsForSelection(ApplicationStage?: number, pageNumber?: number, noOfRecord?: number): void {
@@ -213,6 +228,7 @@ export class InterviewSelectionComponent implements OnInit, SelectionMethods, Pa
   }
 
   ngOnDestroy(): void {
+    this.destroyObs ? this.destroyObs.unsubscribe() : null;
     this.pagination.clearPaginationStuff();
   }
 

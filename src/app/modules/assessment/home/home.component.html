@@ -20,7 +20,7 @@
             <app-general-search-bar
              [quartersToUse]="quartersToUse"
              [agesToUse]="agesToUse"
-             [globusBranches]="globusBranches"
+             [states]="(states$ | async)?.result"
             ></app-general-search-bar>
         </div>
      </section>

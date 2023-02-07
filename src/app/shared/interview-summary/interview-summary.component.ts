@@ -156,12 +156,9 @@ appropriateDateTimeToDisplay!:string
   }
 
   displayAppropriateString(getPosition: boolean, str?: string): string{
-    // console.log(str);
     if(str && str.split('/').length > 0){
-      // console.log(str);
       return !getPosition ? str.split('/')[1] : str.split('/')[2];
     }
-    // console.log(str);
     return str as string;
   }
 

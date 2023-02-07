@@ -1,0 +1,23 @@
+
+
+.main_half{
+    overflow: hidden;
+
+    .wrapper_around_sidebar_components{
+        display: grid;
+        grid-template-columns: var(--width_for_sidebar_parent) 1fr;
+        grid-template-rows: 100%;
+        overflow: visible;
+        transition: all 300ms ease-in-out;
+
+        & .side_bar{
+            grid-column: 1/2;
+            grid-row: span 1;
+        }
+
+        & .main_content_for_components{
+            grid-column: 2/3;
+            grid-row: span 1;
+        }
+    }
+}

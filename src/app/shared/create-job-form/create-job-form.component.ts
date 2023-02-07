@@ -187,7 +187,7 @@ export class CreateJobFormComponent implements OnInit {
 
   showPreview(){
     const form = {
-      ...Object.entries(this.editorBindings).reduce((prevObj: any, [key, value], index: number) => {
+      ...Object.entries(this.editorBindings).reduce((prevObj: any, [key, value]) => {
         const obj = {...prevObj};
         obj[key] = value.html;
         return obj;

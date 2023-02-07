@@ -425,8 +425,8 @@
    <app-preview-job-details
     [data]="objForPreviewOfJob"
     (goBack)="handleCommunication($event)"
-    [buttonText]="'View Applicants'"
-    [showApplicantsPanel]="true"
+    [buttonText]="buttonText"
+    [showApplicantsPanel]="showApplicantsPanel"
     (submitJob)="sendJobForApproval($event)"
     ></app-preview-job-details>
   </div>

@@ -1,7 +1,7 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { PartialObserver } from 'rxjs';
+import { PartialObserver, Subscription } from 'rxjs';
 import { ApplicantSelectionStatistics, ApplicantsSelectionResponse, SelectionMethods } from 'src/app/models/applicant-selection.models';
 import { AnApplication, ApplicationApprovalStatus, InformationForApprovalModal,PaginationMethodsForSelectionAndAssessments, InformationForModal, PreviewActions, RequiredQuarterFormat } from 'src/app/models/generalModels';
 import { ApplicantSelectionService } from 'src/app/services/applicant-selection.service';
@@ -26,6 +26,7 @@ export class MedicalSelectionComponent implements OnInit, SelectionMethods, Pagi
   applicantsToBeSelected: AnApplication[] = [];
   noOfrecords: number = 0
   useCurrentPage: boolean = false;
+  destroyObs!: Subscription;
   constructor(
     private applicationSelectionService: ApplicantSelectionService, 
     private broadCast: BroadCastService,
@@ -33,6 +34,7 @@ export class MedicalSelectionComponent implements OnInit, SelectionMethods, Pagi
     private sdm: SchedulerDateManipulationService,
     private sharedService: SharedService,
     public pagination: PaginationService
+    
     // private router: ActivatedRoute,
   ) {
     this.handleApplicantsFromServer = this.handleApplicantsFromServer.bind(this);
@@ -44,6 +46,22 @@ export class MedicalSelectionComponent implements OnInit, SelectionMethods, Pagi
     const res = this.sdm.generateQuartersOfCurrentYear();
     this.quartersToUse = this.sdm.presentQuartersInHumanReadableFormat(res); 
     this.getApplicantsForSelection();
+
+    this.destroyObs = this.broadCast.search$.subscribe(val =>{
+      if(val != null){
+        this.isLoading = true;
+       const pObs: PartialObserver<ApplicantsSelectionResponse> = {
+        next: this.handleApplicantsFromServer,
+        error: (err) => console.log(err)
+      }
+        this.applicationSelectionService.getApplicants({...val, ApplicationStage: 5, PageNumber: this.pagination.currentPage.toString(), PageSize: this.noOfrecords.toString()})
+        .subscribe(pObs)
+      }
+      else{
+        this.getApplicantsForSelection()
+      } 
+      
+    })
   }
   getApplicantsForSelection(ApplicationStage?: number, pageNumber?: number, noOfRecord?: number): void {
     this.isLoading = true;
@@ -176,6 +194,7 @@ export class MedicalSelectionComponent implements OnInit, SelectionMethods, Pagi
   }
 
   ngOnDestroy(): void {
+    this.destroyObs ? this.destroyObs.unsubscribe() : null;
     this.pagination.clearPaginationStuff();
   }
 

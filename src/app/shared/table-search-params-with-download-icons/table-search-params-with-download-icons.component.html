@@ -1,6 +1,6 @@
-<form class="form_parent applicant_search_params">   
+<form class="form_parent applicant_search_params relative overflow-visible">   
     <div class="relative input_container ">
-        <input type="text" id="job_search" class="" placeholder="Search by Job name" required="">
+        <input #LocalSearch  type="text" id="job_search" class="" placeholder="Search by applicant name" required="">
         <div class="svg_container">
           <svg aria-hidden="true" class="w-7 h-7 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z">
@@ -45,5 +45,9 @@
 
      <button class="btn-red-custom no_bottom_margin">
         Fetch
-     </button>    
+     </button> 
+     
+     <div class="refresh_btn" (click)="refreshTable($event)" title="Click to refresh table">
+       <img src="../../../assets/images/refresh_btn.svg" alt="">
+     </div>
 </form>

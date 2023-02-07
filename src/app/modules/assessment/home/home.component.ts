@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { PartialObserver, Subscription } from 'rxjs';
-import { AGlobusBranch, BaseResponse, RequiredQuarterFormat, tabs } from 'src/app/models/generalModels';
+import { Observable, PartialObserver, Subscription } from 'rxjs';
+import { AGlobusBranch, BaseResponse, GeneralLookUp, RequiredQuarterFormat, tabs } from 'src/app/models/generalModels';
 import { BroadCastService } from 'src/app/services/broad-cast.service';
 import { SchedulerDateManipulationService } from 'src/app/services/scheduler-date-manipulation.service';
 import { SharedService } from 'src/app/services/sharedServices';
@@ -13,7 +13,7 @@ import { SharedService } from 'src/app/services/sharedServices';
 })
 export class HomeComponent implements OnInit, OnDestroy {
   tabList: tabs[] = ['Test Assessments', 'Interview Assessments'];
-  globusBranches: AGlobusBranch[] = [];
+  states$!: Observable<BaseResponse<GeneralLookUp[]>>;
   agesToUse: number[] = [];
   quartersToUse: RequiredQuarterFormat[] = [];
   destroyObs!: Subscription;
@@ -38,7 +38,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   getGlobusBranchLocations(){
     const pObs: PartialObserver<BaseResponse<AGlobusBranch[]>> = {
-      next: ({result}) => this.globusBranches = result,
+      next: ({result}) => {},
       error: (err) => console.log(err)
     }
     this.sharedService.getBranchesInGlobus().subscribe(pObs)

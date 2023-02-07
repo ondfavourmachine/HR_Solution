@@ -288,7 +288,7 @@
                         class="error_text phone">Enter a valid Nigerian phone !! </small>
                     <div class="input_sub_group">   
                       <input [ngClass]="{'required': phone?.touched && phone?.errors}"  
-                        formControlName="phone" type="tel" class="an_input half" placeholder="Primary">
+                        formControlName="phone" type="tel" class="an_input half" maxlength="11" placeholder="Primary">
                       <input formControlName="secondaryPhone" type="tel" class="an_input half" placeholder="Secondary (Optional)">
                      </div>
                   </div>

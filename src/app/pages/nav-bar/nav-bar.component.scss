@@ -1,8 +1,22 @@
 .header_nav{
     box-shadow: var(--general_box_shadow);
-    @apply py-1 bg-white h-[8vh] overflow-hidden w-full;
+    @apply py-1 bg-white h-[9.5vh] overflow-visible w-full min-h-[8vh];
     &__child{
-        @apply flex justify-end gap-2 h-full pr-10; 
+        @apply flex justify-between gap-2 h-full pr-10; 
+    }
+
+    & .omni_holder{
+        & .text_box{
+            inset: 0 0 0 20%;
+            & .text:first-child{
+                font-size: 1.55rem;
+                @apply pt-1;
+            }
+            & .text:last-child{ 
+                font-size: 1.7rem;
+                @apply pt-1;
+            }
+        }    
     }
 
     & .second_half{

@@ -36,7 +36,8 @@ export const environment = {
     deleteDrafts: 'JobDraft/DeactivateJobDraft',
     internalCandidateJobApplication: 'Application/AddApplication',
     internalCandidateJobApplicationUpload: 'Application/Upload',
-    getJobOfAnInternalCandidate: 'Application/GetApplicantJobByJobId'
+    getJobOfAnInternalCandidate: 'Application/GetApplicantJobByJobId',
+    deactivate: 'JobCreate/DeactivateJob'
   },
   departments: {
     getDept: 'Department/GetDepartments'

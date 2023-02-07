@@ -3,7 +3,7 @@
 <div class="preview_page default">
   <div class="body_content w-full ">
   
-    <a (click)="showAnotherView()" class="history"><img src="../../../assets/images/go_back.svg" alt=""> Go back </a>
+    <a (click)="showAnotherView()" class="history"><img src="../../../assets/images/go_back.svg" alt=""> Go back  </a>
     <section *ngIf="showTabs"  class="tab_container">
       <app-general-use-tabs
        [tabArray]="tabList"
@@ -11,7 +11,7 @@
        (changeTab)="handleChangeOfTab($event)"
        ></app-general-use-tabs>
     </section>
-
+  
     <section [ngClass]="{'!hidden': views == 'track application' }" class="main_view">
       <h5 *ngIf="data?.extraInfo?.showHeaderText">{{data?.extraInfo?.headerText}}</h5>
 
@@ -28,8 +28,9 @@
       <div class="main_view__content">
         <div class="heading_content">
           <div class="text">
-            <span class="bigger_text"> {{ data?.job?.position }} </span>
-            <span class="smaller_text"> {{ data?.job?.departmentName }} </span>
+            
+            <span class="bigger_text"> {{ data?.job?.position || data?.job?.jobTitle }} </span>
+            <span class="smaller_text"> {{ data?.job?.departmentName || data?.job?.department }} </span>
           </div>
           <div class="edit_container" *ngIf="data?.extraInfo?.showHeaderText">
             <span>

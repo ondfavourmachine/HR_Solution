@@ -34,14 +34,24 @@
         
     }
     & .side_bars{
-        @apply w-full h-[92vh] flex;
+        
+        display: grid;
+        grid-template-columns: 8rem 1fr;
+        grid-template-rows: 100%;
+        @apply w-full h-[92vh] gap-0;
+
+       
     }
     & .small_side_bar{
-        @apply w-[32%];
+        grid-column: span 1;
+        grid-row: span 1;
+        @apply w-full;
     }
 
     & .big_side_bar{
-        @apply w-[68%] bg-hrms-banner-1;
+        grid-column: span 1;
+        grid-row: span 1;
+        @apply w-full bg-hrms-banner-1;
 
         & .extra_side_bar{
             @apply flex flex-col justify-center gap-14 pt-10;
@@ -68,6 +78,10 @@
             }
         }
     }
+
+   
+
+   
 }
 
 .omni_holder{

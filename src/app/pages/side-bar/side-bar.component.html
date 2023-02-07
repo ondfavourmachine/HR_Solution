@@ -1,19 +1,18 @@
-<div class="sideBar_Half__parent">
-    <div class="w-full h-[8vh] flex gap-4 items-center">
+<div class="sideBar_Half__parent ">
+    <!-- <div class="w-full h-[8vh] flex gap-4 items-center">
         <div class="omni_holder">
             <img class="max-w-[80%]" src="../../../assets/images/harmburger_icon.svg" alt="">
         </div> 
         <div class=""> 
             <img  src="../../../assets/images/smaller_globus_logo_with_text.svg" alt="">
         </div>
-    </div>
+    </div> -->
     <div class="side_bars">
         <div class="small_side_bar sidebarBg">
             <ul class="pt-7 listParent ">
-                <li  [routerLinkActive]="['activated']"  class="activated"> 
+                <li  [routerLinkActive]="['activated']"   class="activated"> 
                     <span class="">
-                        <img class="" src="../../../assets/images/user-tag.svg" alt="">
-                        
+                        <img class="" src="../../../assets/images/user-tag.svg" alt="">    
                     </span>
                      <span>
                         Employment
@@ -40,7 +39,7 @@
         <div class="big_side_bar pt-5">
             <ul class="pt-7 extra_side_bar">
                 <li  [routerLinkActive]="['activated']" 
-                    [routerLink]="['job-management']" class=""> 
+                    [routerLink]="['job-management']" class="" title="Job Management"> 
                     <span class="">
                         <img class="" src="../../../assets/images/briefcase.svg" alt="">    
                     </span>
@@ -49,7 +48,7 @@
                      </span>
                 </li>
                 <li [routerLink]="['job-openings']"  [routerLinkActive]="['activated']" 
-              
+                   title="Job Openings"
                    class=""> 
                     <span class="">
                         <img class="" src="../../../assets/images/chair_alt_FILL0_wght300_GRAD0_opsz24 (1).svg" alt=""></span>
@@ -59,7 +58,7 @@
                 </li>
                 <li  [routerLinkActive]="['activated']" 
                      [routerLink]="['applicant-selection', 'all applications']"  
-                  class=""> 
+                  class="" title="Applicant Selection"> 
                     <span class="">
                         <img class="" src="../../../assets/images/calendar.svg" alt="">
                     </span>
@@ -68,7 +67,7 @@
                      </span>
                 </li>
 
-                <li  [routerLinkActive]="['activated']" [routerLink]="['assessment']" class=""> 
+                <li  [routerLinkActive]="['activated']" title="Assessment" [routerLink]="['assessment']" class=""> 
                     <span class="">
                         <img class="" src="../../../assets/images/people.svg" alt="">
                     </span>
@@ -78,15 +77,15 @@
                 </li>
                 <li  
                   [routerLink]="['scheduler']"
-                  [routerLinkActive]="['activated']" class=""> 
-                    <span class="">
+                  [routerLinkActive]="['activated']" class="" title="Schedule Master">  
+                    <span class="" >
                         <img class="" src="../../../assets/images/document.svg" alt="">
                     </span>
                      <span>
                         Schedule Master
                      </span>
                 </li>
-                <li  [routerLinkActive]="['activated']" [routerLink]="['role-mgt']" class=""> 
+                <li  [routerLinkActive]="['activated']" [routerLink]="['role-mgt']" class="" title="Manage Roles"> 
                     <span class="">
                         <img class="" src="../../../assets/images/external-drive.svg" alt="">
                     </span>
@@ -95,7 +94,7 @@
                      </span>
                 </li>
 
-                <li  [routerLinkActive]="['activated']" class=""> 
+                <li  [routerLinkActive]="['activated']" class="" title="Archieve"> 
                     <span class="">
                         <img class="" src="../../../assets/images/external-drive.svg" alt="">
                     </span>

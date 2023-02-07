@@ -1,7 +1,7 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { PartialObserver } from 'rxjs';
+import { PartialObserver, Subscription } from 'rxjs';
 import { ApplicantSelectionStatistics, ApplicantsSelectionResponse, SelectionMethods, SpecialCandidate } from 'src/app/models/applicant-selection.models';
 import { AnApplication, ApplicationApprovalStatus, InformationForApprovalModal, InformationForModal, PaginationMethodsForSelectionAndAssessments, PreviewActions, RequiredQuarterFormat } from 'src/app/models/generalModels';
 import { ApplicantSelectionService } from 'src/app/services/applicant-selection.service';
@@ -27,6 +27,7 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
   noOfRecords: number = 0;
   useCurrentPage: boolean = false;
   role!: string
+  destroyObs!:Subscription;
   constructor(private sdm: SchedulerDateManipulationService,
      private applicationSelectionService: ApplicantSelectionService, 
      private broadCast: BroadCastService,
@@ -45,6 +46,20 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
       this.quartersToUse = this.sdm.presentQuartersInHumanReadableFormat(res); 
       this.getApplicantsForSelection();   
       this.role = this.sharedService.getRole() as string;
+      // refactor this with a base class that this test selection class will extend;
+      this.destroyObs = this.broadCast.search$.subscribe(val =>{
+        if(val != null){
+          this.isLoading = true;
+          const pObs: PartialObserver<ApplicantsSelectionResponse> = {
+          next: this.handleApplicantsFromServer,
+          error: (err) => console.log(err)
+        }
+          this.applicationSelectionService.getApplicants({...val, ApplicationStage: 1, PageNumber: this.pagination.currentPage.toString(), PageSize: this.noOfRecords.toString()})
+          .subscribe(pObs)
+        }else{
+          this.getApplicantsForSelection()
+        }    
+      })
     }
 
      loadNextSetOfPages(){
@@ -207,6 +222,7 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
  
 
   ngOnDestroy(): void {
+    this.destroyObs ? this.destroyObs.unsubscribe() : null;
     this.pagination.clearPaginationStuff();
   }
 

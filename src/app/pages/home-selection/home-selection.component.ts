@@ -1,21 +1,23 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { ApplicantSelectionStatistics } from 'src/app/models/applicant-selection.models';
-import { AGlobusBranch, RequiredQuarterFormat, tabs } from 'src/app/models/generalModels';
+import { AGlobusBranch, BaseResponse, GeneralLookUp, RequiredQuarterFormat, tabs } from 'src/app/models/generalModels';
 import { BroadCastService } from 'src/app/services/broad-cast.service';
+import { LookUpService } from 'src/app/services/look-up.service';
 import { SchedulerDateManipulationService } from 'src/app/services/scheduler-date-manipulation.service';
 import { SharedService } from 'src/app/services/sharedServices';
 
 @Component({
   selector: 'app-home-selection',
   templateUrl: './home-selection.component.html',
-  styleUrls: ['./home-selection.component.scss']
+  styleUrls: ['./home-selection.component.scss'],
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeSelectionComponent implements OnInit, OnDestroy {
   quartersToUse: RequiredQuarterFormat[] = [];
   agesToUse: number[] = [];
-  globusBranches: AGlobusBranch[] = [];
+  states$!: Observable<BaseResponse<GeneralLookUp[]>>;
   statistics: Partial<ApplicantSelectionStatistics> = {};
   tabList: tabs[] = ['All Applications', 'Tests', 'Interview 01', 'Interview 02', 'Interview 03', 'Medical', 'Offer', 'Post Acceptance'];
   slideConfig = {slidesToShow: 5, slidesToScroll: 5, arrows: true, variableWidth: true, infinite: false, swipeToSlide: true};
@@ -25,6 +27,7 @@ export class HomeSelectionComponent implements OnInit, OnDestroy {
   constructor(
     private sdm: SchedulerDateManipulationService,
     private router: Router,
+    private lookUpService: LookUpService,
     public  sharedService: SharedService, 
     private broadCast: BroadCastService
   ) { }
@@ -34,6 +37,7 @@ export class HomeSelectionComponent implements OnInit, OnDestroy {
     this.quartersToUse = this.sdm.presentQuartersInHumanReadableFormat(res);    
     this.agesToUse = this.sharedService.generateAges();
     this.destroySub = this.broadCast.statistics$.subscribe(stats => this.statistics = stats)
+    this.states$ = this.lookUpService.getStates();
   }
 
   toggleSlidingContainer(){
