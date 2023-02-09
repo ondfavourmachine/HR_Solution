@@ -249,7 +249,7 @@ export interface AGlobusBranch {
   }
 
   export interface PreviewJobDS{
-    job:any, extraInfo: {currentBranchInView: string, headerText: string, showHeaderText: boolean}
+    job:any, extraInfo: {currentBranchInView: string, headerText: string, showHeaderText: boolean, hasRedirect?: boolean}
   }
 
   export type otherRelevantData = {
@@ -497,6 +497,7 @@ export interface AGlobusBranch {
     applicantData: T, 
     extraInfo?: {applicantSelectionScreen: boolean, callBack: Function, extras?: any, interviewForm: boolean} 
   }
+
 
   export interface InformationForApprovalModal<S, B, F = any>{
     header?: S,

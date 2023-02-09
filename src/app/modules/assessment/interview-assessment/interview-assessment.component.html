@@ -2,6 +2,8 @@
     <div class="search_bar__container">
         <app-table-search-params-with-download-icons
                 [quartersToUse]="quartersToUse"
+                [callBackForLoadingData]="getAssessments"
+                [stopLoading]="stopLoading"
                  ></app-table-search-params-with-download-icons>
         <div class="download_icons">
             <span><img src="../../../assets/images/excel_icon.svg" alt="">Excel</span>
@@ -108,7 +110,7 @@
                             <ng-container *ngFor="let assessment of assessments; index as i">
                                 <tr  class="bg-white cursor-pointer border-b">
                                     <td class="individual_tableCell_data !text-ro-black-text !opacity-90 font-semibold">
-                                        01
+                                        {{ i < 9 ? '0' + (i + 1) : i + 1 }}
                                     </td>
                                     <td class="individual_tableCell_data !text-ro-black-text  !opacity-90 font-semibold">
                                          {{ assessment?.applicants![0]?.position }} 

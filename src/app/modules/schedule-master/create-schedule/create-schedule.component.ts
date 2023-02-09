@@ -29,6 +29,7 @@ export class CreateScheduleComponent implements OnInit, NecessaryModalMethods {
   interviewTestLink!: string | null;
   description!: string;
   hospitalName!: string
+  minDate = new Date(Date.now()).toISOString().split('T')[0];
   constructor(private dialogRef: MatDialogRef<SchedulerComponent>, public sharedService: SharedService) { }
 
   ngOnInit(): void {

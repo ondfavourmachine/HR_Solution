@@ -2,6 +2,8 @@
     <div class="search_bar__container">
         <app-table-search-params-with-download-icons
                 [quartersToUse]="quartersToUse"
+                [callBackForLoadingData]="getTestBatches"
+                [stopLoading]="stopLoading"
                  ></app-table-search-params-with-download-icons>
         <div class="download_icons">
             <span><img src="../../../assets/images/excel_icon.svg" alt="">Excel</span>
@@ -129,13 +131,7 @@
                                         {'NotAssessed': !assessment?.assessmentStatus, 'Assessed': assessment?.assessmentStatus }" 
                                         class="status">  {{ assessment?.assessmentStatus ? 'Assessed' : 'Not Assessed' }} </span>
                                      </td>
-                                     
-                                     <!-- <td class="individual_tableCell_data">
-                                        <span [ngClass]="
-                                        {'Pending': assessment.auditApproval == 'Pending', 'Rejected': assessment.auditApproval == 'Fail', 'Approved': assessment?.auditApproval == 'Approve' }" 
-                                        class="status">{{ assessment?.auditApproval == 'Pass' ? 'Successful' : assessment.auditApproval == 'Fail' ? 'Failed' : assessment.auditApproval }}</span>
-                                     </td> -->
-                                     
+                                      
                                     <td class="individual_tableCell_data align-middle">
                                         <img class="inline-flex" (click)="getAAnAssessment(assessment)" src="../../../assets/images/eye_view.svg" alt="">
                                     </td>    
@@ -289,7 +285,7 @@
 
                                      <td class="individual_tableCell_data align-top">
                                         <span [ngClass]="
-                                        {'Pending': batch.assessmentStatus == 'Ongoing', 'NotAssessed': !batch?.assessmentStatus, 'Assessed': batch?.assessmentStatus == 'Assessed' || batch?.assessmentStatus == 'Completed' }" 
+                                        {'Pending': batch.assessmentStatus == 'Ongoing', 'NotAssessed': !batch?.assessmentStatus || batch.assessmentStatus == 'Not Started', 'Assessed': batch?.assessmentStatus == 'Assessed' || batch?.assessmentStatus == 'Completed' }" 
                                         class="status">  {{ batch?.assessmentStatus  }} </span>
                                      </td>
 
@@ -312,7 +308,7 @@
                                                   <img src="../../../../assets/images/eye_view.svg" alt="">  View Applicants
                                                 </li>
                                                 <li *ngIf="batch?.assessmentStatus != 'Completed'" (click)="triggerUploadScoreComp(batch)"><img src="../../../../assets/images/add.svg" alt="">  Upload Score record</li>
-                                                <li *ngIf="batch?.assessmentStatus == 'Completed'" (click)="triggerAuditApprovalComponent(batch)"><img src="../../../../assets/images/add.svg" alt="">  Add Audit Approval</li>
+                                                <li *ngIf="batch?.assessmentStatus == 'Completed' && batch.auditApproval != 'Approve'" (click)="triggerAuditApprovalComponent(batch)"><img src="../../../../assets/images/add.svg" alt="">  Add Audit Approval</li>
                                             </ul>
                                         </div>
                                     </td>    
@@ -327,9 +323,7 @@
     
     <div class="pagination_count !hidden">
         <div class="form-group w-auto flex gap-3 px-1">
-            <input
-             
-             
+            <input 
              name="records"
              type="number" class="w-12 pb-0 border-t-0 border-l-0 border-r-0 border-b border-b-ro-hoverBlue-1 h-6 mb-3">
             <small class="self-center text-[#8F8F8F]">Records</small>

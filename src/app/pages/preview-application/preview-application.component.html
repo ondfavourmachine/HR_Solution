@@ -8,15 +8,6 @@
             <img (click)="closeBtn()" src="../../../assets/images/close-icon.svg" alt=""></span>
         </div>
      </header>
-    <!-- <header *ngIf="checkIfApplicationHasApplicationStage && !checkIfChairPersonAssessed">
-        <pre>testing....</pre>
-        <div class="first_part gap-20">
-         Applicant Information   
-        </div>
-        <div class="second_part" >
-         <span  [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen}" ><img (click)="closeBtn()" src="../../../assets/images/close-icon.svg" alt=""></span>
-        </div>
-     </header> -->
 
      <header *ngIf="data?.applicantData?.approverStatus == 'Pending' && !checkIfChairPersonAssessed && data?.applicantData?.hR_Status == 'Pending' && data?.applicantData?.applicationStage == 0">
         <div class="first_part" [ngClass]="{'gap-20': !data?.applicantData?.hR_Admin, 'gap-5': data?.applicantData?.hR_Admin }">
@@ -127,7 +118,8 @@
         </div>
      </header>
 
-    <header *ngIf="data?.applicantData?.applicationStage! > 0 && data?.applicantData?.invitationStatus == 'Not Sent' && data?.applicantData?.approverStatus == 'Approve'">
+    <header *ngIf="data?.applicantData?.applicationStage! > 0 && data?.applicantData?.invitationStatus == 'Not Sent'
+         && data?.applicantData?.hR_Status == 'Approve' && data?.applicantData?.testAssessed == 0  && data?.applicantData?.approverStatus == 'Approve'">
        <div class="first_part" [ngClass]="{'gap-20': !data?.applicantData?.hR_Admin, 'gap-5': data?.applicantData?.hR_Admin }">
         Applicant Information 
         <!-- testing -->
@@ -152,6 +144,32 @@
         <span  [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen}" ><img (click)="closeBtn()" src="../../../assets/images/close-icon.svg" alt=""></span>
        </div>
     </header>
+
+    <header *ngIf="data?.applicantData?.applicationStage! == 0 && data?.applicantData?.hR_Status== 'Rejected' && data?.applicantData?.approverStatus == 'Rejected'">
+        <div class="first_part" [ngClass]="{'gap-20': !data?.applicantData?.hR_Admin, 'gap-5': data?.applicantData?.hR_Admin }">
+         Applicant Information 
+         <!-- testing -->
+         <span class="status_container" [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen }">Status: 
+             <span class="status"
+             [ngClass]="
+             {'Pending': data?.applicantData?.hR_Status == 'Pending',
+               'Waiting': data?.applicantData?.approverStatus == 'Awaiting', 
+              'Approved': data?.applicantData?.hR_Status == 'Approve', 
+             'Rejected' : data?.applicantData?.hR_Status == 'Rejected' || data?.applicantData?.hR_Status == 'Returned'}" 
+             > {{ getApprovalToDisplay }} 
+           </span>
+         </span>
+         <span  class="status_container initiator" *ngIf="data?.applicantData?.hR_Admin &&  data?.applicantData?.hR_Status == 'Pending',">
+                 <span class="text-black">Initiator:</span> {{ data?.applicantData?.hR_Admin }}
+         </span>
+         <span class="status_container decision" *ngIf="data?.applicantData?.hR_Admin &&  data?.applicantData?.hR_Status == 'Pending'">
+             <span class="text-black">Decision: </span> {{ data?.applicantData?.hR_Comment }} 
+          </span>
+        </div>
+        <div class="second_part" >
+         <span  [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen}" ><img (click)="closeBtn()" src="../../../assets/images/close-icon.svg" alt=""></span>
+        </div>
+     </header>
 
     <header *ngIf="(data?.applicantData?.applicationStage! == 0 || data?.applicantData?.applicationStage! == 1 || data?.applicantData?.applicationStage! == 2
        || data?.applicantData?.applicationStage! == 3 ) && data?.applicantData?.hR_Status== 'Rejected' && (data?.applicantData?.approverStatus == 'Pending' || data?.applicantData?.approverStatus == 'Awaiting')">
@@ -205,7 +223,7 @@
         </div>
      </header>
 
-      <header *ngIf="data?.applicantData?.applicationStage == 1 && data?.applicantData?.testAssessed == 2" >
+      <header *ngIf="data?.applicantData?.applicationStage == 1 && data?.applicantData?.testAssessed == 2 && data?.applicantData?.hR_Status != 'Rejected'" >
         <div class="first_part" [ngClass]="{'gap-20': !data?.applicantData?.hR_Admin, 'gap-5': data?.applicantData?.hR_Admin }">
          Applicant Test Details   
          <span class="status_container" [ngClass]="{'!hidden': !data?.extraInfo?.applicantSelectionScreen }">Invitation: 
@@ -241,12 +259,16 @@
         </div>
      </header>
 
-     <header *ngIf="data?.applicantData?.applicationStage == 1 && data?.applicantData?.testAssessed == 4" >
+     <header *ngIf="data?.applicantData?.applicationStage == 1 && data?.applicantData?.testAssessed == 4 && data?.applicantData?.hR_Status != 'Rejected'" >
         <div class="first_part gap-20">
          Applicant Test Details   
 
          <span class="status_container initiator" *ngIf="data?.applicantData?.hR_Status">
-            <span class="text-black">Test Status:</span> Completed
+            <span class="text-black" >Test Status:</span>
+            <span class="status" [ngClass]="{'Approved': data?.applicantData?.approverStatus == 'Approve' }">
+                Completed
+            </span>
+             
          </span>
 
             <span class="status_container decision" *ngIf="data?.applicantData?.hR_Admin">
@@ -748,7 +770,7 @@
                             <span class="heading">
                                 Audit Approval
                             </span>
-                            <span class="status Approved">
+                            <span [ngClass]="{'Approved': data?.applicantData?.audit_Status == 'Approve'}" class="status ">
                                 {{ data?.applicantData?.audit_Status || 'Nil' }}
                             </span>
                         </div>
@@ -834,6 +856,7 @@
                 <div *ngIf="data?.applicantData?.approverStatus == 'Awaiting' && role == 'Approver' && data?.applicantData?.testAssessed == 0
                 && data?.applicantData?.hR_Status == 'Approved'" [ngClass]="{'!flex': data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
                     <button
+                    (click)="triggerAcceptanceOrRejection(7)"
                      class="btn-red-custom">
                         Return
                     </button>
@@ -847,6 +870,7 @@
                 <div *ngIf="(data?.applicantData?.approverStatus == 'Pending' || data?.applicantData?.approverStatus == 'Awaiting') 
                   && data?.applicantData?.hR_Status == 'Approve' && role == 'Approver' && data?.applicantData?.applicationStage == 0" [ngClass]="{'!flex': data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
                     <button
+                    (click)="triggerAcceptanceOrRejection(7)"
                      class="btn-red-custom">
                         Return
                     </button>
@@ -861,6 +885,7 @@
                    && data?.applicantData?.hR_Status == 'Rejected' && role == 'Approver' &&  !checkIfChairPersonAssessed &&
                     (data?.applicantData?.applicationStage == 0 || data?.applicantData?.applicationStage == 1 || data?.applicantData?.applicationStage == 2)" [ngClass]="{'!flex': data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
                     <button
+                    (click)="triggerAcceptanceOrRejection(7)"
                      class="btn-red-custom">
                         Return
                     </button>
@@ -875,6 +900,7 @@
                     && data?.applicantData?.hR_Status == 'Approve' && !checkIfChairPersonAssessed
                     && data?.applicantData?.applicationStage == 1" [ngClass]="{'!flex': data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
                     <button
+                    (click)="triggerAcceptanceOrRejection(7)"
                      class="btn-red-custom">
                         Return
                     </button>
@@ -898,7 +924,7 @@
                     </button>
                 </div>
 
-                <div *ngIf="checkIfChairPersonAssessed && data?.applicantData?.interviewAssessed == 1 && role == 'HRAdmin'" [ngClass]="{'!flex': data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
+                <div *ngIf="checkIfChairPersonAssessed && data?.applicantData?.interviewAssessed == 1 && role == 'HRAdmin' && data?.applicantData?.applicationStage! == 2" [ngClass]="{'!flex': data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
                     <button
                     (click)="triggerAcceptanceOrRejection(3)"
                      class="btn-red-custom">
@@ -928,7 +954,8 @@
                   data?.applicantData?.approverStatus == 'Awaiting' && data?.applicantData?.hR_Status == 'Rejected'
                   && role == 'Approver'" [ngClass]="{'!flex': data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
                     <button
-                     class="btn-red-custom">
+                    (click)="triggerAcceptanceOrRejection(7)"
+                     class="transition-all px-16 py-3 rounded-md font-hrmsCamptonLight bg-white border border-hrms-text-dark">
                         Return
                     </button>
                     <button
@@ -940,6 +967,7 @@
 
                 <div *ngIf="(data?.applicantData?.applicationStage == 3 || data?.applicantData?.applicationStage == 4) && role == 'HRAdmin' && data?.applicantData!.hR_Status == 'Pending'" [ngClass]="{'!flex': data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
                     <button
+                    (click)="triggerAcceptanceOrRejection(3)"
                      class="btn-red-custom">
                         Fail
                     </button>
@@ -953,6 +981,7 @@
 
                 <div *ngIf="data?.applicantData?.applicationStage == 5 && role == 'HRAdmin' && data?.applicantData!.hR_Status == 'Pending'" [ngClass]="{'!flex': data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
                     <button
+                    (click)="triggerAcceptanceOrRejection(3)"
                      class="btn-red-custom">
                         Fail
                     </button>
@@ -966,7 +995,8 @@
                 <div *ngIf="(data?.applicantData?.approverStatus == 'Pending' || data?.applicantData?.approverStatus == 'Awaiting') 
                   && data?.applicantData?.hR_Status == 'Approve' && role == 'Approver' && data?.applicantData?.applicationStage == 5" [ngClass]="{'!flex': data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
                     <button
-                     class="btn-red-custom">
+                     (click)="triggerAcceptanceOrRejection(7)"
+                     class="transition-all px-16 py-3 rounded-md font-hrmsCamptonLight bg-white border border-hrms-text-dark">
                         Return
                     </button>
                     <button
@@ -983,6 +1013,20 @@
                         Confirm PickUp
                     </button>
                    
+                </div>
+
+                <div *ngIf="(data?.applicantData?.approverStatus == 'Awaiting') 
+                  && data?.applicantData?.hR_Status == 'Approve' && role == 'Approver' && data?.applicantData?.applicationStage == 6" [ngClass]="{'!flex': data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
+                    <button
+                    (click)="triggerAcceptanceOrRejection(7)"
+                     class="transition-all px-16 py-3 rounded-md font-hrmsCamptonLight bg-white border border-hrms-text-dark">
+                        Return
+                    </button>
+                    <button
+                     (click)="triggerAcceptanceOrRejection(2)"
+                     class="btn-red-custom green">
+                        Approve Decision
+                    </button>
                 </div>
                 
             </footer>

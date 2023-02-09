@@ -188,11 +188,12 @@
 
         <div *ngIf="data.stageOfCreation == 'PendingApproval' && role == 'Approver'" class="button_fields">
             <button
+            (click)="triggerApprovalProcess($event, 3)"
              class="btn-red-custom">
                 Reject Invite
             </button>
             <button
-             (click)="triggerApprovalProcess($event)"
+             (click)="triggerApprovalProcess($event, 2)"
              class="btn-red-custom green">
                 Approve Invite
             </button>

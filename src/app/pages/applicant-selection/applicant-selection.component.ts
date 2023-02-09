@@ -17,6 +17,7 @@ import { PaginationService } from 'src/app/services/pagination.service';
 import {  jsPDF } from "jspdf";
 import autoTable from 'jspdf-autotable';
 import {UserOptions} from 'jspdf-autotable';
+import { ActivatedRoute } from '@angular/router';
 // import { AssessmentSheetComponent } from 'src/app/shared/assessment-sheet/assessment-sheet.component';
 
 
@@ -36,10 +37,13 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
   applicantAboutToBeAccepted!: AnApplication;
   rejectionHasBeenTriggered: boolean = false;
   role!: string;
-  destroyObs!: Subscription;
+  destroyObs: Subscription[] = [];
+  stopLoading: {stopLoading: boolean} = {stopLoading : false};
+  idOfJobToLoadModal!: any;
   constructor(
     public  sharedService: SharedService, 
     private dialog: MatDialog,
+    private activatedRoute: ActivatedRoute,
     private applicationSelectionService: ApplicantSelectionService,
     private broadCast: BroadCastService,
     private sdm: SchedulerDateManipulationService,
@@ -49,6 +53,7 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
       this.triggerApprovalModalForAcceptingApplicant = this.triggerApprovalModalForAcceptingApplicant.bind(this);
       this.acceptAnApplicant = this.acceptAnApplicant.bind(this);
       this.getApplicantsForSelection = this.getApplicantsForSelection.bind(this);
+      this.clearidOfJobToLoadModal = this.clearidOfJobToLoadModal.bind(this);
      }
 
   ngOnInit(): void {
@@ -57,8 +62,8 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
     this.getApplicantsForSelection();
     this.getGlobusBranchLocations();
     this.role = this.sharedService.getRole() as string;
-    this.destroyObs = this.broadCast.search$.subscribe(val =>{
-      if(val != null){
+    this.destroyObs[0] = this.broadCast.search$.subscribe(val =>{
+      if(val != null && typeof val == 'object'){
         this.isLoading = true;
        const pObs: PartialObserver<ApplicantsSelectionResponse> = {
         next: this.handleApplicantsFromServer,
@@ -67,11 +72,23 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
         this.applicationSelectionService.getApplicants({...val, ApplicationStage: 0, PageNumber: this.pagination.currentPage.toString(), PageSize: this.noOfrecords.toString()})
         .subscribe(pObs)
       }
-      else{
-        this.getApplicantsForSelection()
+      else if(val == 'reload'){
+        this.useCurrentPage = true;
+        this.getApplicantsForSelection();
       } 
     })
-    
+    this.idOfJobToLoadModal = this.activatedRoute.snapshot.params
+    this.destroyObs[1] = this.broadCast.applicantDataHasBeenLoaded$.subscribe(val => {
+      if(this.idOfJobToLoadModal && this.idOfJobToLoadModal.hasOwnProperty('jobId') && !isNaN(parseInt(this.idOfJobToLoadModal.jobId.split('_')[1]))){
+        const appId = parseInt(this.idOfJobToLoadModal.jobId.split('_')[1]);
+        const foundJob = this.applicantsToBeSelected.find(elem => elem.applicationId == appId);
+        this.gotoApplicantView(foundJob as AnApplication);
+      }
+    })  
+  }
+
+  clearidOfJobToLoadModal(){
+    this.idOfJobToLoadModal = undefined;
   }
 
   getApplicantsForSelection(ApplicationStage?: number, pageNumber?: number, noOfRecord?: number){
@@ -92,11 +109,9 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
   }
 
   handleApplicantsFromServer(val: ApplicantsSelectionResponse){
-
     const { accepted, all, awaiting, pending, rejected, returned, data, pageSize, totalRecords } = val;
     const statistics = {accepted, all, awaiting, rejected, returned, pending};
     this.broadCast.broadCastStatistics(statistics);
-    // debugger;
     this.pagination.paginationData.size > 0 && this.pagination.paginationData.get(1)!.length > 0 ? this.pagination.updatePaginationData = true : this.pagination.updatePaginationData = false;
     this.pagination.calculatePagination<AnApplication>(data, totalRecords);
     this.pagination.generatePagesForView();
@@ -104,10 +119,15 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
     this.noOfrecords = pageSize
     this.applicantsToBeSelected = this.pagination.getAPageOfPaginatedData<AnApplication>();
     this.useCurrentPage = false;
+    this.stopLoading = {stopLoading: false};
+    if(this.applicantsToBeSelected.length > 0) {
+      this.broadCast.broadCastLoadModalInfo(true);
+    }else{
+      this.broadCast.broadCastLoadModalInfo(false);
+    }
   }
 
   triggerApprovalModalForAcceptingApplicant(command: PreviewActions, acceptOrReject: ApplicationApprovalStatus){
-    // debugger;
     this.rejectionHasBeenTriggered = acceptOrReject == ApplicationApprovalStatus.Rejected ? true : false;
     if(command == 2){
     const data: InformationForApprovalModal<string, string> = {
@@ -147,7 +167,13 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
     })
   }
 
-  acceptingWasSuccessful(){
+  acceptingWasSuccessful(typeOfApproval?: ApplicationApprovalStatus){
+    // debugger;
+    if(this.applicantAboutToBeAccepted.approverStatus == 'Awaiting' && typeOfApproval == 7){
+      this.useCurrentPage = true;
+      this.sharedService.triggerSuccessfulInitiationModal('Application has been returned to HRAdmin Successfully!', 'Continue to Applicant Selection', this.getApplicantsForSelection);
+      return;
+    }
     if(this.applicantAboutToBeAccepted.hR_Status == 'Pending'){
       this.useCurrentPage = true;
       const message = this.rejectionHasBeenTriggered ? 'You have initiated rejection of an applicant. You will be notified when it is approved' : 'You have initiated selection of an applicant. You will be notified when it is approved';
@@ -234,6 +260,7 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
     if (applicant.approverStatus == 'Approve' && applicant.hR_Status == 'Approve') return 'Approve';
     if (applicant.hR_Status == 'Rejected' && applicant.approverStatus == 'Pending') return 'Awaiting';
     if (applicant.hR_Status == 'Rejected' && applicant.approverStatus == 'Rejected') return 'Rejected';
+    if (applicant.hR_Status == 'Rejected' && applicant.approverStatus == 'Approve') return 'Rejected';
     else return 'Pending';
   }
   downloadExcel(){
@@ -266,7 +293,8 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
   doc.save('applicants_selected.pdf');
   }
   ngOnDestroy(): void {
-    this.destroyObs ? this.destroyObs.unsubscribe() : null;
+    this.idOfJobToLoadModal = undefined;
+    this.destroyObs ? this.destroyObs.forEach(elem => elem.unsubscribe()) : null;
     this.pagination.clearPaginationStuff();
   }
 }

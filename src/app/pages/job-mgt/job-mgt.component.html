@@ -228,7 +228,7 @@
               </div>
               <div class="button_container">
                 <div class="">
-                  <a (click)="editJob(adraft)" class="trigger_buttons edit">
+                  <a (click)="editDraft(adraft)" class="trigger_buttons edit">
                     Edit Draft
                   </a>
                 </div>
@@ -425,6 +425,8 @@
    <app-preview-job-details
     [data]="objForPreviewOfJob"
     (goBack)="handleCommunication($event)"
+    (editJob)="editJob($event)"
+    (moveBackToRedirectComp)="goBackToRedirectComp($event)"
     [buttonText]="buttonText"
     [showApplicantsPanel]="showApplicantsPanel"
     (submitJob)="sendJobForApproval($event)"
@@ -444,10 +446,11 @@
            <span class="bigger_text"> {{ dataFromCreateJob?.jobTitle }} </span>
            <span class="smaller_text"> {{ dataFromCreateJob?.department }} </span>
          </div>
-         <div class="edit_container">
-           <span>
+         <div class="edit_container" (click)="editJob(dataFromCreateJob)">
+           <span class="hover:border hover:border-hrms-black-text-2 hover:px-2 hover:py-1"
+             >
              <img class="edit_button" src="../../../assets/images/edit_button.svg" alt="">
-             <small>Edit</small>
+             <small>i am here lnsndlsnl Edit</small>
            </span>
          </div>
        </div>
@@ -539,7 +542,7 @@
         <li>
           <p class="heading">
             <span>Location</span> 
-            <span>
+            <span (click)="editJob(dataFromCreateJob)">
               <img class="edit_button" src="../../../assets/images/edit_button.svg" alt="">
               <small>Edit</small>
             </span>
@@ -609,11 +612,11 @@
         class="approval_buttons_return">
         Return
       </button>
-      <button class="approval_buttons_reject">
+      <button (click)="startApproval($event, 3)" class="approval_buttons_reject">
         Reject
       </button>
       <button
-        (click)="startApproval($event)"
+        (click)="startApproval($event, 2)"
         class="approval_buttons_approve">
         Approve
       </button>

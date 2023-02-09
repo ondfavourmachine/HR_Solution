@@ -21,12 +21,13 @@ export class PreviewJobDetailsComponent implements OnInit, OnChanges {
   tabList: tabs[] = ['Job Details', 'Track application']
   @Output() goBack = new EventEmitter<Views>();
   @Output() submitJob = new EventEmitter<Event>();
+  @Output() editJob = new EventEmitter<PreviewJobDS>();
+  @Output() moveBackToRedirectComp = new EventEmitter<boolean>();
   @Input('data')
-  data!: PreviewJobDS
+  data: PreviewJobDS | undefined;
   @Input('buttonText') buttonText!: string
   @Input('showTabs') showTabs: boolean = false;
   @Input('showApplicantsPanel') showApplicantsPanel!: boolean;
-  
 
   @ViewChild('PersonSpecifications', {static: true}) PersonSpecifications!: ElementRef<HTMLElement>;
   @ViewChild('ProfessionalCompetencies', {static: true}) ProfessionalCompetencies!: ElementRef<HTMLElement>;
@@ -42,6 +43,7 @@ export class PreviewJobDetailsComponent implements OnInit, OnChanges {
     if(!this.data || typeof this.data == 'object')console.log(`data input  is an: ${this.data}`);
     if(typeof this.data == 'object' && 'job' in this.data){
       console.log(`data input  is an:`, this.data);
+       this.sharedService.clearInnerHtmlOfElement<HTMLElement, ElementRef>([this.JobObjectives, this.PersonSpecifications, this.Accountability, this.ProfessionalCompetencies, this.Experience, this.EducationalQualifications, this.OrganisationalCompetencies, this.BehavioralCompetencies]);
       this.sharedService.insertIntoAdjacentHtmlOfElement<HTMLElement, ElementRef, string>([
         {element: this.JobObjectives, content: this.sharedService.insertLisIntoUl(this.data.job.jobObjectives)},
         {element: this.Accountability, content: this.sharedService.insertLisIntoUl(this.data.job.accountabilities)} ,
@@ -62,8 +64,15 @@ export class PreviewJobDetailsComponent implements OnInit, OnChanges {
   }
 
 
+  editAJob(){
+    this.editJob.emit(this.data);
+  }
+
   showAnotherView(){
     this.views = 'jobs';
+    if(this.data?.extraInfo.hasRedirect) {
+      this.moveBackToRedirectComp.emit(true);
+    }
     this.goBack.emit(this.views);
   }
 
@@ -74,7 +83,7 @@ export class PreviewJobDetailsComponent implements OnInit, OnChanges {
   async handleChangeOfTab(event: any){
     switch(event){
       case 'Track application':
-      await this.getMyJob(this.data.job.id);
+      await this.getMyJob(this.data?.job.id);
       this.views = 'track application';
       break;
       default:
@@ -83,7 +92,7 @@ export class PreviewJobDetailsComponent implements OnInit, OnChanges {
   }
 
   takeAction(event: Event){
-    if(!this.data.job.hasOwnProperty('id')){
+    if(!this.data?.job.hasOwnProperty('id')){
         this.sendJobForApproval(event);
         return;
     }
@@ -103,11 +112,11 @@ export class PreviewJobDetailsComponent implements OnInit, OnChanges {
       panelClass: 'create_a_schedule',
       width: '75vw',
       height: '75vh',
-      data: {jobId: this.data.job.id}
+      data: {jobId: this.data?.job.id}
     }
     const d = this.dialog.open(ApplyForJobByInternalStaffComponent, config);
     d.afterClosed().subscribe(val => {
-      if(val) this.data.job['hasApplied'] = 1;
+      if(val) this.data!.job['hasApplied']! = 1;
     })
   }
 
@@ -140,7 +149,7 @@ export class PreviewJobDetailsComponent implements OnInit, OnChanges {
           return;
         }
         try {
-        const res = await lastValueFrom(this.jobservice.deleteJobs({jobId: this.data.job.id, comment: val, status: ApplicationApprovalStatus.Approve, actionType: 1}));
+        const res = await lastValueFrom(this.jobservice.deleteJobs({jobId: this.data?.job.id, comment: val, status: ApplicationApprovalStatus.Approve, actionType: 1}));
         console.log(res);
         this.sharedService.loading4button(btn, 'done', prevText as string);
         this.sharedService.successSnackBar('Job deleted successfully!');

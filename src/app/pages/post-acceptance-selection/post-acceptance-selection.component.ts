@@ -25,6 +25,8 @@ export class PostAcceptanceSelectionComponent implements OnInit, SelectionMethod
   applicantsToBeSelected: AnApplication[] = [];
   noOfRecords: number = 0;
   useCurrentPage: boolean = false;
+  stopLoading: {stopLoading: boolean} = {stopLoading : false};
+
   constructor(
     private applicationSelectionService: ApplicantSelectionService, 
     private broadCast: BroadCastService,
@@ -84,6 +86,7 @@ export class PostAcceptanceSelectionComponent implements OnInit, SelectionMethod
     this.noOfRecords = pageSize;
     this.applicantsToBeSelected = this.pagination.getAPageOfPaginatedData<AnApplication>();
     this.useCurrentPage = false;
+    this.stopLoading = {stopLoading: false};
   }
   gotoApplicantView(applicant: AnApplication): void {
     const data: InformationForModal<AnApplication> = { 

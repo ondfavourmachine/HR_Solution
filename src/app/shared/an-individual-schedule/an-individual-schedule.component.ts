@@ -17,7 +17,7 @@ export class AnIndividualScheduleComponent  extends ScheduleSwitching implements
   }
 
   ngOnInit(): void {
-    console.log(this.schedule?.dateTime);
+    // console.log(this.schedule?.dateTime);
   }
 
   triggerParent(){
@@ -32,6 +32,9 @@ export class AnIndividualScheduleComponent  extends ScheduleSwitching implements
     if(this.schedule && this.schedule.hasOwnProperty('status') && this.schedule.status == 'Approve'){
       this.schedule.stageOfCreation = StageOfCreation.Approved;
     }
+    if(this.schedule && this.schedule.hasOwnProperty('status') && this.schedule.status == 'Rejected'){
+      this.schedule.stageOfCreation = StageOfCreation.Rejected;
+    }
     const config: MatDialogConfig = {
       panelClass: 'interview_summary_comp',
       width: '80vw',
@@ -43,7 +46,8 @@ export class AnIndividualScheduleComponent  extends ScheduleSwitching implements
          console.log(val);
         //  debugger;
          if(val){
-          (val as ASchedule).stageOfCreation = StageOfCreation.Approved; 
+          (val as ASchedule).stageOfCreation == StageOfCreation.Approved ? 
+          (val as ASchedule).stageOfCreation == StageOfCreation.Approved : (val as ASchedule).stageOfCreation == StageOfCreation.Rejected; 
           this.sendUpApprovedSchedule.emit(val)}
         })
   }
@@ -54,6 +58,10 @@ export class AnIndividualScheduleComponent  extends ScheduleSwitching implements
 
   get approve(): boolean{
     return 'status' in this.schedule! && this.schedule?.status == 'Approve';
+  }
+
+  get rejected(): boolean{
+    return 'status' in this.schedule! && this.schedule?.status == 'Rejected';
   }
 
 }

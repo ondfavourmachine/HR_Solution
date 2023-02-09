@@ -33,7 +33,7 @@
             <span class="smaller_text"> {{ data?.job?.departmentName || data?.job?.department }} </span>
           </div>
           <div class="edit_container" *ngIf="data?.extraInfo?.showHeaderText">
-            <span>
+            <span (click)="editAJob()" class="hover:border hover:border-hrms-black-text-2 hover:px-2 hover:py-1">
               <img class="edit_button" src="../../../assets/images/edit_button.svg" alt="">
               <small>Edit</small>
             </span>

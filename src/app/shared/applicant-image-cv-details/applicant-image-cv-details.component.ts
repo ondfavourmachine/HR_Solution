@@ -1,4 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { AnApplication, InformationForModal, RequiredApplicantDetails } from 'src/app/models/generalModels';
 import { SharedService } from 'src/app/services/sharedServices';
 
@@ -12,10 +14,12 @@ export class ApplicantImageCvDetailsComponent implements OnInit, AfterViewInit {
   @ViewChild('CVPort') CVPort!: ElementRef<HTMLElement>;
   @Input() data!: InformationForModal<AnApplication & RequiredApplicantDetails>
   cvName!: string;
-  constructor(public sharedService: SharedService) { }
+  currentRoute!:string;
+  constructor(public sharedService: SharedService, private dialog: MatDialog, private route: Router) { }
 
   ngOnInit(): void {
-    console.log(this.data.extraInfo);
+    console.log(this.data);
+    this.currentRoute = this.route.url;
     this.cvName = this.data.applicantData.cV_URL?.split('/')[4];
   }
 
@@ -34,8 +38,13 @@ export class ApplicantImageCvDetailsComponent implements OnInit, AfterViewInit {
   }
 
   downloadCV(){
-    // debugger;
     this.sharedService.downloadFile(this.data?.applicantData!.cV_URL);
+  }
+
+  routeToJobMgtForPreviewPurposes(){
+    this.dialog.closeAll();
+    // debugger;
+    this.route.navigate(['dashboard', 'job-management'], {queryParams: {dataFromPreviewApplication: this.data.applicantData.jobId, appId: this.data.applicantData.applicationId, redirect: this.currentRoute}})
   }
 
 

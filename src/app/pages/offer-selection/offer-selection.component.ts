@@ -26,6 +26,7 @@ export class OfferSelectionComponent implements OnInit, SelectionMethods, Pagina
   noOfRecords: number = 0;
   useCurrentPage: boolean = false;
   destroyObs!: Subscription;
+  stopLoading: {stopLoading: boolean} = {stopLoading : false};
   constructor(
     private applicationSelectionService: ApplicantSelectionService, 
     private broadCast: BroadCastService,
@@ -45,7 +46,7 @@ export class OfferSelectionComponent implements OnInit, SelectionMethods, Pagina
     this.quartersToUse = this.sdm.presentQuartersInHumanReadableFormat(res); 
     this.getApplicantsForSelection();
     this.destroyObs = this.broadCast.search$.subscribe(val =>{
-      if(val != null){
+      if(val != null && typeof val == 'object'){
         this.isLoading = true;
        const pObs: PartialObserver<ApplicantsSelectionResponse> = {
         next: this.handleApplicantsFromServer,
@@ -54,9 +55,7 @@ export class OfferSelectionComponent implements OnInit, SelectionMethods, Pagina
         this.applicationSelectionService.getApplicants({...val, ApplicationStage: 6, PageNumber: this.pagination.currentPage.toString(), PageSize: this.noOfRecords.toString()})
         .subscribe(pObs)
       }
-      else{
-        this.getApplicantsForSelection()
-      } 
+      else if(val == 'reload')this.getApplicantsForSelection() 
     })
   }
 
@@ -79,6 +78,7 @@ export class OfferSelectionComponent implements OnInit, SelectionMethods, Pagina
     this.noOfRecords = pageSize;
     this.applicantsToBeSelected = this.pagination.getAPageOfPaginatedData<AnApplication>();
     this.useCurrentPage = false;
+    this.stopLoading = {stopLoading: false};
   }
   loadNextSetOfPages(){
     const res = this.pagination.loadNextSetOfPages<AnApplication>({ApplicationStage: 6, noOfRecord: this.noOfRecords},this.getApplicantsForSelection);
@@ -118,8 +118,8 @@ export class OfferSelectionComponent implements OnInit, SelectionMethods, Pagina
   triggerApprovalModalForAcceptingApplicant(command: PreviewActions, acceptOrReject: ApplicationApprovalStatus): void {
     if(command == 2){
       const data: InformationForApprovalModal<string, string> = {
-      header: acceptOrReject == 5  ? 'Confirm Pickup' : acceptOrReject == 2 ? 'Approve Decision' : 'Confirm Rejection', 
-      button: acceptOrReject == 5 ? 'Confirm' :  acceptOrReject == 2 ? 'Approve Decision' : 'Confirm Rejection', 
+      header: acceptOrReject == 5  ? 'Confirm Pickup' : acceptOrReject == 2 ? 'Approve Decision' : acceptOrReject == 7 ? 'Confirm Return' : 'Confirm Rejection', 
+      button: acceptOrReject == 5 ? 'Confirm' :  acceptOrReject == 2 ? 'Approve Decision' : acceptOrReject == 7 ? 'Confirm Return' : 'Confirm Rejection', 
       callBack: () => {}}
       const config: MatDialogConfig = {
         width: '28vw',
@@ -130,7 +130,7 @@ export class OfferSelectionComponent implements OnInit, SelectionMethods, Pagina
       const dialog = this.dialog.open(ApprovalModalComponent, config);
       dialog.afterClosed().subscribe(
         val => {
-            this.acceptAnApplicant(PreviewActions.CLOSEANDSUBMIT, val, acceptOrReject == 5 ? 2 : acceptOrReject == 2 ? 2 : 3)
+            this.acceptAnApplicant(PreviewActions.CLOSEANDSUBMIT, val, acceptOrReject == 5 ? 2 : acceptOrReject == 2 ? 2 : acceptOrReject == 7 ? acceptOrReject : 3)
         }
       )
       }
@@ -150,14 +150,20 @@ export class OfferSelectionComponent implements OnInit, SelectionMethods, Pagina
       comment,
     }).subscribe({
       next:(val) => {
-        if(!val.hasError)this.acceptingWasSuccessful();
+        if(!val.hasError)this.acceptingWasSuccessful(specificTypeOfApproval as ApplicationApprovalStatus);
          }, 
       error: (err: HttpResponse<any>) => {
         const {status} = err;
         status == 403 ? this.sharedService.errorSnackBar('You are not authorized to inititate pickup for this applicant') : this.sharedService.errorSnackBar('An error occured while trying to initiate offer letter pickup confirmation!');
       }})
   }
-  acceptingWasSuccessful(): void {
+  acceptingWasSuccessful(typeOfApproval: ApplicationApprovalStatus): void {
+    if(this.applicantAboutToBeAccepted.approverStatus == 'Awaiting' || typeOfApproval == 7){
+      this.useCurrentPage = true;
+      this.sharedService.triggerSuccessfulInitiationModal('Application has been returned to HRAdmin Successfully!', 'Continue to Applicant Selection', this.getApplicantsForSelection);
+      return;
+    }
+    
     if(this.applicantAboutToBeAccepted.hR_Status == 'Pending'){
       this.useCurrentPage = true;
       this.sharedService.triggerSuccessfulInitiationModal('You have triggered initiation for pickup of offer letter. You will be notified when it is approved', 'Continue to Applicant Selection', this.getApplicantsForSelection);
@@ -178,6 +184,7 @@ export class OfferSelectionComponent implements OnInit, SelectionMethods, Pagina
       this.useCurrentPage = true;
       this.sharedService.triggerSuccessfulInitiationModal('Applicant has been approved Successfully!', 'Continue to Applicant Selection', this.getApplicantsForSelection);
     }
+   
   }
 
   trackByFn(index: number, applicant: AnApplication) {

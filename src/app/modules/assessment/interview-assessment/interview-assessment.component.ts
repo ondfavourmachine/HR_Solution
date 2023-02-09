@@ -17,6 +17,7 @@ export class InterviewAssessmentComponent implements OnInit {
   isLoading: boolean = true;
   assessments!: AssessmentDetails[];
   quartersToUse: RequiredQuarterFormat[] = [];
+  stopLoading: {stopLoading: boolean} = {stopLoading : false};
   constructor(
      private sdm: SchedulerDateManipulationService,
      private assessmentService: AssessmentService,
@@ -37,6 +38,7 @@ export class InterviewAssessmentComponent implements OnInit {
         this.isLoading = false;
         this.assessments = data;
         console.log(this.assessments);
+        this.stopLoading = {stopLoading: false};
         // console.log(this.assessments[1].applicants[0].position)
 
       },

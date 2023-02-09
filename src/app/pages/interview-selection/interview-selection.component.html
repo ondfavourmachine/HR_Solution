@@ -3,6 +3,8 @@
         <div class="search_bar__container">
             <app-table-search-params-with-download-icons
              [quartersToUse]="quartersToUse"
+             [callBackForLoadingData]="getApplicantsForSelection"
+             [stopLoading]="stopLoading"
              ></app-table-search-params-with-download-icons>
             <div class="download_icons">
                 <span (click)="downloadExcel()"><img src="../../../assets/images/excel_icon.svg" alt="">Excel</span>
@@ -130,7 +132,7 @@
                                         </td>
                                         <td class="individual_tableCell_data !text-ro-black-text !opacity-90">
                                             <span [ngClass]="
-                                              {'Pending': applicant.scheduleStatus == 'Pending' , 
+                                              {'Pending': applicant.scheduleStatus == 'Pending', 
                                                'Approved': applicant.scheduleStatus == 'Approve'}" 
                                               class="status">{{ applicant?.scheduleStatus == 'Approve' ? 'Sent' : 'Not Sent' }}</span>
                                          </td>
@@ -155,7 +157,7 @@
                                                 'Pending': applicant.approverStatus == 'Pending' || applicant.hR_Status == 'Pending' || applicant.hR_Status == ''
                                                 } -->
                                             <span [ngClass]="sharedService.getClassToDisplay(applicant)" 
-                                              class="status">{{  applicant?.approverStatus == 'Pending' ? 'Pending' : applicant?.approverStatus == 'Approve' ? 'Passed' :  applicant?.approverStatus == 'Awaiting' ? 'Awaiting' : 'Failed'  }}</span>
+                                              class="status">{{  applicant?.approverStatus == 'Pending' ? 'Pending' : applicant?.approverStatus == 'Approve' ? 'Passed' :  applicant?.approverStatus == 'Awaiting' ? 'Awaiting' : applicant?.approverStatus == 'Returned' ? applicant?.approverStatus : 'Failed'  }}</span>
                                         </td>
                                         <td class="individual_tableCell_data align-middle">
                                             <img  (click)="gotoApplicantView(applicant)" src="../../../assets/images/eye_view.svg" alt="">

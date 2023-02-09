@@ -92,9 +92,6 @@ export class SchedulerComponent extends ScheduleSwitching implements OnInit {
       val.hasOwnProperty('hospitalName') && val!.hospitalName!.length > 2 ? scheduleToCreate = {...scheduleToCreate, hospitalName: val.hospitalName} : null;
       const d =  super.receiveResponseFromModal(scheduleToCreate);
       d.afterClosed().subscribe((val: Partial<ASchedule>) => this.showSuccessModalAndFetchData(val));
-
-    
-      // this.insertCreatedScheduleIntoView(scheduleToCreate.schduleDateFormatForDisplay as string)
        }
     })
     
@@ -107,11 +104,10 @@ export class SchedulerComponent extends ScheduleSwitching implements OnInit {
   }
 
   triggerSuccessModal(event: Partial<ASchedule>){
-    // debugger;
     // this is the reason why approval of schedule doesn't trigger reload. Please fix it ASAP!!
-    if(event && event.stageOfCreation == StageOfCreation.Approved){
+    if(event && (event.stageOfCreation == StageOfCreation.Approved || event.stageOfCreation == StageOfCreation.Rejected)){
     this.sharedService.triggerSuccessfulInitiationModal(
-    `You have successfully approved ${event.inviteType == 1 ? 'Test'  : event.inviteType == 5 ? 'Medical' :  event.inviteType == 6 ? 'Offer Letter' : 'Interview' } Invite
+    `You have successfully ${event.stageOfCreation == StageOfCreation.Approved ? 'approved': 'rejected'} ${event.inviteType == 1 ? 'Test'  : event.inviteType == 5 ? 'Medical' :  event.inviteType == 6 ? 'Offer Letter' : 'Interview' } Invite
     ${event.dateTime?.includes('T') ? event.dateTime.split('T')[0] : event.dateTime} at ${event.testTime?.hour ?? event.dateTime!.split('T')[1]}:00 hours`, 'Continue', this.getMatrixOfScheduler)
     }
   }

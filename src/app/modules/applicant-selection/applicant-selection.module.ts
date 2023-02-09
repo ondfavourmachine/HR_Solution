@@ -19,7 +19,9 @@ const routes: Routes = [
     children:[
       {path: '', redirectTo: 'all applications', pathMatch: 'full'},
       {path: 'all applications', component: ApplicantSelectionComponent},
+      {path: 'all applications/:jobId', component: ApplicantSelectionComponent},
       {path: 'tests', component: TestSelectionComponent},
+      {path: 'tests/:jobId', component: TestSelectionComponent},
       {path: 'interviews', component: InterviewSelectionComponent},
       {path: 'interviews/:extraStages', component: InterviewSelectionComponent},
       {path: 'medical', component: MedicalSelectionComponent},

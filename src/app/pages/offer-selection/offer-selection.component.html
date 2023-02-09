@@ -3,6 +3,8 @@
         <div class="search_bar__container">
             <app-table-search-params-with-download-icons
              [quartersToUse]="quartersToUse"
+             [callBackForLoadingData]="getApplicantsForSelection"
+             [stopLoading]="stopLoading"
              ></app-table-search-params-with-download-icons>
             <div class="download_icons">
                 <span (click)="downloadExcel()"><img src="../../../assets/images/excel_icon.svg" alt="">Excel</span>
@@ -128,10 +130,10 @@
                                               {
                                              'Approved': applicant.approverStatus == 'Approve', 
                                              'Waiting': applicant.approverStatus == 'Awaiting', 
-                                             'Rejected' : applicant.hR_Status == 'Fail' || applicant.hR_Status == 'Returned',
+                                             'Rejected' : applicant.hR_Status == 'Fail' || applicant.hR_Status == 'Returned' || applicant.approverStatus == 'Rejected',
                                              'Pending': applicant.approverStatus == 'Pending' || applicant.hR_Status == 'Pending' || applicant.hR_Status == ''
                                              }" 
-                                              class="status">{{  applicant?.hR_Status == 'Pending' ? 'Not Yet' : 'Picked'  }}</span>
+                                              class="status">{{  applicant?.hR_Status == 'Pending' ? 'Not Yet' : applicant?.approverStatus == 'Awaiting' ? 'Awaiting' : applicant?.approverStatus == 'Rejected' ? 'Rejected': 'Picked Up'  }}</span>
                                         </td>
                                          
                                          <td class="individual_tableCell_data">

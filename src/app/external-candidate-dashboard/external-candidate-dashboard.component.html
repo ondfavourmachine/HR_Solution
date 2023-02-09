@@ -196,7 +196,7 @@
                     'current_stage': applications![0]?.applicationStage! == 2 && applications![0]?.approverStatus == 'Pending' }" class="a_level">
                     <div class="content">
                       <span><a >Interview 01</a></span>
-                      <small class="last_text">{{ applications![0]?.applicationStage! == 2 &&  applications![0]?.invitationStatus == 'Sent' ?  'Invite has been sent' : applications![0]?.applicationStage! >= 3 ? 'Your Interview has been assessed has been moved to Interview 02 stage' : 'No Description yet'}}</small>
+                      <small class="last_text">{{ applications![0]?.applicationStage! == 2 &&  applications![0]?.invitationStatus == 'Sent' ?  'Invite has been sent' : applications![0]?.applicationStage! >= 3 ? 'Your Interview has been assessed and has been moved to Interview 02 stage' : 'No Description yet'}}</small>
                     </div>
                   </li>
                   <li [ngClass]="{
@@ -206,7 +206,7 @@
                     'current_stage': applications![0]?.applicationStage! == 3 && applications![0]?.approverStatus == 'Pending' }" class="a_level">
                     <div class="content">
                       <span><a >Interview 02</a></span>
-                      <small class="last_text">{{ applications![0]?.applicationStage! == 3 && applications![0]?.invitationStatus == 'Sent' ? 'Invite has been sent' : applications![0]?.applicationStage! >= 4 ? 'Your Interview has been assessed has been moved to Interview 03 stage' : 'No Description yet'}}</small>
+                      <small class="last_text">{{ applications![0]?.applicationStage! == 3 && applications![0]?.invitationStatus == 'Sent' ? 'Invite has been sent' : applications![0]?.applicationStage! >= 4 ? 'Your Interview has been assessed and has been moved to Interview 03 stage' : 'No Description yet'}}</small>
                     </div>
                   </li>
 
@@ -216,7 +216,7 @@
                     'current_stage': applications![0]?.applicationStage! == 4 && applications![0]?.approverStatus == 'Pending'}" class="a_level">
                     <div class="content">
                       <span><a >Interview 03</a></span>
-                      <small class="last_text">{{ applications![0]?.applicationStage! == 4 && applications![0]?.invitationStatus == 'Sent' ? 'Invite has been sent' : applications![0]?.applicationStage! >= 5 ? 'Your Interview has been assessed has been moved to Medicals stage' : 'No Description yet'}}</small>
+                      <small class="last_text">{{ applications![0]?.applicationStage! == 4 && applications![0]?.invitationStatus == 'Sent' ? 'Invite has been sent' : applications![0]?.applicationStage! >= 5 ? 'Your Interview has been assessed and has been moved to Medicals stage' : 'No Description yet'}}</small>
                     </div>
                   </li>
 
@@ -226,7 +226,7 @@
                     'current_stage': applications![0]?.applicationStage! == 5 && applications![0]?.approverStatus == 'Pending' }" class="a_level">
                     <div class="content">
                       <span><a >Medical Test</a></span>
-                      <small class="last_text">{{ applications![0]?.applicationStage! == 5 && applications![0]?.invitationStatus == 'Sent' ? 'Invite has been sent' : applications![0]?.applicationStage! >= 6 ? 'Your medical assessment has been completed and your offer letter is being prepared' : 'No Description yet'}}</small>
+                      <small class="last_text">{{ applications![0]?.applicationStage! == 5 && applications![0]?.invitationStatus == 'Sent' ? 'Invite has been sent' : applications![0]?.applicationStage! >= 6 ? 'Your medical assessment has been assessed completed and your offer letter is being prepared' : 'No Description yet'}}</small>
                     </div>
                   </li>
 

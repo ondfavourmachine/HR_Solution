@@ -3,7 +3,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Editor, Toolbar } from 'ngx-editor';
 // import { throwError } from 'rxjs';
 import { AddJobStringNames, AGlobusBranch, AJob, DepartmentsInGlobus, EditorStringNames, JobDraft, JobToBeCreated, JobType, UnitsInGlobus } from 'src/app/models/generalModels';
-import { DashboardComponent } from 'src/app/pages/dashboard/dashboard.component';
+// import { DashboardComponent } from 'src/app/pages/dashboard/dashboard.component';
+import { JobMgtComponent } from 'src/app/pages/job-mgt/job-mgt.component';
 // import { JobsService } from 'src/app/services/jobs.service';
 import { SharedService } from 'src/app/services/sharedServices';
 
@@ -47,8 +48,7 @@ export class CreateJobFormComponent implements OnInit {
   jobToBeCreatedIsADraft: boolean = false;
   draftId!: any;
   constructor(
-    // private jobservice: JobsService, 
-    public sharedService: SharedService, private dialog: MatDialogRef<DashboardComponent>, 
+    public sharedService: SharedService, private dialog: MatDialogRef<JobMgtComponent>, 
     @Inject(MAT_DIALOG_DATA) public data?: JobToBeCreated
     ) { }
 
@@ -122,7 +122,7 @@ export class CreateJobFormComponent implements OnInit {
   }
 
  get disableOrEnableButton(): boolean{
-      return this.editorBindings.jobObjectives.html.length > 5 && this.otherJobDetails.jobTitle.length > 2;
+      return this.editorBindings.hasOwnProperty('jobObjectives') && this.otherJobDetails.hasOwnProperty('jobTitle') &&  this.editorBindings.jobObjectives?.html?.length > 5 && this.otherJobDetails?.jobTitle?.length > 2;
   }
 
   saveJobBeingCreatedAsDraft(){
@@ -201,23 +201,30 @@ export class CreateJobFormComponent implements OnInit {
   }
 
   convertJobToBeCreatedIntoJobDraft(job?: JobToBeCreated): void{
-    console.log(job);
     if(job){
-    this.editorBindings.jobObjectives.html = job.accountablities;
-    this.editorBindings.accountabilities.html = job.objective;
+    this.editorBindings.jobObjectives.html = (job as any).accountabilities;
+    this.editorBindings.accountabilities.html = (job as any).jobObjectives;
     this.editorBindings.professionalCompetencies.html = job.professionalCompetencies;
     this.editorBindings.behavioralCompetencies.html = job.behavioralCompetencies;
     this.editorBindings.organisationalCompetencies.html = job.organisationalCompetencies;
     this.editorBindings.educationalQualifications.html = job.educationalQualifications;
     this.editorBindings.experience.html = job.experience;
-    this.otherJobDetails.jobTitle = job.position;
+    this.otherJobDetails.jobTitle = job.position ||  (job as any).jobTitle;
     this.otherJobDetails.age = job.age;
     this.otherJobDetails.grade = job.grade;
     this.otherJobDetails.category = job.category;
     this.otherJobDetails.classOfDegree = job.classOfDegree;
     this.otherJobDetails.nysc = job.nysc;
     this.otherJobDetails.deadline = job.deadline;
-    this.draftId = job?.id,
+    this.otherJobDetails.location = job.location;
+    this.otherJobDetails.unit = job.unit;
+    this.otherJobDetails.interviewIsRequired = (job as any).interviewIsRequired;
+    this.otherJobDetails.testIsRequired = (job as any).testIsRequired;
+    this.otherJobDetails.department = job.department;
+    this.otherJobDetails.supervise = (job as any).supervise;
+    this.otherJobDetails.reportTo = job.reportTo;
+    this.otherJobDetails.type = job.type;
+    this.draftId = job?.id;
     this.jobToBeCreatedIsADraft = true;
     }
   }

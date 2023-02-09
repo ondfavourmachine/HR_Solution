@@ -159,12 +159,11 @@
             <section class="form_contents overflow-visible">
                 <div class="form-group parent_input_control">
                       <label for="date_of_test" class="form-labels">
-                        
                         {{( selectedInviteType == 'Interview_invites_2'
-                        || selectedInviteType == 'Interview_invites_3' || selectedInviteType == 'Interview_invites_4'  )  ? 
+                        || selectedInviteType == 'Interview_invites_3' || selectedInviteType == 'Interview_invites_4')  ? 
                         'Pick Interview Date' : selectedInviteType == 'Medical_invites_5' ? 'Pick Visit Date' : selectedInviteType == 'Offer_letter_invites_6' ? 'Offer Letter Collection Date' : 'Pick Test Date'}}
-                    </label>
-                      <input type="date"  [(ngModel)]="dateOfTest" name="dateOfTest"  [placeholder]="selectedInviteType == 'Interview_invites_2' ? 'Select Interview Date' :   'Select Test Date'" 
+                      </label>
+                      <input type="date" [min]="minDate" [(ngModel)]="dateOfTest" name="dateOfTest"  [placeholder]="selectedInviteType == 'Interview_invites_2' ? 'Select Interview Date' :   'Select Test Date'" 
                       class="form-control" id="date_of_test">  
                </div> 
             </section>

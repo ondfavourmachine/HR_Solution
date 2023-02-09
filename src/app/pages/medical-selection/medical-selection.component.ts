@@ -3,7 +3,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { PartialObserver, Subscription } from 'rxjs';
 import { ApplicantSelectionStatistics, ApplicantsSelectionResponse, SelectionMethods } from 'src/app/models/applicant-selection.models';
-import { AnApplication, ApplicationApprovalStatus, InformationForApprovalModal,PaginationMethodsForSelectionAndAssessments, InformationForModal, PreviewActions, RequiredQuarterFormat } from 'src/app/models/generalModels';
+import { AnApplication, ApplicationApprovalStatus, InformationForApprovalModal,PaginationMethodsForSelectionAndAssessments, InformationForModal, PreviewActions, RequiredQuarterFormat, ApprovalProcessStatuses } from 'src/app/models/generalModels';
 import { ApplicantSelectionService } from 'src/app/services/applicant-selection.service';
 import { BroadCastService } from 'src/app/services/broad-cast.service';
 import { PaginationService } from 'src/app/services/pagination.service';
@@ -27,6 +27,7 @@ export class MedicalSelectionComponent implements OnInit, SelectionMethods, Pagi
   noOfrecords: number = 0
   useCurrentPage: boolean = false;
   destroyObs!: Subscription;
+  stopLoading: {stopLoading: boolean} = {stopLoading : false};
   constructor(
     private applicationSelectionService: ApplicantSelectionService, 
     private broadCast: BroadCastService,
@@ -48,7 +49,7 @@ export class MedicalSelectionComponent implements OnInit, SelectionMethods, Pagi
     this.getApplicantsForSelection();
 
     this.destroyObs = this.broadCast.search$.subscribe(val =>{
-      if(val != null){
+      if(val != null && typeof val == 'object'){
         this.isLoading = true;
        const pObs: PartialObserver<ApplicantsSelectionResponse> = {
         next: this.handleApplicantsFromServer,
@@ -57,9 +58,7 @@ export class MedicalSelectionComponent implements OnInit, SelectionMethods, Pagi
         this.applicationSelectionService.getApplicants({...val, ApplicationStage: 5, PageNumber: this.pagination.currentPage.toString(), PageSize: this.noOfrecords.toString()})
         .subscribe(pObs)
       }
-      else{
-        this.getApplicantsForSelection()
-      } 
+      else if(val == 'reload')this.getApplicantsForSelection() 
       
     })
   }
@@ -82,6 +81,7 @@ export class MedicalSelectionComponent implements OnInit, SelectionMethods, Pagi
     this.noOfrecords = pageSize;
     this.applicantsToBeSelected = this.pagination.getAPageOfPaginatedData<AnApplication>();
     this.useCurrentPage = false;
+    this.stopLoading = {stopLoading: false};
   }
 
   loadNextSetOfPages(){
@@ -135,7 +135,7 @@ export class MedicalSelectionComponent implements OnInit, SelectionMethods, Pagi
       dialog.afterClosed().subscribe(
         val => {
           // this is wrong,i am calling this twice and it shouldn't be so. Please fix;
-            this.acceptAnApplicant(PreviewActions.CLOSEANDSUBMIT, val, acceptOrReject == 5 ? 2 : acceptOrReject == 2 ? 2 : 3)
+            this.acceptAnApplicant(PreviewActions.CLOSEANDSUBMIT, val, acceptOrReject == 5 ? 2 : acceptOrReject == 2 ? 2 : acceptOrReject == 7 ? acceptOrReject : 3)
         }
       )
       }
@@ -155,17 +155,19 @@ export class MedicalSelectionComponent implements OnInit, SelectionMethods, Pagi
       comment,
     }).subscribe({
       next:(val) => {
-        if(!val.hasError)this.acceptingWasSuccessful();
+        if(!val.hasError)this.acceptingWasSuccessful(specificTypeOfApproval as ApplicationApprovalStatus);
          }, 
       error: (err: HttpResponse<any>) => {
         const {status} = err;
         status == 403 ? this.sharedService.errorSnackBar('You are not authorized to accept this applicant') : this.sharedService.errorSnackBar('An error occured while trying to accept applicant!');
       }})
   }
-  acceptingWasSuccessful(): void {
+  acceptingWasSuccessful(typeOfApproval: ApplicationApprovalStatus): void {
     if(this.applicantAboutToBeAccepted.hR_Status == 'Pending'){
       this.useCurrentPage = true;
-      this.sharedService.triggerSuccessfulInitiationModal('You have initiated to pass an applicant. You will be notified when it is approved', 'Continue to Applicant Selection', this.getApplicantsForSelection);
+      this.sharedService.triggerSuccessfulInitiationModal(
+        'You have initiated to pass an applicant. You will be notified when it is approved', 
+        'Continue to Applicant Selection', this.getApplicantsForSelection);
       return;
     }
 
@@ -183,6 +185,9 @@ export class MedicalSelectionComponent implements OnInit, SelectionMethods, Pagi
       this.useCurrentPage = true;
       this.sharedService.triggerSuccessfulInitiationModal('Applicant has been approved Successfully!', 'Continue to Applicant Selection', this.getApplicantsForSelection);
     }
+    if(this.applicantAboutToBeAccepted.approverStatus == 'Returned'){
+      console.log(typeOfApproval);
+    }
   }
 
   trackByFn(index: number, applicant: AnApplication) {
@@ -191,6 +196,13 @@ export class MedicalSelectionComponent implements OnInit, SelectionMethods, Pagi
 
   downloadExcel(){
     this.sharedService.downloadAsExcel(this.applicantsToBeSelected, 'applicants-with-medical-invites');
+  }
+   checkIfHospitalIsAvailable(applicant: AnApplication, returnType: 'boolean' | 'string'): boolean | string{
+    if(returnType == 'string'){
+      const val = !applicant.hospitalName ? 'Not Available' : applicant.hospitalName.split(':')[0];
+      return val;
+    }
+    return 'hospitalName' in applicant && applicant.hospitalName != null;
   }
 
   ngOnDestroy(): void {

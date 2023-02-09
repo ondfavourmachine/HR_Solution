@@ -1,20 +1,21 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { lastValueFrom, throwError } from 'rxjs';
-import { AGlobusBranch, AJob, DepartmentsInGlobus, InformationForApprovalModal, JobCategories, JobDraft, JobStatus, JobToBeCreated, JobType, otherRelevantData, PreviewJobDS, tabs, Views, WhoIsViewing } from 'src/app/models/generalModels';
+import { AGlobusBranch, AJob, ApplicationApprovalStatus, ApprovalProcessStatuses, DepartmentsInGlobus, InformationForApprovalModal, JobCategories, JobDraft, JobStatus, JobToBeCreated, JobType, otherRelevantData, PreviewJobDS, tabs, Views, WhoIsViewing } from 'src/app/models/generalModels';
 import { JobsService } from 'src/app/services/jobs.service';
 import { SharedService } from 'src/app/services/sharedServices';
 import { ApprovalModalComponent } from 'src/app/shared/approval-modal/approval-modal.component';
 import { CreateJobFormComponent } from 'src/app/shared/create-job-form/create-job-form.component';
-import { SuccessfulInitiationComponent } from 'src/app/shared/successful-initiation/successful-initiation.component';
+// import { SuccessfulInitiationComponent } from 'src/app/shared/successful-initiation/successful-initiation.component';
 
 @Component({
   selector: 'app-job-mgt',
   templateUrl: './job-mgt.component.html',
   styleUrls: ['./job-mgt.component.scss']
 })
-export class JobMgtComponent implements OnInit {
+export class JobMgtComponent implements OnInit, OnDestroy {
   // @ViewChild('PersonSpecifications') PersonSpecifications!: ElementRef<HTMLElement>;
   // @ViewChild('ProfessionalCompetencies') ProfessionalCompetencies!: ElementRef<HTMLElement>;
   // @ViewChild('Accountability') Accountability!: ElementRef<HTMLElement>;
@@ -47,12 +48,16 @@ export class JobMgtComponent implements OnInit {
   showDraftSideBar: boolean = false;
   savedDrafts: AJob[] = [];
   relevantData!: otherRelevantData;
-  objForPreviewOfJob!: PreviewJobDS;
+  objForPreviewOfJob: PreviewJobDS | undefined = undefined;
   showApplicantsPanel: boolean = false;
   buttonText: string = '';
   roleOfUser!: string;
-  constructor(private dialog: MatDialog, public sharedService: SharedService, private jobservice: JobsService) { 
+  redirectUrl!:string | null;
+  jobIdFromExternalComp!: any;
+  constructor(private dialog: MatDialog, private route: Router, private activatedRoute: ActivatedRoute,
+     public sharedService: SharedService, private jobservice: JobsService) { 
     this.refresh = this.refresh.bind(this);
+    this.handleInstructionToPreviewJobFromExternalComponent = this.handleInstructionToPreviewJobFromExternalComponent.bind(this);
   }
 
   ngOnInit(): void {
@@ -63,6 +68,53 @@ export class JobMgtComponent implements OnInit {
     this.getDept();
     this.getPendingJobs();
     this.getApprovedJobs();
+    this.activatedRoute.queryParamMap.subscribe((val: ParamMap) => {
+      this.handleInstructionToPreviewJobFromExternalComponent(val);
+    });
+  }
+ async handleInstructionToPreviewJobFromExternalComponent(val: ParamMap){
+    const stuff = val.get('dataFromPreviewApplication');
+    const appId = val.get('appId');
+    this.jobIdFromExternalComp = {stuff, appId};
+    this.redirectUrl = val.get('redirect');
+    if(!stuff) return;
+    try {
+      const {result:job} = await lastValueFrom(this.jobservice.getJobByID(stuff));
+      if(this.locationsOfGlobus.length < 1){
+        const {result} = await lastValueFrom(this.sharedService.getBranchesInGlobus());
+        this.currentBranchInView = result.find(elem => elem.id == parseInt(this.dataFromCreateJob?.location))?.branchName as string;
+      }else{
+        this.currentBranchInView = this.locationsOfGlobus.find(elem => elem.id == parseInt(this.dataFromCreateJob?.location))?.branchName as string;
+      }
+      if(this.deptInGlobus.length < 1){
+        const result = await this.getDept(true) as DepartmentsInGlobus[];
+        job['departmentName'] = result.find(elem => elem.id == job.department)?.name as string;
+      }else{
+        job['departmentName'] = this.deptInGlobus.find(elem => elem.id == job.department)?.name as string;
+      }
+      const {result:unitsInDept} = await lastValueFrom(this.sharedService.getUnits(job.department));
+      const foundUnit = unitsInDept.find(elem => elem.unitId == job.unit);
+      job['unitName'] = foundUnit?.name as string;
+      this.objForPreviewOfJob = undefined;
+      this.objForPreviewOfJob = {job: job, extraInfo: {currentBranchInView: this.currentBranchInView, headerText: '', showHeaderText: false, hasRedirect: true}};
+      this.sharedService.successSnackBar(`Fetched job details successfully`);
+      job['hasApplied']= 1;
+      this.views = 'preview';
+    } catch (error) {
+      console.log(error);
+      this.sharedService.errorSnackBar(`Unable to fetch Job details of Job with Id:${stuff}`);
+    }
+    console.log({stuff, redirectUrl: this.redirectUrl});
+  }
+
+  goBackToRedirectComp(event: boolean){
+    if(event){
+      this.redirectUrl = this.redirectUrl?.replace(/(%20|_|%25|\s+)/gm, ' ')as string;
+      this.redirectUrl = this.redirectUrl?.replace(/[0-9]/gm, '')as string;
+      this.redirectUrl = this.redirectUrl.trimEnd();
+      const url = `${this.redirectUrl}${this.jobIdFromExternalComp.stuff}_${this.jobIdFromExternalComp.appId}`;
+      this.route.navigate([this.redirectUrl, `${this.jobIdFromExternalComp.stuff}_${this.jobIdFromExternalComp.appId}`]);
+    }
   }
 
   getApprovedJobs(){
@@ -87,7 +139,7 @@ export class JobMgtComponent implements OnInit {
     this.tabToSelect == 'Approved' ? this.showPendingJobs = false : this.showPendingJobs = true;
   }
 
-  editJob(adraft: JobToBeCreated){
+  editDraft(adraft: JobToBeCreated){
     const config: MatDialogConfig = {
       width: '80vw',
       height: '80vh',
@@ -101,10 +153,18 @@ export class JobMgtComponent implements OnInit {
     this.showDraftSideBar =false;
   }
 
-  // changeTabs(tab: tabs){
-    
-  //   // tab == 'Approved' ? this.showPendingJobs = false : this.showPendingJobs = true;
-  // }
+  editJob(dataFromCreateJob: PreviewJobDS){
+    const config: MatDialogConfig = {
+      width: '80vw',
+      height: '80vh',
+      maxHeight: '80vh',
+      disableClose: true,
+      panelClass: 'createJob',
+      data: dataFromCreateJob.job
+    } 
+    const dialog = this.dialog.open(CreateJobFormComponent, config);
+    this.handleJobCreation(dialog);
+  }
 
   startCreatingJob(event?: Event){
     const config: MatDialogConfig = {
@@ -126,23 +186,12 @@ export class JobMgtComponent implements OnInit {
       {next: (val: {viewToShow: Views, data: any, saveDraft?: boolean}) => {
       if(val.data && !val.hasOwnProperty('saveDraft')){
         this.views = val.viewToShow;
-        this.dataFromCreateJob = {...val.data};
+        this.dataFromCreateJob = structuredClone(val.data);
         this.currentBranchInView = this.locationsOfGlobus.find(elem => elem.id == parseInt(this.dataFromCreateJob?.location))?.branchName as string;
+        this.objForPreviewOfJob = undefined;
         this.objForPreviewOfJob = {job: this.dataFromCreateJob, extraInfo: {currentBranchInView: this.currentBranchInView, headerText: 'Preview the Job Details Before Submitting for Approval', showHeaderText: true}};
         this.showApplicantsPanel = false;
         this.buttonText = 'Submit For Approval';
-      //   this.sharedService.insertIntoAdjacentHtmlOfElement<HTMLElement, ElementRef, string>([
-      //     {element: this.JobObjectives, content: this.sharedService.insertLisIntoUl(this.dataFromCreateJob.jobObjectives)},
-      //     {element: this.Accountability, content: this.sharedService.insertLisIntoUl(this.dataFromCreateJob.accountabilities)} ,
-      //     {element: this.ProfessionalCompetencies, content: this.sharedService.insertLisIntoUl( this.dataFromCreateJob.professionalCompetencies)},
-      //     {element: this.PersonSpecifications, content: this.sharedService.insertLisIntoUl( this.dataFromCreateJob.personSpecification)},
-      //     {element: this.BehavioralCompetencies, content: this.sharedService.insertLisIntoUl(this.dataFromCreateJob.behavioralCompetencies)},
-      //     {element: this.OrganisationalCompetencies, content: this.sharedService.insertLisIntoUl( this.dataFromCreateJob.organisationalCompetencies)},
-      //     {element: this.EducationalQualifications, content: this.sharedService.insertLisIntoUl(this.dataFromCreateJob.educationalQualifications)},
-      //     {element:  this.Experience, content: this.sharedService.insertLisIntoUl(this.dataFromCreateJob.experience)}
-      //  ])
-      //   this.sharedService.showAllChildren([this.JobObjectives, this.PersonSpecifications, this.Accountability, this.ProfessionalCompetencies, this.Experience, this.EducationalQualifications, this.OrganisationalCompetencies, this.BehavioralCompetencies]);
-      //   return;
        }
        this.views = val.viewToShow;
        if(val.hasOwnProperty('saveDraft') && val.saveDraft) this.createJobAsDraft(event as Event, val.data);
@@ -289,9 +338,10 @@ export class JobMgtComponent implements OnInit {
 
   
 
-   async getDept(){
+   async getDept(getResult?: boolean): Promise<DepartmentsInGlobus[] | void>{
     const { result } = await this.sharedService.getDepartments();
-      this.deptInGlobus = result;
+    if(getResult) return result;
+    this.deptInGlobus = result;
    }
 
    async startApprovalProcessForAJob(event: {view: Views, data: AJob}){
@@ -361,10 +411,11 @@ export class JobMgtComponent implements OnInit {
     )
   }
 
-  startApproval(event: Event){
+  startApproval(event: Event, type: ApplicationApprovalStatus){
     const btn = event.target as HTMLButtonElement;
     const prevText  = btn.textContent;
-    const data: InformationForApprovalModal<string, string> = {header: 'Approve Job', button: 'Approve Job'}
+    const data: InformationForApprovalModal<string, string> = 
+    type == 3 ?  {header: 'Reject Job', button: 'Reject Job'} : {header: 'Approve Job', button: 'Approve Job'}
     const config: MatDialogConfig = {
       width: '28vw',
       height: '38vh',
@@ -377,8 +428,8 @@ export class JobMgtComponent implements OnInit {
       {
         next: (val) => {
           if(!val) return;
-          this.sharedService.loading4button(btn, 'yes', 'Approving...');
-          this.handleApprovalOfJob(btn, val, prevText as string)
+          this.sharedService.loading4button(btn, 'yes', type == 2 ?'Approving...': 'Rejecting...');
+          this.handleApprovalOfJob(btn, val, prevText as string, type)
         },
       }
     )
@@ -390,7 +441,6 @@ export class JobMgtComponent implements OnInit {
     this.getPendingJobs();
     this.showApplicantsPanel = false;
     this.buttonText = '';
-    // this.objForPreviewOfJob = {}
   }
 
   showPreviewPage(event: {view: Views, data: AJob}){
@@ -400,13 +450,13 @@ export class JobMgtComponent implements OnInit {
     this.buttonText = 'View Applicants';
   } 
 
-  handleApprovalOfJob(btn: HTMLButtonElement, comment: string, prevText: string){
+  handleApprovalOfJob(btn: HTMLButtonElement, comment: string, prevText: string, approvalType: ApplicationApprovalStatus){
      this.jobservice.approveAJob(
-      {jobId: this.jobID, comment, status: JobStatus.APPROVE}
+      {jobId: this.jobID, comment, status: approvalType == 3 ? JobStatus.REJECTED : JobStatus.APPROVE}
      ).subscribe({
        next: () => {
         this.sharedService.loading4button(btn, 'done', prevText);
-        this.sharedService.triggerSuccessfulInitiationModal('You have successfully approved this Job.', undefined, this.refresh);
+        this.sharedService.triggerSuccessfulInitiationModal( approvalType == 3 ?'You have successfully rejected this Job.' :'You have successfully approved this Job.', undefined, this.refresh);
        },
        error: () => {
         this.sharedService.errorSnackBar('An error occured while trying to approve job.', 'close');
@@ -435,6 +485,12 @@ export class JobMgtComponent implements OnInit {
         this.sharedService.errorSnackBar('Unable to delete draft!');
       }
     })
+  }
+
+
+  ngOnDestroy(): void {
+    this.redirectUrl = null;
+    this.jobIdFromExternalComp = undefined;
   }
 
 }

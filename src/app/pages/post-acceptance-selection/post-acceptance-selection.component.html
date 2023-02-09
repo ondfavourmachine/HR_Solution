@@ -3,6 +3,8 @@
         <div class="search_bar__container">
             <app-table-search-params-with-download-icons
              [quartersToUse]="quartersToUse"
+             [callBackForLoadingData]="getApplicantsForSelection"
+             [stopLoading]="stopLoading"
              ></app-table-search-params-with-download-icons>
             <div class="download_icons">
                 <span (click)="downloadExcel()"><img src="../../../assets/images/excel_icon.svg" alt="">Excel</span>

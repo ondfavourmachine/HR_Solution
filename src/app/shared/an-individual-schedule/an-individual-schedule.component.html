@@ -11,6 +11,7 @@
             <!-- <img src="../../../assets/images/pending_circle.svg" alt=""> -->
             <img *ngIf="pending" class="" src="../../../assets/images/pending_circle.svg" alt="">
             <img *ngIf="approve" class="" src="../../../assets/images/pending_green.svg" alt="">
+            <img *ngIf="rejected" class="" src="../../../assets/images/rejected.svg" alt="">
         </div>
         <div class="job_position">
             {{ schedule?.jobTitle}}

@@ -23,7 +23,8 @@ export class PreviewApplicationComponent implements OnInit {
     private dialog: MatDialog,
     private currencypipe:CurrencyPipe,
     private matDialogRef: MatDialogRef<ExternalCandidateJobsComponent>
-  ) { }
+  ) { 
+  }
 
   ngOnInit(): void {
     console.log(this.data);
@@ -65,9 +66,10 @@ export class PreviewApplicationComponent implements OnInit {
 
   get getApprovalToDisplay(): string{
     if(this.data.applicantData.approverStatus == 'Awaiting') return 'Awaiting Approval';
-    else if(this.data?.applicantData?.approverStatus == 'Approve') return 'Accepted';
+    else if(this.data?.applicantData?.approverStatus == 'Approve' && this.data?.applicantData?.hR_Status != 'Rejected') return 'Accepted';
     else if (this.data.applicantData?.approverStatus == 'Pending') return 'Pending';
-    // else if(this.data.applicantData?.hR_Status == 'Rejected') return 'Rejected';
+    else if(this.data?.applicantData?.approverStatus == 'Approve' && this.data?.applicantData?.hR_Status == 'Rejected') return 'Rejected';
+    else if(this.data?.applicantData?.approverStatus == 'Rejected' && this.data?.applicantData?.hR_Status == 'Rejected') return 'Rejected';
     return 'Rejected'
   }
 

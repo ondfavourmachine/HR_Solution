@@ -122,6 +122,10 @@ export class SharedService {
    obj.forEach(elem => elem.element.nativeElement.insertAdjacentHTML('beforeend', elem.content));
   }
 
+  clearInnerHtmlOfElement<T extends Element, K extends ElementRef<T>>(obj: K[]){
+    obj.forEach(elem => elem.nativeElement.textContent = '');
+  }
+
   fillUpJobObject<T extends JobToBeCreated, K extends JobToBeCreatedKeys >(obj: T, args: K[]){
     args.forEach(elem => obj[elem] = elem as never);
   }

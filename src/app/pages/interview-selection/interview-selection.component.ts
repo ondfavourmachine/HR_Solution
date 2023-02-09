@@ -28,7 +28,7 @@ export class InterviewSelectionComponent implements OnInit, SelectionMethods, Pa
   useCurrentPage: boolean = false;
   stage: number | undefined
   destroyObs!:Subscription;
-  
+  stopLoading: {stopLoading: boolean} = {stopLoading : false};
   constructor(
     private applicationSelectionService: ApplicantSelectionService, 
     private broadCast: BroadCastService,
@@ -49,7 +49,7 @@ export class InterviewSelectionComponent implements OnInit, SelectionMethods, Pa
     const res = this.sdm.generateQuartersOfCurrentYear();
     this.quartersToUse = this.sdm.presentQuartersInHumanReadableFormat(res); 
     this.destroyObs = this.broadCast.search$.subscribe(val =>{
-      if(val != null){
+      if(val != null && typeof val == 'object'){
         this.isLoading = true;
        const pObs: PartialObserver<ApplicantsSelectionResponse> = {
         next: this.handleApplicantsFromServer,
@@ -58,9 +58,7 @@ export class InterviewSelectionComponent implements OnInit, SelectionMethods, Pa
         this.applicationSelectionService.getApplicants({...val, ApplicationStage: this.stage ? this.stage : 2, PageNumber: this.pagination.currentPage.toString(), PageSize: this.noOfrecords.toString()})
         .subscribe(pObs)
       }
-      else{
-        this.getApplicantsForSelection();
-      } 
+      else if(val == 'reload')this.getApplicantsForSelection() 
     })
     
   }
@@ -128,6 +126,7 @@ export class InterviewSelectionComponent implements OnInit, SelectionMethods, Pa
     this.noOfrecords = pageSize;
     this.applicantsToBeSelected = this.pagination.getAPageOfPaginatedData<AnApplication>();
     this.useCurrentPage = false;
+    this.stopLoading = {stopLoading: false};
   }
   gotoApplicantView(applicant: AnApplication): void {
     const data: InformationForModal<AnApplication> = { 
@@ -145,9 +144,9 @@ export class InterviewSelectionComponent implements OnInit, SelectionMethods, Pa
   triggerApprovalModalForAcceptingApplicant(command: PreviewActions, acceptOrReject: ApplicationApprovalStatus): void {
     if(command == 2){
       const data: InformationForApprovalModal<string, string> = {
-      header: acceptOrReject == 5  ? 'Pass Applicant' : acceptOrReject == 2 ? 'Approve Decision' : 'Fail Applicant', 
-      button: acceptOrReject == 5 ? 'Pass Applicant' :  acceptOrReject == 2 ? 'Approve Decision' : 'Fail Applicant', 
-      shouldShowIsSpecialToggle: this.stage ?  false : acceptOrReject == ApplicationApprovalStatus.Rejected ? false :  true,
+      header: acceptOrReject == 5  ? 'Pass Applicant' : acceptOrReject == 2 ? 'Approve Decision' : acceptOrReject == 7? 'Return Applicant' : 'Fail Applicant', 
+      button: acceptOrReject == 5 ? 'Pass Applicant' :  acceptOrReject == 2 ? 'Approve Decision' : acceptOrReject == 7? 'Return Applicant' : 'Fail Applicant', 
+      shouldShowIsSpecialToggle: this.stage ?  false : acceptOrReject == ApplicationApprovalStatus.Rejected || ApplicationApprovalStatus.Returned ? false :  true,
       callBack: () => {}}
       const config: MatDialogConfig = {
         width: '28vw',
@@ -160,10 +159,10 @@ export class InterviewSelectionComponent implements OnInit, SelectionMethods, Pa
         (val: SpecialCandidate | string) => {
           // debugger;
           if(val instanceof SpecialCandidate){
-            this.acceptAnApplicant(PreviewActions.CLOSEANDSUBMIT, val, acceptOrReject == 5 ? 2 : acceptOrReject == 2 ? 2 : 3)
+            this.acceptAnApplicant(PreviewActions.CLOSEANDSUBMIT, val,  acceptOrReject == 5 ? 2 : acceptOrReject == 2 ? 2 : acceptOrReject == 7 ? acceptOrReject : 3);
             return;
           }
-          this.acceptAnApplicant(PreviewActions.CLOSEANDSUBMIT, val, acceptOrReject == 5 ? 2 : acceptOrReject == 2 ? 2 : 3);
+          this.acceptAnApplicant(PreviewActions.CLOSEANDSUBMIT, val,  acceptOrReject == 5 ? 2 : acceptOrReject == 2 ? 2 : acceptOrReject == 7 ? acceptOrReject : 3);
         }
       )
       }
@@ -193,6 +192,11 @@ export class InterviewSelectionComponent implements OnInit, SelectionMethods, Pa
       }})
   }
   acceptingWasSuccessful(approvalType?: ApplicationApprovalStatus): void {
+    if(this.applicantAboutToBeAccepted.approverStatus == 'Awaiting' && approvalType == 7){
+      this.useCurrentPage = true;
+      this.sharedService.triggerSuccessfulInitiationModal('Application has been returned to HRAdmin Successfully!', 'Continue to Applicant Selection', this.getApplicantsForSelection);
+      return;
+    }
     if(this.applicantAboutToBeAccepted.hR_Status == 'Pending'){
       this.useCurrentPage = true;
       const message = approvalType == (ApplicationApprovalStatus.Rejected || ApplicationApprovalStatus.Fail) ? 'You have initiated the failing of an applicant. You will be notified when it is approved' : 'You have initiated to pass an applicant. You will be notified when it is approved';

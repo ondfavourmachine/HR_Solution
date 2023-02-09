@@ -32,7 +32,7 @@ export interface SelectionMethods{
     triggerApprovalModalForAcceptingApplicant(command: PreviewActions, acceptOrReject: ApplicationApprovalStatus): void,
     applicantAboutToBeAccepted: AnApplication,
     acceptAnApplicant(command: PreviewActions, comment: string): void,
-    acceptingWasSuccessful?():void,
+    acceptingWasSuccessful?(approvalTypes?: ApplicationApprovalStatus):void,
 }
 
 export interface NecessaryModalMethods{

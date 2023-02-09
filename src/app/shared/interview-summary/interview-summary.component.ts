@@ -79,19 +79,22 @@ appropriateDateTimeToDisplay!:string
     })
   }
 
-   AppropriateTextForButton(inviteType: number): string{
+   AppropriateTextForButton(inviteType: number, approvalType: ScheduleApprovalNum): string{
     let returnVal;
     switch(inviteType) {
       case 1:
-        returnVal = 'Approve Test Invite'
+        returnVal = approvalType == 2 ? 'Approve Test Invite': 'Reject Test Invite';
       break;
       case 2:
       case 3:
       case 4:
-      returnVal = 'Approve Interview Invite'
+      returnVal = approvalType == 2 ?  'Approve Interview Invite': 'Reject Interview Invite';
       break;
       case 5:
-      returnVal = 'Approve Medical Invite'
+      returnVal = approvalType == 2 ?  'Approve Medical Invite' : 'Reject Medical Invite';
+      break;
+      case 6:
+      returnVal = approvalType == 2 ?  'Approve Offer Letter Invite' : 'Reject Offer  Invite';
       break;
       
     }
@@ -99,15 +102,15 @@ appropriateDateTimeToDisplay!:string
     return returnVal as string;
   }
 
-  triggerApprovalProcess(event: Event){
+  triggerApprovalProcess(event: Event, approvalType: ScheduleApprovalNum){
     const btn = event.target as HTMLButtonElement;
     const prevText = btn.textContent as string;
     const currentlyOpenElement =  document.querySelector('.interview_summary_comp');
     currentlyOpenElement?.classList.add('shrinkUp'); 
     const data: InformationForApprovingAnAssessment = 
     {
-      buttonText: this.AppropriateTextForButton(this.data.inviteType as InterviewTypesWithNumber), 
-      headingText: this.AppropriateTextForButton(this.data.inviteType as InterviewTypesWithNumber), 
+      buttonText: this.AppropriateTextForButton(this.data.inviteType as InterviewTypesWithNumber, approvalType), 
+      headingText: this.AppropriateTextForButton(this.data.inviteType as InterviewTypesWithNumber, approvalType), 
       typeOfAssessment: this.data.inviteType as InterviewTypesWithNumber
     }
     const config: MatDialogConfig = {
@@ -123,10 +126,10 @@ appropriateDateTimeToDisplay!:string
         if(val && val.length > 2){
           this.sharedService.loading4button(btn, 'yes', 'Approving...');
           try {
-            // debugger;
-            const res = await lastValueFrom(this.scheduleService.approveSchedule({scheduleId: this.data.id as number, scheduleRef: this.data.scheduleId as string, actionType: 1, status: ScheduleApprovalNum.Approving, comment: val}));
+            const res = await lastValueFrom(this.scheduleService.approveSchedule({scheduleId: this.data.id as number, scheduleRef: this.data.scheduleId as string, actionType: 1, status: approvalType, comment: val}));
+            // debugger/
             if(!res.hasError && (res.statusCode == '200' || res.statusCode == 200)){
-              this.data.stageOfCreation == StageOfCreation.Approved
+              this.data.stageOfCreation = approvalType == ScheduleApprovalNum.Approving ? StageOfCreation.Approved : StageOfCreation.Rejected
               this.sharedService.loading4button(btn, 'done', prevText);
               this.dialogRef.close(this.data);
               return;
@@ -166,7 +169,7 @@ appropriateDateTimeToDisplay!:string
     let returnVal;
     switch(inviteType){
       case 1:
-        returnVal = 'Test Invite Summary';
+        returnVal =  'Test Invite Summary';
       break;
       case 2:
       case 3:

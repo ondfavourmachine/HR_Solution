@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { ApplicantSelectionStatistics } from '../models/applicant-selection.models';
 import { SearchParams } from '../models/generalModels';
 
@@ -9,10 +9,12 @@ import { SearchParams } from '../models/generalModels';
 export class BroadCastService {
   private statisticsSubject = new BehaviorSubject<Partial<ApplicantSelectionStatistics>>({});
   private changeInViewSubject = new BehaviorSubject<null | 'Batch View' | 'Single View'>(null);
-  private globalSearchSubject = new BehaviorSubject<null | Partial<SearchParams>>(null);
+  private globalSearchSubject = new BehaviorSubject<null | Partial<SearchParams> | string>(null);
   public search$ = this.globalSearchSubject.asObservable();
   statistics$ = this.statisticsSubject.asObservable();
   public changeInViewSubject$ = this.changeInViewSubject.asObservable();
+  private applicantDataHasBeenLoadedSubject = new Subject<boolean>();
+  applicantDataHasBeenLoaded$ = this.applicantDataHasBeenLoadedSubject.asObservable();
   constructor() { }
 
 
@@ -24,8 +26,12 @@ export class BroadCastService {
     this.changeInViewSubject.next(view);
   }
 
-  broadCastSearchInformation(view: null | Partial<SearchParams>){
+  broadCastSearchInformation(view: null | Partial<SearchParams> | string){
     this.globalSearchSubject.next(view);
+  }
+
+  broadCastLoadModalInfo(val: boolean){
+    this.applicantDataHasBeenLoadedSubject.next(val)
   }
 
 }

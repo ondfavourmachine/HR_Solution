@@ -1,6 +1,7 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
 import { PartialObserver, Subscription } from 'rxjs';
 import { ApplicantSelectionStatistics, ApplicantsSelectionResponse, SelectionMethods, SpecialCandidate } from 'src/app/models/applicant-selection.models';
 import { AnApplication, ApplicationApprovalStatus, InformationForApprovalModal, InformationForModal, PaginationMethodsForSelectionAndAssessments, PreviewActions, RequiredQuarterFormat } from 'src/app/models/generalModels';
@@ -27,11 +28,14 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
   noOfRecords: number = 0;
   useCurrentPage: boolean = false;
   role!: string
-  destroyObs!:Subscription;
+  destroyObs: Subscription[] = [];
+  stopLoading: {stopLoading: boolean} = {stopLoading : false};
+  idOfJobToLoadModal!: any;
   constructor(private sdm: SchedulerDateManipulationService,
      private applicationSelectionService: ApplicantSelectionService, 
      private broadCast: BroadCastService,
      private dialog: MatDialog,
+     private activatedRoute: ActivatedRoute,
      public pagination: PaginationService,
      public sharedService: SharedService
      ) { 
@@ -39,6 +43,7 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
       this.triggerApprovalModalForAcceptingApplicant = this.triggerApprovalModalForAcceptingApplicant.bind(this);
       this.acceptAnApplicant = this.acceptAnApplicant.bind(this);
       this.getApplicantsForSelection = this.getApplicantsForSelection.bind(this);
+      this.clearidOfJobToLoadModal = this.clearidOfJobToLoadModal.bind(this);
      }
 
      ngOnInit(): void {
@@ -47,8 +52,8 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
       this.getApplicantsForSelection();   
       this.role = this.sharedService.getRole() as string;
       // refactor this with a base class that this test selection class will extend;
-      this.destroyObs = this.broadCast.search$.subscribe(val =>{
-        if(val != null){
+      this.destroyObs[0] = this.broadCast.search$.subscribe(val =>{
+        if(val != null && typeof val == 'object'){
           this.isLoading = true;
           const pObs: PartialObserver<ApplicantsSelectionResponse> = {
           next: this.handleApplicantsFromServer,
@@ -56,10 +61,22 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
         }
           this.applicationSelectionService.getApplicants({...val, ApplicationStage: 1, PageNumber: this.pagination.currentPage.toString(), PageSize: this.noOfRecords.toString()})
           .subscribe(pObs)
-        }else{
-          this.getApplicantsForSelection()
-        }    
+        }
+        else if(val == 'reload')this.getApplicantsForSelection()    
       })
+
+      this.idOfJobToLoadModal = this.activatedRoute.snapshot.params
+      this.destroyObs[1] = this.broadCast.applicantDataHasBeenLoaded$.subscribe(val => {
+        if(this.idOfJobToLoadModal && this.idOfJobToLoadModal.hasOwnProperty('jobId') && !isNaN(parseInt(this.idOfJobToLoadModal.jobId.split('_')[1]))){
+          const appId = parseInt(this.idOfJobToLoadModal.jobId.split('_')[1]);
+          const foundJob = this.applicantsToBeSelected.find(elem => elem.applicationId == appId);
+          this.gotoApplicantView(foundJob as AnApplication);
+        }
+      })  
+    }
+
+    clearidOfJobToLoadModal(){
+      this.idOfJobToLoadModal = undefined;
     }
 
      loadNextSetOfPages(){
@@ -111,6 +128,12 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
     this.noOfRecords = pageSize;
     this.applicantsToBeSelected = this.pagination.getAPageOfPaginatedData<AnApplication>();
     this.useCurrentPage = false;
+    this.stopLoading = {stopLoading: false};
+    if(this.applicantsToBeSelected.length > 0) {
+      this.broadCast.broadCastLoadModalInfo(true);
+    }else{
+      this.broadCast.broadCastLoadModalInfo(false);
+    }
   }
 
   triggerApprovalModalForAcceptingApplicant(command: PreviewActions, acceptOrReject: ApplicationApprovalStatus){
@@ -132,10 +155,11 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
     dialog.afterClosed().subscribe(
       (val: SpecialCandidate | string) => {
         if(val instanceof SpecialCandidate){
-          this.acceptAnApplicant(PreviewActions.CLOSEANDSUBMIT, val, acceptOrReject == 5 ? 2 : acceptOrReject == 2 ? 2 : 3)
+          this.acceptAnApplicant(PreviewActions.CLOSEANDSUBMIT, val, acceptOrReject == 5 ? 2 : acceptOrReject == 2 ? 2 : acceptOrReject == 7 ? acceptOrReject : 3);
+          acceptOrReject == 5 ? 2 : acceptOrReject == 2 ? 2 : acceptOrReject == 7 ? acceptOrReject : 3
           return;
         }
-        this.acceptAnApplicant(PreviewActions.CLOSEANDSUBMIT, val, acceptOrReject == 5 ? 2 : acceptOrReject == 2 ? 2 : 3);
+        this.acceptAnApplicant(PreviewActions.CLOSEANDSUBMIT, val, acceptOrReject == 5 ? 2 : acceptOrReject == 2 ? 2 : acceptOrReject == 7 ? acceptOrReject : 3);
       }
     )
     }
@@ -181,7 +205,11 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
   }
 
   acceptingWasSuccessful(approvalType?: ApplicationApprovalStatus){
-    // debugger;
+    if(this.applicantAboutToBeAccepted.approverStatus == 'Awaiting' && approvalType == 7){
+      this.useCurrentPage = true;
+      this.sharedService.triggerSuccessfulInitiationModal('Application has been returned to HRAdmin Successfully!', 'Continue to Applicant Selection', this.getApplicantsForSelection);
+      return;
+    }
     if(this.applicantAboutToBeAccepted.hR_Status == 'Pending'){
       this.useCurrentPage = true;
       const message = approvalType == (ApplicationApprovalStatus.Rejected || ApplicationApprovalStatus.Fail) ? 'You have initiated the failing of an applicant. You will be notified when it is approved' : 'You have initiated to pass an applicant. You will be notified when it is approved';
@@ -222,7 +250,7 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
  
 
   ngOnDestroy(): void {
-    this.destroyObs ? this.destroyObs.unsubscribe() : null;
+    this.destroyObs ? this.destroyObs.forEach(elem => elem.unsubscribe()) : null;
     this.pagination.clearPaginationStuff();
   }
 

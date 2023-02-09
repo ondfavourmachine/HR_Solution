@@ -25,7 +25,7 @@ export class JobsService {
   }
   
 
-  approveAJob(job: {jobId: number,status: number,comment: string}): Observable<BaseResponse>{
+  approveAJob(job: {jobId: number, status: number,comment: string}): Observable<BaseResponse>{
     // const token = sessionStorage.getItem('token');
     // const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
     const url = `${environment.baseUrl}${environment.jobApis.approveJob}`

@@ -118,7 +118,8 @@ export type SearchedApplicant =  {
   export enum StageOfCreation{
     Initiation='Initiation',
     PendingApproval='PendingApproval',
-    Approved='Approved'
+    Approved='Approved',
+    Rejected='Rejected'
   }
 
   export enum ScheduleApprovalNum{

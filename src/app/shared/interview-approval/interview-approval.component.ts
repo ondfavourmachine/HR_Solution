@@ -21,6 +21,7 @@ export class InterviewApprovalComponent implements OnInit {
     private dialogRef2: MatDialogRef<AssessApplicantModalComponent>) { }
 
   ngOnInit(): void {
+    console.log(this.data)
   }
 
   close(response?: string){

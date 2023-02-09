@@ -33,6 +33,7 @@ export class TestAssessmentComponent implements OnInit, PaginationMethodsForSele
  testBatches: BatchedSchedule[] = [];
  currentBatchInView!: BatchedSchedule;
  destroyObs!: Subscription;
+ stopLoading: {stopLoading: boolean} = {stopLoading : false};
   constructor(private sdm: SchedulerDateManipulationService,
     private pagination: PaginationService,
     private schedule: ScheduleService,
@@ -55,6 +56,11 @@ export class TestAssessmentComponent implements OnInit, PaginationMethodsForSele
       {next: val => val == null ? null : this.view = val}
     )
   }
+
+  // get FunctionToUse(): Function{
+  //   let functionToUse: Function;
+  //   this.view == 'Batch View' ? functionToUse = this.getTestBatches : functionToUse = 
+  // }
 
   toggleDropDown(index: number){
     this.current = index
@@ -124,6 +130,7 @@ fetchASingleBatchOfTestApplicants(batch: BatchedSchedule, event?: Event, pageNum
         this.isLoading = false;
         this.assessments = data;
         this.useCurrentPage = false;
+        this.stopLoading = {stopLoading: false};
       },
       error: console.error
     }
@@ -148,6 +155,10 @@ fetchASingleBatchOfTestApplicants(batch: BatchedSchedule, event?: Event, pageNum
   }
 
   triggerAuditApprovalComponent(batch: BatchedSchedule){
+    if(this.sharedService.getRole() == ('HRAdmin' || 'Approver')) {
+      this.sharedService.errorSnackBar('Only user with audit role is allowed to approve');
+      return;
+    }
     const config: MatDialogConfig = {
       width: '42vw',
       minHeight: '35vh',
@@ -193,6 +204,7 @@ fetchASingleBatchOfTestApplicants(batch: BatchedSchedule, event?: Event, pageNum
         // this.assessments = data;
         // this.useCurrentPage = false;
         console.log(val.data);
+        this.stopLoading = {stopLoading: false};
         this.testBatches = val.data;
         this.current = 0;
         this.showDropDown = false;

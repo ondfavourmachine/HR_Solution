@@ -44,26 +44,26 @@ export class GeneralSearchBarComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     defer(() => fromEvent<InputEvent, HTMLInputElement>(this.generalInputSearch.nativeElement, 'input', (event: Event)=> (event.target as HTMLInputElement) )
     .pipe(
-      tap(event => {
-        if(event.value.length < 1) this.broadCastService.broadCastSearchInformation(null);
-      }),
-      debounceTime(1000) ))
+      debounceTime(1000)))
     .subscribe({next: this.handleTextFromInput, error: console.error})
     
   }
 
-  handleSelection(event?: Event, jobTitleValue?: string){
+  handleSelection(){
+    this.handleTextFromInput(this.generalInputSearch.nativeElement);
+  }
+
+  handleTextFromInput(input: HTMLInputElement){
+    if(input.value.length < 1){
+      this.broadCastService.broadCastSearchInformation('reload');
+      return;
+    }
     const obj = structuredClone(this.searchParams);
     const q =obj.Quarter == 'First' ? 1 : obj.Quarter == 'Second' ? 2 : obj.Quarter == 'Third' ? 3 : 4;
     obj.Quarter = q;
     obj.State == '' ? obj.State = '25' : null;
-    jobTitleValue  ? obj['JobTitle']  = jobTitleValue ?? this.jobTitle : null;
+    obj['JobTitle'] = input.value;
     this.broadCastService.broadCastSearchInformation(obj);
-  }
-
-  handleTextFromInput(input: HTMLInputElement){
-    
-    this.handleSelection(undefined, input.value);
   }
 
     

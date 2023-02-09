@@ -10,7 +10,7 @@
         </div>
       </div>
         <div class="relative select_container">
-          <select [(ngModel)]="searchParams.State" name="branch" (ngModelChange)="handleSelection($event)"  class="width-80">
+          <select [(ngModel)]="searchParams.State" name="branch" (ngModelChange)="handleSelection()"  class="width-80">
             <option selected="">All Location</option>
             <option [value]="state.id" *ngFor="let state of states">
                 {{ state?.name }}
@@ -20,7 +20,7 @@
         </div>
 
         <div class="relative select_container">
-          <select [(ngModel)]="searchParams.JobCategory" name="category" (ngModelChange)="handleSelection($event)" class="width-80">
+          <select [(ngModel)]="searchParams.JobCategory" name="category" (ngModelChange)="handleSelection()" class="width-80">
             <option selected="">All Job Category</option>
             <option [value]="cat" *ngFor="let cat of sharedService.convertJobCategoryToArray()">
                 {{ cat }}
@@ -30,7 +30,7 @@
         </div>
 
         <div class="relative select_container">
-            <select [(ngModel)]="searchParams.ClassOfDegree" name="classOfDegree" (ngModelChange)="handleSelection($event)"  class="width-80">
+            <select [(ngModel)]="searchParams.ClassOfDegree" name="classOfDegree" (ngModelChange)="handleSelection()"  class="width-80">
               <option selected="">Class of Degree</option>
               <option [value]="classOfDegree" *ngFor="let classOfDegree of sharedService.convertClassOfDegreeToArray()">
                 {{ classOfDegree }}
@@ -39,14 +39,14 @@
           </div>
 
           <div class="relative select_container">
-            <select [(ngModel)]="searchParams.Age" name="age" (ngModelChange)="handleSelection($event)" class="width-80">
+            <select [(ngModel)]="searchParams.Age" name="age" (ngModelChange)="handleSelection()" class="width-80">
               <option selected="">Select Age</option>
               <option [value]="age" *ngFor="let age of agesToUse; index as i"> {{ age }} </option>
             </select>
           </div>
 
           <div class="relative select_container">
-            <select  [(ngModel)]="searchParams.Quarter" name="selectedQuarter" (ngModelChange)="handleSelection($event)" id="" class="width-80">
+            <select  [(ngModel)]="searchParams.Quarter" name="selectedQuarter" (ngModelChange)="handleSelection()" id="" class="width-80">
               <option selected>Choose a Quarter</option>
                 <option [value]="quarter?.humanNameForQuarter" *ngFor="let quarter of quartersToUse; index as i">
                     {{ quarter?.humanNameForQuarter }}

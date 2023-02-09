@@ -3,6 +3,8 @@
         <div class="search_bar__container">
             <app-table-search-params-with-download-icons
              [quartersToUse]="quartersToUse"
+             [callBackForLoadingData]="getApplicantsForSelection"
+             [stopLoading]="stopLoading"
              ></app-table-search-params-with-download-icons>
             <div class="download_icons">
                 <span (click)="downloadExcel()"><img src="../../../assets/images/excel_icon.svg" alt="">Excel</span>
@@ -127,7 +129,7 @@
                                               class="status">{{ applicant?.invitationStatus }}</span>
                                          </td>
                                          <td class="individual_tableCell_data !text-ro-black-text !opacity-90 font-semibold">
-                                            {{ applicant?.hospitalName?.split(':')![0] || 'Not Available' }}
+                                            {{ checkIfHospitalIsAvailable(applicant, 'string') || 'Not Available' }}
                                          </td>
                                          
                                          <td class="individual_tableCell_data">
@@ -140,7 +142,7 @@
                                              }" 
                                               class="status">{{  applicant?.approverStatus == 'Pending' ? 'Pending' : applicant?.approverStatus == 'Approve' ? 'Passed' :  applicant?.approverStatus == 'Awaiting' ? 'Awaiting' : 'Failed'  }}</span>
                                         </td>
-                                        <td class="individual_tableCell_data align-middle">
+                                        <td class="individual_tableCell_data align-middle" [ngClass]="{'opacity-10 pointer-events-none': !checkIfHospitalIsAvailable(applicant, 'boolean')}">
                                             <img  (click)="gotoApplicantView(applicant)" src="../../../assets/images/eye_view.svg" alt="">
                                         </td>    
                                     </tr>  
