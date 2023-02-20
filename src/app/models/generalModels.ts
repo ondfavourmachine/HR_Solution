@@ -3,6 +3,8 @@ import { FullInterviewerDetailsAndInterviewResponse } from "./applicant-selectio
 import { InterviewTypesWithNumber } from "./scheduleModels"
 
 
+export type RolesInThisApp = 'Staff' | 'Audit' | 'HRAdmin' | 'HRApprover' | 'Inputter';
+
 export enum NYSCStrings {
     PROGRESS="InProgress",
     COMPLETED="Completed",

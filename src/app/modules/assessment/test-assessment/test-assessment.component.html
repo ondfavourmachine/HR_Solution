@@ -307,8 +307,8 @@
                                                 <li (click)="fetchASingleBatchOfTestApplicants(batch, $event, 1, 10)">
                                                   <img src="../../../../assets/images/eye_view.svg" alt="">  View Applicants
                                                 </li>
-                                                <li *ngIf="batch?.assessmentStatus != 'Completed'" (click)="triggerUploadScoreComp(batch)"><img src="../../../../assets/images/add.svg" alt="">  Upload Score record</li>
-                                                <li *ngIf="batch?.assessmentStatus == 'Completed' && batch.auditApproval != 'Approve'" (click)="triggerAuditApprovalComponent(batch)"><img src="../../../../assets/images/add.svg" alt="">  Add Audit Approval</li>
+                                                <li (click)="triggerUploadScoreComp(batch)"><img src="../../../../assets/images/add.svg" alt="">  Upload Score record</li>
+                                                <li  (click)="triggerAuditApprovalComponent(batch)"><img src="../../../../assets/images/add.svg" alt="">  Add Audit Approval</li>
                                             </ul>
                                         </div>
                                     </td>    

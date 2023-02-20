@@ -924,6 +924,20 @@
                     </button>
                 </div>
 
+                <div *ngIf="data?.applicantData?.applicationStage == 2 && role == 'HRAdmin' && data?.applicantData?.hR_Status == 'Pending' && data?.applicantData?.approverStatus == 'Pending'" 
+                  [ngClass]="{'!flex': data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
+                    <button
+                    (click)="triggerAcceptanceOrRejection(3)"
+                     class="btn-red-custom">
+                        Fail
+                    </button>
+                    <button
+                     (click)="triggerAcceptanceOrRejection(5)"
+                     class="btn-red-custom green">
+                        Pass
+                    </button>
+                </div>
+
                 <div *ngIf="checkIfChairPersonAssessed && data?.applicantData?.interviewAssessed == 1 && role == 'HRAdmin' && data?.applicantData?.applicationStage! == 2" [ngClass]="{'!flex': data?.extraInfo?.applicantSelectionScreen}" class="button_fields">
                     <button
                     (click)="triggerAcceptanceOrRejection(3)"
