@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import {HttpClientModule} from '@angular/common/http'
+import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http'
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -14,6 +14,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { DatePipe, TitleCasePipe } from '@angular/common';
 import { ExternalCandidateDashboardComponent } from './external-candidate-dashboard/external-candidate-dashboard.component';
 import { RoleComponent } from './pages/role/role.component';
+import { GlobalInterceptorInterceptor } from './services/global-interceptor.interceptor';
+import { NotFoundComponent } from './pages/not-found/not-found.component';
 
 
 @NgModule({
@@ -24,6 +26,7 @@ import { RoleComponent } from './pages/role/role.component';
     LoginComponent,
     ExternalCandidateDashboardComponent,
     RoleComponent,
+    NotFoundComponent,
   
   ],
   imports: [
@@ -36,7 +39,9 @@ import { RoleComponent } from './pages/role/role.component';
     MatDialogModule,
     BrowserAnimationsModule
   ],
-  providers: [TitleCasePipe, DatePipe],
+  providers: [TitleCasePipe, DatePipe,  { 
+    provide: HTTP_INTERCEPTORS, useClass: GlobalInterceptorInterceptor, multi:true
+  },],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

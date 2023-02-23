@@ -3,7 +3,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { PartialObserver, Subscription } from 'rxjs';
 import { ApplicantSelectionStatistics, ApplicantsSelectionResponse, SelectionMethods } from 'src/app/models/applicant-selection.models';
-import { AnApplication, ApplicationApprovalStatus, InformationForApprovalModal,PaginationMethodsForSelectionAndAssessments, InformationForModal, PreviewActions, RequiredQuarterFormat, ApprovalProcessStatuses } from 'src/app/models/generalModels';
+import { AnApplication, ApplicationApprovalStatus, InformationForApprovalModal,PaginationMethodsForSelectionAndAssessments, InformationForModal, PreviewActions, RequiredQuarterFormat, ApprovalProcessStatuses, DownloadAsExcelAndPdfData } from 'src/app/models/generalModels';
 import { ApplicantSelectionService } from 'src/app/services/applicant-selection.service';
 import { BroadCastService } from 'src/app/services/broad-cast.service';
 import { PaginationService } from 'src/app/services/pagination.service';
@@ -28,6 +28,7 @@ export class MedicalSelectionComponent implements OnInit, SelectionMethods, Pagi
   useCurrentPage: boolean = false;
   destroyObs!: Subscription;
   stopLoading: {stopLoading: boolean} = {stopLoading : false};
+  dataForExcelAndPdf!: DownloadAsExcelAndPdfData
   constructor(
     private applicationSelectionService: ApplicantSelectionService, 
     private broadCast: BroadCastService,
@@ -82,6 +83,7 @@ export class MedicalSelectionComponent implements OnInit, SelectionMethods, Pagi
     this.applicantsToBeSelected = this.pagination.getAPageOfPaginatedData<AnApplication>();
     this.useCurrentPage = false;
     this.stopLoading = {stopLoading: false};
+    this.setDataForPdfAndExcel();
   }
 
   loadNextSetOfPages(){
@@ -193,16 +195,27 @@ export class MedicalSelectionComponent implements OnInit, SelectionMethods, Pagi
   trackByFn(index: number, applicant: AnApplication) {
     return applicant.applicationRefNo; // or item.id
   }
-
-  downloadExcel(){
-    this.sharedService.downloadAsExcel(this.applicantsToBeSelected, 'applicants-with-medical-invites');
-  }
    checkIfHospitalIsAvailable(applicant: AnApplication, returnType: 'boolean' | 'string'): boolean | string{
     if(returnType == 'string'){
       const val = !applicant.hospitalName ? 'Not Available' : applicant.hospitalName.split(':')[0];
       return val;
     }
     return 'hospitalName' in applicant && applicant.hospitalName != null;
+  }
+
+  setDataForPdfAndExcel(){
+    const columns: string[] = ['Serial_Number', 'Applicant_Name', 'Email', 'Invitation', 'Job_Title', 'Hospital'];
+    const rows =  this.applicantsToBeSelected.map((elem, index) => {
+      return [
+        index > 8 ? `${index + 1}` : `0${index + 1}`,
+        `${elem.firstName} ${elem.middleName} ${elem.lastName}`,
+        `${elem.email}`,
+        `${elem.invitationStatus}`,
+        `${elem.jobTitle || elem?.position}`,
+        `${elem.hospitalName  }`
+      ]
+    })
+    this.dataForExcelAndPdf = {data: this.applicantsToBeSelected, columns: columns, rows}
   }
 
   ngOnDestroy(): void {

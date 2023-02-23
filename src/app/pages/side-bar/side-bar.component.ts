@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RolesInThisApp } from 'src/app/models/generalModels';
+import { BroadCastService } from 'src/app/services/broad-cast.service';
 import { SharedService } from 'src/app/services/sharedServices';
 
 
@@ -11,7 +12,7 @@ import { SharedService } from 'src/app/services/sharedServices';
 })
 export class SideBarComponent implements OnInit {
   rolesInThisApp!: RolesInThisApp; 
-  constructor(private sharedService: SharedService) { }
+  constructor(private sharedService: SharedService, public broadCast: BroadCastService) { }
 
   ngOnInit(): void {
     this.rolesInThisApp = this.sharedService.getRole() as unknown as RolesInThisApp;

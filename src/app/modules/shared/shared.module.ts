@@ -42,6 +42,7 @@ import { BatchScoreUploadComponent } from '../../shared/batch-score-upload/batch
 import { PreviewJobDetailsComponent } from '../../shared/preview-job-details/preview-job-details.component';
 import { ApplyForJobByInternalStaffComponent } from '../../shared/apply-for-job-by-internal-staff/apply-for-job-by-internal-staff.component';
 import { TestAssessmentAuditApprovalComponent } from '../../shared/test-assessment-audit-approval/test-assessment-audit-approval.component';
+import { DownloadIconsComponent } from '../../shared/download-icons/download-icons.component';
 
 @NgModule({
   declarations: [
@@ -77,6 +78,7 @@ import { TestAssessmentAuditApprovalComponent } from '../../shared/test-assessme
     PreviewJobDetailsComponent,
     ApplyForJobByInternalStaffComponent,
     TestAssessmentAuditApprovalComponent,
+    DownloadIconsComponent,
 
   ],
   imports: [
@@ -120,7 +122,8 @@ import { TestAssessmentAuditApprovalComponent } from '../../shared/test-assessme
     NoContentComponent,
     MatSlideToggleModule,
     NoContentToShowComponent,
-    PreviewJobDetailsComponent
+    PreviewJobDetailsComponent,
+    DownloadIconsComponent
   ], 
   providers: [TitleStringDisplayForGradingPipe]
 })

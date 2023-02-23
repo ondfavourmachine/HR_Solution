@@ -33,6 +33,7 @@ export interface SelectionMethods{
     applicantAboutToBeAccepted: AnApplication,
     acceptAnApplicant(command: PreviewActions, comment: string): void,
     acceptingWasSuccessful?(approvalTypes?: ApplicationApprovalStatus):void,
+    setDataForPdfAndExcel?(): void
 }
 
 export interface NecessaryModalMethods{

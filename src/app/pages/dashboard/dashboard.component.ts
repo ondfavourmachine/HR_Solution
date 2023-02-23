@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { BroadCastService } from 'src/app/services/broad-cast.service';
 
 
 
@@ -9,9 +10,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DashboardComponent implements OnInit {
   reduceSideBar: boolean = false;
-  constructor() {
-    
-   }
+  constructor(public broadCast: BroadCastService) {}
 
   ngOnInit(): void {
     
@@ -19,6 +18,7 @@ export class DashboardComponent implements OnInit {
 
   toggleBigSideBar(){
     this.reduceSideBar = !this.reduceSideBar;
+    this.broadCast.broadCastToggleForSideBar(this.reduceSideBar);
   }
 
 

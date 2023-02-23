@@ -6,6 +6,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { SharedService } from 'src/app/services/sharedServices';
 import { PartialObserver } from 'rxjs';
 import { AuthResponse } from 'src/app/models/generalModels';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -52,9 +53,10 @@ export class LoginComponent implements OnInit {
     const pObs: PartialObserver<AuthResponse> = {
       next: (val) => {
           if(!val.hasError){
+                  const keyname = window.btoa(environment.cacher.jeton);
                   this.sharedService.successSnackBar(`Welcome ${this.titleCasePipe.transform((value.username as string).toString())}`, 'close');
                   this.sharedService.loading4button(btn, 'done', prevText as string);
-                  sessionStorage.setItem('token', val.token);
+                  this.sharedService.saveItemInCache(environment.cacher.jeton, val.token);
                   sessionStorage.setItem('loggedInUser', val.fullName);
                   sessionStorage.setItem('role', val.role);
                   sessionStorage.setItem('email', this.loginForm.get('username')?.value);

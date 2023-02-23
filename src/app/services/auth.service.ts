@@ -6,6 +6,7 @@ import { timeout } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 import { AuthResponse, BaseResponse, GeneratedToken, Role, StaffDetailsFromAd } from '../models/generalModels';
+import { SharedService } from './sharedServices';
 
 @Injectable({
   providedIn: 'root'
@@ -14,9 +15,14 @@ export class AuthService {
   auth_url = `${environment.baseUrl}${environment.authUrl.login}`;
   constructor(
     private http: HttpClient,
+    private sharedService: SharedService,
     private router: Router
   ) { }
 
+  shouldAllowAccessToRoute(): boolean{
+    const t = this.sharedService.getItemFromCache(environment.cacher.jeton);
+    return t != null ;
+  }
  
   authenticateUser(req: {username: string, password: string}):Observable<AuthResponse>{
     return this.http.post<AuthResponse>(this.auth_url, req)

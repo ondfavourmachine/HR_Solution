@@ -42,7 +42,28 @@
                         </div>
                     </div>
                     <div class="content_picture">
-                        <img src="../../../assets/images/sliding_pix.png" alt="">
+                        <!-- <img src="../../../assets/images/sliding_pix.png" alt=""> -->
+                        <div class="sliding_container landing_page_sliding_pictures">
+                            <ngx-slick-carousel class="carousel" 
+                                            #slickModal="slick-carousel" 
+                                            [config]="slideConfig" 
+                                            (init)="slickInit($event)"
+                                            (breakpoint)="breakpoint($event)"
+                                            (afterChange)="afterChange($event)"
+                                            (beforeChange)="beforeChange($event)">
+                               <div ngxSlickItem  class="slide" >  
+                                    <img src="../../../assets/images/first_image.png" alt="">
+                               </div>
+                              <div ngxSlickItem  class="slide">
+                                <img src="../../../assets/images/second_image.png" alt="">
+                              </div>
+                    
+                             <div ngxSlickItem  class="slide">
+                                <img src="../../../assets/images/third_image.png" alt="">
+                             </div> 
+                            </ngx-slick-carousel>
+                           <!-- <span class="next_icon" (click)="nextSlide()"><img src="../../../assets/images/right_icon.svg" alt=""></span> -->
+                        </div>
                     </div>
                 </div>
             </div>

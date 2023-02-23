@@ -1,8 +1,8 @@
-import { Component, OnDestroy, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { ApplicantSelectionStatistics } from 'src/app/models/applicant-selection.models';
-import { AGlobusBranch, BaseResponse, GeneralLookUp, RequiredQuarterFormat, tabs } from 'src/app/models/generalModels';
+import { BaseResponse, GeneralLookUp, RequiredQuarterFormat, tabs } from 'src/app/models/generalModels';
 import { BroadCastService } from 'src/app/services/broad-cast.service';
 import { LookUpService } from 'src/app/services/look-up.service';
 import { SchedulerDateManipulationService } from 'src/app/services/scheduler-date-manipulation.service';
@@ -12,7 +12,6 @@ import { SharedService } from 'src/app/services/sharedServices';
   selector: 'app-home-selection',
   templateUrl: './home-selection.component.html',
   styleUrls: ['./home-selection.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeSelectionComponent implements OnInit, OnDestroy {
   quartersToUse: RequiredQuarterFormat[] = [];

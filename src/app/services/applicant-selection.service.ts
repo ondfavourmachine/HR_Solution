@@ -13,6 +13,9 @@ export class ApplicantSelectionService {
   constructor(private http: HttpClient) { }
 
   getApplicants(searchParams: Partial<SearchParams>): Observable<ApplicantsSelectionResponse>{
+    if('ApplicantName' in searchParams && searchParams!.ApplicantName!.length < 1){
+      delete searchParams.ApplicantName;
+    }
     const params: HttpParams = Object.keys(searchParams).reduce((prev, curr) => prev.set(curr, (searchParams as SearchParams)[curr as keyof SearchParams]), new HttpParams());
     const url = `${environment.baseUrl}${environment.applicationSelection.getApplication}`
     return this.http.get<ApplicantsSelectionResponse>(url, {params});

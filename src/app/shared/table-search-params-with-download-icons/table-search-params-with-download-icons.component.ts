@@ -27,9 +27,7 @@ export class TableSearchParamsWithDownloadIconsComponent implements OnInit, OnCh
     this.handleTextFromInput = this.handleTextFromInput.bind(this);
    }
 
-   ngOnChanges(){
-    console.log(this.stopLoading);
-   }
+   ngOnChanges(){}
 
   ngOnInit(): void {
     const [first, second, ...rest] = this.sdm.generateQuartersOfCurrentYear();

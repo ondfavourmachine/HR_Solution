@@ -10,11 +10,13 @@ export class BroadCastService {
   private statisticsSubject = new BehaviorSubject<Partial<ApplicantSelectionStatistics>>({});
   private changeInViewSubject = new BehaviorSubject<null | 'Batch View' | 'Single View'>(null);
   private globalSearchSubject = new BehaviorSubject<null | Partial<SearchParams> | string>(null);
+  private reduceSideBarSubject = new BehaviorSubject<boolean>(false);
   public search$ = this.globalSearchSubject.asObservable();
   statistics$ = this.statisticsSubject.asObservable();
   public changeInViewSubject$ = this.changeInViewSubject.asObservable();
   private applicantDataHasBeenLoadedSubject = new Subject<boolean>();
   applicantDataHasBeenLoaded$ = this.applicantDataHasBeenLoadedSubject.asObservable();
+  public reducedSideBar$ = this.reduceSideBarSubject.asObservable();
   constructor() { }
 
 
@@ -32,6 +34,10 @@ export class BroadCastService {
 
   broadCastLoadModalInfo(val: boolean){
     this.applicantDataHasBeenLoadedSubject.next(val)
+  }
+
+  broadCastToggleForSideBar(command: boolean){
+    this.reduceSideBarSubject.next(command);
   }
 
 }

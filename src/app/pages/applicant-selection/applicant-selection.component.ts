@@ -4,7 +4,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 // import { MatDatepicker } from '@angular/material/datepicker';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { PartialObserver, Subscription } from 'rxjs';
-import { AGlobusBranch, AnApplication, ApplicationApprovalStatus, BaseResponse, InformationForApprovalModal, InformationForModal, PaginationMethodsForSelectionAndAssessments, PreviewActions, RequiredQuarterFormat, tabs } from 'src/app/models/generalModels';
+import { AGlobusBranch, AnApplication, ApplicationApprovalStatus, BaseResponse, DownloadAsExcelAndPdfData, InformationForApprovalModal, InformationForModal, PaginationMethodsForSelectionAndAssessments, PreviewActions, RequiredQuarterFormat, tabs } from 'src/app/models/generalModels';
 import { ApplicantSelectionService } from 'src/app/services/applicant-selection.service';
 import { SharedService } from 'src/app/services/sharedServices';
 import { PreviewApplicationComponent } from 'src/app/pages/preview-application/preview-application.component';
@@ -40,6 +40,7 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
   destroyObs: Subscription[] = [];
   stopLoading: {stopLoading: boolean} = {stopLoading : false};
   idOfJobToLoadModal!: any;
+  dataForExcelAndPdf!: DownloadAsExcelAndPdfData
   constructor(
     public  sharedService: SharedService, 
     private dialog: MatDialog,
@@ -125,6 +126,7 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
     }else{
       this.broadCast.broadCastLoadModalInfo(false);
     }
+    this.setDataForPdfAndExcel();
   }
 
   triggerApprovalModalForAcceptingApplicant(command: PreviewActions, acceptOrReject: ApplicationApprovalStatus){
@@ -263,11 +265,37 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
     if (applicant.hR_Status == 'Rejected' && applicant.approverStatus == 'Approve') return 'Rejected';
     else return 'Pending';
   }
-  downloadExcel(){
-    this.sharedService.downloadAsExcel(this.applicantsToBeSelected, 'applicants-selected');
-  }
+  // downloadExcel(){
+  //   this.sharedService.downloadAsExcel(this.applicantsToBeSelected, 'applicants-selected');
+  // }
 
-  downloadAsPdf(){
+  // downloadAsPdf(){
+  //   const columns: string[] = ['Serial_Number', 'Applicant_Name', 'Email', 'Age', 'Job_Title', 'Course', 'Date_Applied'];
+  //   const rows =  this.applicantsToBeSelected.map((elem, index) => {
+  //     return [
+  //       index > 8 ? `${index + 1}` : `0${index + 1}`,
+  //       `${elem.firstName} ${elem.middleName} ${elem.lastName}`,
+  //       `${elem.email}`,
+  //       `${elem.age.toString()}`,
+  //       `${elem.jobTitle || elem?.position}`,
+  //       `${elem.courseofStudy}`,
+  //       `${this.sharedService.covertDateToHumanFreiendlyFormat(elem.dateApplied, 'medium')}`
+  //     ]
+  //   })
+  // var doc =  new jsPDF('landscape', 'mm', [320, 320]);
+  // const options:UserOptions = {
+  //   head: [columns],
+  //   body: rows,
+  //   headStyles: {
+  //     fillColor: '#F4F7FF',
+  //     textColor: 'black'
+  //   }
+  // }
+  // autoTable(doc, options);
+  // doc.save('applicants_selected.pdf');
+  // }
+
+  setDataForPdfAndExcel(){
     const columns: string[] = ['Serial_Number', 'Applicant_Name', 'Email', 'Age', 'Job_Title', 'Course', 'Date_Applied'];
     const rows =  this.applicantsToBeSelected.map((elem, index) => {
       return [
@@ -280,17 +308,7 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
         `${this.sharedService.covertDateToHumanFreiendlyFormat(elem.dateApplied, 'medium')}`
       ]
     })
-  var doc =  new jsPDF('landscape', 'mm', [320, 320]);
-  const options:UserOptions = {
-    head: [columns],
-    body: rows,
-    headStyles: {
-      fillColor: '#F4F7FF',
-      textColor: 'black'
-    }
-  }
-  autoTable(doc, options);
-  doc.save('applicants_selected.pdf');
+    this.dataForExcelAndPdf = {data: this.applicantsToBeSelected, columns: columns, rows}
   }
   ngOnDestroy(): void {
     this.idOfJobToLoadModal = undefined;

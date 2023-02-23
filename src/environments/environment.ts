@@ -28,6 +28,10 @@ export const environment = {
     approveSchedule: 'Scheduler/ApproveSchedule',
     getOneScheduleByScheduleRef: 'Scheduler/GetScheduleByScheduleAndApplicationRef'
   },
+  
+  cacher:{
+    jeton: 'jeton'
+  },
 
   jobApis: {
     creatJob: 'JobCreate/AddJob',

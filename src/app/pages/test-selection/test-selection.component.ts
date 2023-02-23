@@ -4,7 +4,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { PartialObserver, Subscription } from 'rxjs';
 import { ApplicantSelectionStatistics, ApplicantsSelectionResponse, SelectionMethods, SpecialCandidate } from 'src/app/models/applicant-selection.models';
-import { AnApplication, ApplicationApprovalStatus, InformationForApprovalModal, InformationForModal, PaginationMethodsForSelectionAndAssessments, PreviewActions, RequiredQuarterFormat } from 'src/app/models/generalModels';
+import { AnApplication, ApplicationApprovalStatus, DownloadAsExcelAndPdfData, InformationForApprovalModal, InformationForModal, PaginationMethodsForSelectionAndAssessments, PreviewActions, RequiredQuarterFormat } from 'src/app/models/generalModels';
 import { ApplicantSelectionService } from 'src/app/services/applicant-selection.service';
 import { BroadCastService } from 'src/app/services/broad-cast.service';
 import { PaginationService } from 'src/app/services/pagination.service';
@@ -31,6 +31,7 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
   destroyObs: Subscription[] = [];
   stopLoading: {stopLoading: boolean} = {stopLoading : false};
   idOfJobToLoadModal!: any;
+  dataForExcelAndPdf!: DownloadAsExcelAndPdfData
   constructor(private sdm: SchedulerDateManipulationService,
      private applicationSelectionService: ApplicantSelectionService, 
      private broadCast: BroadCastService,
@@ -58,7 +59,7 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
           const pObs: PartialObserver<ApplicantsSelectionResponse> = {
           next: this.handleApplicantsFromServer,
           error: (err) => console.log(err)
-        }
+         }
           this.applicationSelectionService.getApplicants({...val, ApplicationStage: 1, PageNumber: this.pagination.currentPage.toString(), PageSize: this.noOfRecords.toString()})
           .subscribe(pObs)
         }
@@ -74,6 +75,7 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
         }
       })  
     }
+    
 
     clearidOfJobToLoadModal(){
       this.idOfJobToLoadModal = undefined;
@@ -134,6 +136,7 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
     }else{
       this.broadCast.broadCastLoadModalInfo(false);
     }
+    this.setDataForPdfAndExcel();
   }
 
   triggerApprovalModalForAcceptingApplicant(command: PreviewActions, acceptOrReject: ApplicationApprovalStatus){
@@ -245,6 +248,22 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
 
   downloadExcel(){
     this.sharedService.downloadAsExcel(this.applicantsToBeSelected, 'applicants-with-test-invites');
+  }
+
+  setDataForPdfAndExcel(){
+    const columns: string[] = ['Serial_Number', 'Applicant_Name', 'Email', 'Invitation', 'Job_Title', 'Score', 'Audit_Approval'];
+    const rows =  this.applicantsToBeSelected.map((elem, index) => {
+      return [
+        index > 8 ? `${index + 1}` : `0${index + 1}`,
+        `${elem.firstName} ${elem.middleName} ${elem.lastName}`,
+        `${elem.email}`,
+        `${elem.invitationStatus}`,
+        `${elem.jobTitle || elem?.position}`,
+        `${elem.score}`,
+        `${elem.audit_Status}`
+      ]
+    })
+    this.dataForExcelAndPdf = {data: this.applicantsToBeSelected, columns: columns, rows}
   }
 
  

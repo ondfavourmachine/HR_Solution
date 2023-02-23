@@ -3,7 +3,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { PartialObserver, Subscription } from 'rxjs';
 import { ApplicantSelectionStatistics, ApplicantsSelectionResponse, SelectionMethods } from 'src/app/models/applicant-selection.models';
-import { AnApplication, PreviewActions, ApplicationApprovalStatus, RequiredQuarterFormat, InformationForModal, InformationForApprovalModal, PaginationMethodsForSelectionAndAssessments } from 'src/app/models/generalModels';
+import { AnApplication, PreviewActions, ApplicationApprovalStatus, RequiredQuarterFormat, InformationForModal, InformationForApprovalModal, PaginationMethodsForSelectionAndAssessments, DownloadAsExcelAndPdfData } from 'src/app/models/generalModels';
 import { ApplicantSelectionService } from 'src/app/services/applicant-selection.service';
 import { BroadCastService } from 'src/app/services/broad-cast.service';
 import { PaginationService } from 'src/app/services/pagination.service';
@@ -27,6 +27,7 @@ export class OfferSelectionComponent implements OnInit, SelectionMethods, Pagina
   useCurrentPage: boolean = false;
   destroyObs!: Subscription;
   stopLoading: {stopLoading: boolean} = {stopLoading : false};
+  dataForExcelAndPdf!: DownloadAsExcelAndPdfData
   constructor(
     private applicationSelectionService: ApplicantSelectionService, 
     private broadCast: BroadCastService,
@@ -79,6 +80,7 @@ export class OfferSelectionComponent implements OnInit, SelectionMethods, Pagina
     this.applicantsToBeSelected = this.pagination.getAPageOfPaginatedData<AnApplication>();
     this.useCurrentPage = false;
     this.stopLoading = {stopLoading: false};
+    this.setDataForPdfAndExcel();
   }
   loadNextSetOfPages(){
     const res = this.pagination.loadNextSetOfPages<AnApplication>({ApplicationStage: 6, noOfRecord: this.noOfRecords},this.getApplicantsForSelection);
@@ -191,15 +193,28 @@ export class OfferSelectionComponent implements OnInit, SelectionMethods, Pagina
     return applicant.applicationRefNo; // or item.id
   }
 
+  setDataForPdfAndExcel(){
+    const columns: string[] = ['Serial_Number', 'Applicant_Name', 'Email', 'Invitation', 'PickUp_Status', 'Acceptance_status',];
+    const rows =  this.applicantsToBeSelected.map((elem, index) => {
+      return [
+        index > 8 ? `${index + 1}` : `0${index + 1}`,
+        `${elem.firstName} ${elem.middleName} ${elem.lastName}`,
+        `${elem.email}`,
+        `${elem.invitationStatus}`,
+        `${elem.hR_Status}`,
+        `${elem.offerAcceptance}`,
+      ]
+    })
+    this.dataForExcelAndPdf = {data: this.applicantsToBeSelected, columns: columns, rows}
+  }
+
 
   ngOnDestroy(): void {
     this.destroyObs ? this.destroyObs.unsubscribe() : null;
     this.pagination.clearPaginationStuff();
   }
 
-  downloadExcel(){
-    this.sharedService.downloadAsExcel(this.applicantsToBeSelected, 'applicants-with-offer-letters');
-  }
+
  
 
 }

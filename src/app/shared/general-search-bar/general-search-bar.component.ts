@@ -39,7 +39,6 @@ export class GeneralSearchBarComponent implements OnInit, OnChanges {
     this.searchParams.Age = Array.isArray((changes['agesToUse'].currentValue)) ? (changes['agesToUse'].currentValue as number[])[0] : '';
     this.searchParams.Quarter = Array.isArray((changes['quartersToUse'].currentValue)) ? (changes['quartersToUse'].currentValue as RequiredQuarterFormat[])![0].humanNameForQuarter: '';
     }
-    console.log(changes);
   }
   ngOnInit(): void {
     defer(() => fromEvent<InputEvent, HTMLInputElement>(this.generalInputSearch.nativeElement, 'input', (event: Event)=> (event.target as HTMLInputElement) )

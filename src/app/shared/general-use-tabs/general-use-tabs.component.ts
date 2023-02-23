@@ -22,7 +22,7 @@ export class GeneralUseTabsComponent implements OnInit, OnChanges {
   ) { 
     router.events.subscribe(val => {
       if(val instanceof NavigationEnd) {
-        const tabString = val.url.split('/').slice(-1);
+        const tabString = val.urlAfterRedirects.split('/').slice(-1);
         if(!isNaN(parseInt(tabString[0]))) {
           switch(tabString[0]){
             case '02':
@@ -34,8 +34,10 @@ export class GeneralUseTabsComponent implements OnInit, OnChanges {
           }
         }
         else if(tabString[0] == 'interviews') this.tabToHighlight = 'Interview 01';
+        else if(tabString[0] == 'job-management' || tabString[0] == 'job-openings'){ return }
         else{
-          const tabForm = titleCase.transform(tabString[0]);
+          const t = tabString[0].replace(/(-|\\s|%20)/g, ' ');
+          const tabForm = titleCase.transform(t);
           this.tabToHighlight = tabForm as tabs;
         }
       }

@@ -242,6 +242,10 @@
     }
 
     @media(min-width: 1350px){
+        --width_for_sidebar_parent: 16.5vw;   
+    }
+
+    @media(min-width: 1410px){
         --width_for_sidebar_parent: 18vw;   
     }
 }
@@ -762,10 +766,11 @@ footer{
                 }
 
                 & .job_title{
+                    --font-for-job: 1.275em;
                     @apply flex gap-16 items-center relative; 
 
                     & span:first-child{
-                        font-size: 1.275em;
+                        font-size: var(--font-for-job);
                         @apply font-hrmsCamptonBook font-semibold relative overflow-visible;
                     }
 
@@ -778,6 +783,17 @@ footer{
                     & span:last-child{
                         font-size: .875em;
                         @apply font-hrmsCamptonBook text-hrms-text-light;
+                    }
+
+                    @media(min-width: 1280px){
+                        --font-for-job: 0.8em;
+                    }
+
+                    @media(min-width: 1350px){
+                        --font-for-job: 1em;
+                    }
+                    @media(width > 1410px){
+                        --font-for-job: 1.275em;
                     }
                 }
 
@@ -1756,6 +1772,10 @@ input:focus, select:focus, textarea:focus {
     opacity: 0 !important;
     height: 0 !important;
  }
+
+ &.landing_page_sliding_pictures{
+  @apply h-auto;
+ }
 }
 
 // ends here
@@ -1929,7 +1949,7 @@ table{
     @apply border-[1px] border-hrms-dull shadow-2xl h-auto  rounded-lg mt-10 mb-6 ;
 
     & .table_search_container{
-        @apply px-6 pt-5 h-auto ;
+        @apply px-6 pt-5 h-auto overflow-visible;
 
         & input{
             @apply h-20
@@ -1937,12 +1957,12 @@ table{
     }
 
     & .search_bar__container{
-        @apply flex gap-10;
+        @apply flex gap-10 overflow-visible;
     }
 
     & .download_icons{
         font-size: .876em;
-        @apply w-3/12 px-4 justify-end flex gap-10 items-center text-hrms-slightRed ;
+        @apply w-3/12 px-4 overflow-visible text-hrms-slightRed;
 
         & span{
             @apply flex gap-1 items-center relative cursor-pointer isolate overflow-visible;

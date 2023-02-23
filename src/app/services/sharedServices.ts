@@ -116,6 +116,16 @@ export class SharedService {
     } 
   }
 
+   saveItemInCache(itemLocation: string, item: any): void{
+    const keyname = window.btoa(itemLocation);
+    sessionStorage.setItem(keyname, item);
+   }
+
+   getItemFromCache(itemLocation: string): any {
+    const keyname = window.btoa(itemLocation);
+    return sessionStorage.getItem(keyname);
+   }
+   
   insertIntoAdjacentHtmlOfElement<T extends Element, K extends ElementRef<T>, S extends string>(
     obj: {element: K, content: S}[]
   ){

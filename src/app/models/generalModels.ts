@@ -1,5 +1,6 @@
 // import { ApplicantsSelectionResponse } from "./applicant-selection.models"/
 import { FullInterviewerDetailsAndInterviewResponse } from "./applicant-selection.models"
+import { AnAssessment, AssessmentDetails, BatchedSchedule } from "./assessment.models";
 import { InterviewTypesWithNumber } from "./scheduleModels"
 
 
@@ -133,6 +134,12 @@ export interface AGlobusBranch {
     Fail,
     Returned
   }
+
+  export interface DownloadAsExcelAndPdfData{
+    columns: string[], data: Array<AnApplication | AssessmentDetails | BatchedSchedule | AnAssessment>,
+    rows: Array<any[]>,
+    fileName?: string
+    }
 
 
   export interface AuthResponse extends BaseResponse{

@@ -37,7 +37,7 @@
             </ul>
         </div>
         <div class="big_side_bar pt-5">
-            <ul class="pt-7 extra_side_bar">
+            <ul class="pt-7 extra_side_bar " [ngClass]="{'reducedSize': broadCast.reducedSideBar$ | async }">
                 <li
                   [ngClass]="{'!opacity-20 !pointer-events-none':rolesInThisApp == 'Staff' || rolesInThisApp == 'Audit'}"
                   [routerLinkActive]="['activated']" 
@@ -60,14 +60,26 @@
                      </span>
                 </li>
                 <li  
-                [routerLinkActive]="['activated']" 
+                     [routerLinkActive]="['activated']" 
                      [routerLink]="['applicant-selection', 'all applications']"  
-                  class="" title="Applicant Selection"> 
+                  class="applicant_big" title="Applicant Selection"> 
                     <span class="">
-                        <img class="" src="../../../assets/images/calendar.svg" alt="">
+                        <img class="" src="../../../assets/images/people.svg" alt="">
                     </span>
                      <span>
                         Applicant Selection
+                     </span>
+                </li>
+
+                 <li  
+                     [routerLinkActive]="['activated']" 
+                     [routerLink]="['applicant-selection', 'all applications']"  
+                     class="applicant_small" title="Applicant Selection"> 
+                    <span class="">
+                        <img class="" src="../../../assets/images/people.svg" alt="">
+                    </span>
+                     <span>
+                        Applicant
                      </span>
                 </li>
 
@@ -75,7 +87,7 @@
                  [ngClass]="{'!opacity-20 !pointer-events-none':rolesInThisApp == 'Inputter'}"
                  [routerLinkActive]="['activated']" title="Assessment" [routerLink]="['assessment']" class=""> 
                     <span class="">
-                        <img class="" src="../../../assets/images/people.svg" alt="">
+                        <img class="" src="../../../assets/images/document.svg" alt="">
                     </span>
                      <span>
                         Assessment
@@ -86,7 +98,7 @@
                   [routerLink]="['scheduler']"
                   [routerLinkActive]="['activated']" class="" title="Schedule Master">  
                     <span class="" >
-                        <img class="" src="../../../assets/images/document.svg" alt="">
+                        <img class="" src="../../../assets/images/calendar.svg" alt="">
                     </span>
                      <span>
                         Schedule Master

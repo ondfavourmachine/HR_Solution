@@ -6,7 +6,11 @@ import { RequiredQuarterFormat } from 'src/app/models/generalModels';
 import { InterviewTypesWithNumber } from 'src/app/models/scheduleModels';
 import { AssessmentService } from 'src/app/services/assessment.service';
 import { SchedulerDateManipulationService } from 'src/app/services/scheduler-date-manipulation.service';
+import { SharedService } from 'src/app/services/sharedServices';
 import { InterviewAssessmentDetailsComponent } from 'src/app/shared/interview-assessment-details/interview-assessment-details.component';
+import {  jsPDF } from "jspdf";
+import autoTable from 'jspdf-autotable';
+import {UserOptions} from 'jspdf-autotable';
 
 @Component({
   selector: 'app-interview-assessment',
@@ -21,6 +25,7 @@ export class InterviewAssessmentComponent implements OnInit {
   constructor(
      private sdm: SchedulerDateManipulationService,
      private assessmentService: AssessmentService,
+     private sharedService:SharedService,
      private dialog: MatDialog) {
       this.getAssessments = this.getAssessments.bind(this);
       }
@@ -37,15 +42,14 @@ export class InterviewAssessmentComponent implements OnInit {
       next: ({ data }) => {
         this.isLoading = false;
         this.assessments = data;
-        console.log(this.assessments);
         this.stopLoading = {stopLoading: false};
-        // console.log(this.assessments[1].applicants[0].position)
-
       },
       error: console.error
     }
     this.assessmentService.getAssesmentsByParameters<AssessmentDetails[]>({ ApplicationStage: InterviewTypesWithNumber.Interview_Invite, PageNumber: '1', PageSize: '20' }).subscribe(pObs)
   }
+
+  
 
   showAnInterview(assessment: AssessmentDetails){
     const config: MatDialogConfig = {
@@ -64,6 +68,35 @@ export class InterviewAssessmentComponent implements OnInit {
     return returnClassNames ? 'NotAssessed' : 'Not Started';
    }
 
+   downloadExcel(){
+    this.sharedService.downloadAsExcel(this.assessments, 'applicants-selected');
+  }
+
+
+   downloadAsPdf(){
+    const columns: string[] = ['Serial_Number', 'Job_Title', 'Department', 'Date_Time', 'Applicants', 'Interviewers'];
+    const rows =  this.assessments.map((elem, index) => {
+      return [
+        index > 8 ? `${index + 1}` : `0${index + 1}`,
+        `${elem.jobTitle}`,
+        `${elem.departmentName}`,
+        `${this.sharedService.covertDateToHumanFreiendlyFormat(elem.dateTime, 'medium')}`,
+        `${elem.applicants}`,
+        `${elem.interviewers!.length}`,
+      ]
+    })
+    var doc =  new jsPDF('landscape', 'mm', [320, 320]);
+    const options:UserOptions = {
+      head: [columns],
+      body: rows,
+      headStyles: {
+        fillColor: '#F4F7FF',
+        textColor: 'black'
+      }
+    }
+    autoTable(doc, options);
+    doc.save('applicants_selected.pdf');
+    }
  
 
 }

@@ -8,7 +8,7 @@
        <app-nav-bar></app-nav-bar>
      </ng-container>
 <!-- close_up_big_side_bar -->
-     <div class="wrapper_around_sidebar_components " [ngClass]="{'close_up_big_side_bar': reduceSideBar}">
+     <div class="wrapper_around_sidebar_components " [ngClass]="{'close_up_big_side_bar': broadCast.reducedSideBar$ | async }">
         <div class="side_bar">
             <app-side-bar></app-side-bar>
             <div (click)="toggleBigSideBar()" class="toggle_slide">

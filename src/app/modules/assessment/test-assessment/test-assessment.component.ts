@@ -3,7 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { id } from 'date-fns/locale';
 import { lastValueFrom, PartialObserver, Subscription } from 'rxjs';
 import { AnAssessment, AssessmentResponseDS, BatchedSchedule } from 'src/app/models/assessment.models';
-import { AnApplication, ApplicationApprovalStatus, ApprovalProcessStatuses, InformationForModal, PaginationMethodsForSelectionAndAssessments, RequiredApplicantDetails, RequiredQuarterFormat } from 'src/app/models/generalModels';
+import { AnApplication, ApplicationApprovalStatus, ApprovalProcessStatuses, DownloadAsExcelAndPdfData, InformationForModal, PaginationMethodsForSelectionAndAssessments, RequiredApplicantDetails, RequiredQuarterFormat } from 'src/app/models/generalModels';
 import { InterviewTypesWithNumber } from 'src/app/models/scheduleModels';
 import { AssessmentService } from 'src/app/services/assessment.service';
 import { BroadCastService } from 'src/app/services/broad-cast.service';
@@ -34,6 +34,7 @@ export class TestAssessmentComponent implements OnInit, PaginationMethodsForSele
  currentBatchInView!: BatchedSchedule;
  destroyObs!: Subscription;
  stopLoading: {stopLoading: boolean} = {stopLoading : false};
+ dataForExcelAndPdf!:DownloadAsExcelAndPdfData
   constructor(private sdm: SchedulerDateManipulationService,
     private pagination: PaginationService,
     private schedule: ScheduleService,
@@ -131,6 +132,7 @@ fetchASingleBatchOfTestApplicants(batch: BatchedSchedule, event?: Event, pageNum
         this.assessments = data;
         this.useCurrentPage = false;
         this.stopLoading = {stopLoading: false};
+        this.setDataForPdfAndExcel();
       },
       error: console.error
     }
@@ -203,7 +205,6 @@ fetchASingleBatchOfTestApplicants(batch: BatchedSchedule, event?: Event, pageNum
         this.isLoading = false;
         // this.assessments = data;
         // this.useCurrentPage = false;
-        console.log(val.data);
         this.stopLoading = {stopLoading: false};
         this.testBatches = val.data;
         this.current = 0;
@@ -234,6 +235,34 @@ fetchASingleBatchOfTestApplicants(batch: BatchedSchedule, event?: Event, pageNum
     }
     this.pagination.currentPage = pageNumber;
     this.getAssessments(1,pageNumber);
+  }
+
+  setDataForPdfAndExcel(){
+    const columns: string[] = this.view == 'Batch View' ? 
+    ['Serial_Number', 'Batch_Date', 'Test_Date', 'Invigilator', 'Applicants', 'Score_Record', 'Assessment', 'Audit_Approval'] : 
+    ['Serial_Number', 'Applicant_Name', 'Job_Title', 'Invigilator', 'Score', 'Assessment_Status'];
+    const rows = this.view == 'Batch View' ?  this.testBatches.map((elem, index) => {
+      return [
+        index > 8 ? `${index + 1}` : `0${index + 1}`,
+        `${ this.sharedService.covertDateToHumanFreiendlyFormat(elem.createdDate, 'medium')}`,
+        `${ this.sharedService.covertDateToHumanFreiendlyFormat(elem.testDate, 'medium')}`,
+        `${elem.invigilator}`,
+        `${elem.applicants}`,
+        `${elem.scoreSheet}`,
+        `${elem.assessmentStatus  }`,
+        `${elem.auditApproval  }`
+      ]
+    }) : this.assessments.map((element, index) => { 
+      return [
+      index > 8 ? `${index + 1}` : `0${index + 1}`,
+      `${element.applicantName}`,
+      `${element.position}`,
+      `${element.invigilator}`,
+      `${element.score}`,
+      `${element.assessmentStatus}`,
+    ]
+  });
+    this.dataForExcelAndPdf = {data: this.view == 'Batch View' ? this.testBatches : this.assessments, columns: columns, rows, fileName: 'Test Assessment'}
   }
 
   ngOnDestroy(): void {
