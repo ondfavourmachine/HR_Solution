@@ -16,6 +16,8 @@ import { ExternalCandidateDashboardComponent } from './external-candidate-dashbo
 import { RoleComponent } from './pages/role/role.component';
 import { GlobalInterceptorInterceptor } from './services/global-interceptor.interceptor';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
+import { NgImageSliderModule } from 'ng-image-slider';
+
 
 
 @NgModule({
@@ -37,7 +39,8 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
     SharedModule,
     HttpClientModule,
     MatDialogModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    NgImageSliderModule,
   ],
   providers: [TitleCasePipe, DatePipe,  { 
     provide: HTTP_INTERCEPTORS, useClass: GlobalInterceptorInterceptor, multi:true
