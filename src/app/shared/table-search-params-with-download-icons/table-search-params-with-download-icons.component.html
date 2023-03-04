@@ -1,6 +1,6 @@
 <form class="form_parent applicant_search_params relative overflow-visible">   
-    <div class="relative input_container ">
-        <input #LocalSearch  type="text" id="job_search_secondary" class="" placeholder="Search by applicant name" required="">
+    <div class="relative input_container " [ngClass]="{'!hidden': hideSearch}">
+        <input #LocalSearch  type="text" id="job_search_secondary"  class=""  [placeholder]="placeHolderToUse ? 'Search by '+ placeHolderToUse : 'Search by applicant name'" required="">
         <div class="svg_container">
           <svg aria-hidden="true" class="w-7 h-7 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z">

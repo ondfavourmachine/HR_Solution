@@ -28,9 +28,9 @@ export class ExternalApplicantService {
     if(email) {
       return this.http.get<BaseResponse<T>>(`${urlToUse}${environment.externalApplicationApis.applicantJobs}`, {params});
     }
-    let token = sessionStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.get<BaseResponse<T>>(`${urlToUse}${environment.externalApplicationApis.applicantJobs}`, {headers});
+    // let token = sessionStorage.getItem('token');
+    // const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<BaseResponse<T>>(`${urlToUse}${environment.externalApplicationApis.applicantJobs}`);
     
   }
 
@@ -45,20 +45,20 @@ export class ExternalApplicantService {
   }
 
   candidateAcceptanceOrRejection(req: { applicationRef: string,status: string, createdBy: any}){
-    const token = sessionStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.post<BaseResponse<TestDetails>>(`${this.external_url}${environment.externalApplicationApis.acceptOrRejectOffer}`, req, {headers});
+    // const token = sessionStorage.getItem('token');
+    // const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.post<BaseResponse<TestDetails>>(`${this.external_url}${environment.externalApplicationApis.acceptOrRejectOffer}`, req);
   }
 
   addReferences(req: Partial<PostAcceptanceInfo>){
-    const token = sessionStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.post<BaseResponse<TestDetails>>(`${this.external_url}${environment.externalApplicationApis.addReferences}`, req, {headers});
+    // const token = sessionStorage.getItem('token');
+    // const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.post<BaseResponse<TestDetails>>(`${this.external_url}${environment.externalApplicationApis.addReferences}`, req);
   }
 
   addAcceptanceDocuments(req: Partial<PostAcceptanceInfo>){
-    const token = sessionStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    // const token = sessionStorage.getItem('token');
+    // const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     const formData= new FormData();
     formData.append('ApplicationRefNo', req.applicationRefNo as string)
     formData.append('Passport', req.passport as File);
@@ -69,7 +69,7 @@ export class ExternalApplicantService {
     formData.append('NameChange', req.nameChange instanceof File ? req.nameChange as File : 'N/A');
     formData.append('Masters',  req.masters instanceof File ? req.masters as File : 'N/A');
     formData.append('Marriage', req.masters instanceof File ? req.marriage as File: 'N/A')
-    return this.http.post<BaseResponse<TestDetails>>(`${this.external_url}${environment.externalApplicationApis.addDocumentsForAcceptance}`, formData, {headers});
+    return this.http.post<BaseResponse<TestDetails>>(`${this.external_url}${environment.externalApplicationApis.addDocumentsForAcceptance}`, formData);
   }
   
 }

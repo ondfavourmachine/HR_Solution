@@ -1,12 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { lastValueFrom } from 'rxjs';
 import { FullInterviewerDetailsAndInterviewResponse, NecessaryModalMethods } from 'src/app/models/applicant-selection.models';
-import { RatingsInformationOnAnApplicant } from 'src/app/models/assessment.models';
 import { AnApplication, ApprovalProcessStatuses, InformationForModal, PreviewActions } from 'src/app/models/generalModels';
 import { PreviewApplicationComponent } from 'src/app/pages/preview-application/preview-application.component';
-import { AssessmentService } from 'src/app/services/assessment.service';
-import { SharedService } from 'src/app/services/sharedServices';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-assessment-sheet',
@@ -36,7 +33,8 @@ export class AssessmentSheetComponent implements OnInit, NecessaryModalMethods {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: InformationForModal<AnApplication>,
     private matDialogRef: MatDialogRef<PreviewApplicationComponent>,
-    private sharedService: SharedService,
+    private authService: AuthService,
+    // private sharedService: SharedService,
   ) { }
 
   closeBtn(): void {
@@ -44,7 +42,7 @@ export class AssessmentSheetComponent implements OnInit, NecessaryModalMethods {
   }
 
   ngOnInit(): void {
-    this.role = this.sharedService.getRole();
+    this.role = this.authService.getRole();
     console.log(this.data.applicantData.interviewersSummary);
     this.getGradesByLoggedInUser();
   }

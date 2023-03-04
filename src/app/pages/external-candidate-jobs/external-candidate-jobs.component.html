@@ -74,7 +74,7 @@
       </div>
     </div>
 
-    <div [ngClass]="{'default': views == 'preview'}" class="preview_page external_job_view">
+    <div [ngClass]="{'default': views == 'preview'}" class="preview_page external_job_view laptop_view">
       <div class="body_content w-full ">
        <a (click)="views = 'jobs'"  class="history"><img src="../../../assets/images/go_back.svg" alt=""> Go back</a>
 
@@ -295,7 +295,7 @@
                    
                 </div>
 
-                <div class="form_fields_with_radios">
+                <div class="form_fields_with_radios laptop_view">
                    <label for="" class="important_content">Gender</label>
                    <div class="input_group_radio">                    
                     <input formControlName="gender" name="gender" value="Male" type="radio" class="an_input half" id="male" >
@@ -308,7 +308,22 @@
                   </div>
                 </div>
 
-                <div class="form_fields_with_radios">
+                <div class="form_fields_with_radios mobile_view">
+                  <label for="" class="important_content">Gender</label>
+                  <div class="wrapper">
+                    <div class="input_group_radio">                    
+                      <input formControlName="gender" name="gender" value="Male" type="radio" class="an_input half" id="male" >
+                      <label for="male">Male</label>
+                    </div>
+   
+                    <div class="input_group_radio">                    
+                      <input formControlName="gender" name="gender" value="Female" type="radio" class="an_input half" id="female">
+                      <label for="female">Female</label>
+                    </div>
+                  </div>
+               </div>
+
+                <div class="form_fields_with_radios laptop_view">
                   <label for="" class="important_content">Marital Status</label>
                   <div class="input_group_radio">  
                                    
@@ -326,6 +341,29 @@
                   <label for="divorced">Divorced</label>
                 </div>
                </div>
+
+               <div class="form_fields_with_radios mobile_view">
+                <label for="" class="important_content">Marital Status</label>
+                <div class="wrapper">
+                  <div class="input_group_radio">  
+                                 
+                    <input formControlName="maritalStatus" name="maritalStatus" value="Single" type="radio" class="an_input half" id="single" >
+                    <label for="single">Single</label>
+                   </div>
+   
+                  <div class="input_group_radio">                    
+                    <input formControlName="maritalStatus" name="maritalStatus" value="Married" type="radio" class="an_input half" id="married">
+                    <label for="married">Married</label>
+                  </div>
+   
+                  <div class="input_group_radio">                    
+                   <input formControlName="maritalStatus" name="maritalStatus" value="Divorced" type="radio" class="an_input half" id="divorced">
+                   <label for="divorced">Divorced</label>
+                 </div>
+                </div>
+             </div>
+
+               
 
 
                 <div class="form_fields">
@@ -632,6 +670,12 @@
           </li>
 
          </ul>
+       </aside>
+
+       <aside *ngIf="subView == 'preview' && views == 'preview'" class="floating_view mobile_view">
+        <button  (click)="subView = 'apply'" class="btn-red-custom cursor-pointer whitespace-nowrap !w-max !px-6">
+          Apply for this Job
+        </button>
        </aside>
       </div>
     </div>

@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { id } from 'date-fns/locale';
 import { lastValueFrom, PartialObserver, Subscription } from 'rxjs';
 import { AnAssessment, AssessmentResponseDS, BatchedSchedule } from 'src/app/models/assessment.models';
-import { AnApplication, ApplicationApprovalStatus, ApprovalProcessStatuses, DownloadAsExcelAndPdfData, InformationForModal, PaginationMethodsForSelectionAndAssessments, RequiredApplicantDetails, RequiredQuarterFormat } from 'src/app/models/generalModels';
+import { AnApplication, ApplicationApprovalStatus, DownloadAsExcelAndPdfData, InformationForModal, PaginationMethodsForSelectionAndAssessments, RequiredApplicantDetails, RequiredQuarterFormat, SearchParams } from 'src/app/models/generalModels';
 import { InterviewTypesWithNumber } from 'src/app/models/scheduleModels';
 import { AssessmentService } from 'src/app/services/assessment.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { BroadCastService } from 'src/app/services/broad-cast.service';
 import { PaginationService } from 'src/app/services/pagination.service';
 import { ScheduleService } from 'src/app/services/schedule.service';
@@ -25,22 +25,24 @@ export class TestAssessmentComponent implements OnInit, PaginationMethodsForSele
  quartersToUse: RequiredQuarterFormat[] = [];
  data!: InformationForModal<AnApplication & RequiredApplicantDetails>
  assessments: AnAssessment[] = [];
- noOfRecords: number = 0;
+ noOfRecords: number = 10;
  useCurrentPage: boolean = false;
  view: 'Batch View' | 'Single View' = 'Batch View';
  current: number = 0;
  showDropDown: boolean = false;
  testBatches: BatchedSchedule[] = [];
  currentBatchInView!: BatchedSchedule;
- destroyObs!: Subscription;
+ destroyObs: Subscription[]=[];
  stopLoading: {stopLoading: boolean} = {stopLoading : false};
- dataForExcelAndPdf!:DownloadAsExcelAndPdfData
+ dataForExcelAndPdf!:DownloadAsExcelAndPdfData;
+ hideSearch = true;
   constructor(private sdm: SchedulerDateManipulationService,
     private pagination: PaginationService,
     private schedule: ScheduleService,
     private broadCastService: BroadCastService,
     private sharedService: SharedService,
-    private dialog: MatDialog, private assessmentService: AssessmentService ) 
+    private authService: AuthService,
+    private dialog: MatDialog, private broadCast: BroadCastService, private assessmentService: AssessmentService ) 
     { 
       this.getAssessments = this.getAssessments.bind(this);
       this.fetchASingleBatchOfTestApplicants = this.fetchASingleBatchOfTestApplicants.bind(this);
@@ -53,15 +55,26 @@ export class TestAssessmentComponent implements OnInit, PaginationMethodsForSele
     this.quartersToUse = this.sdm.presentQuartersInHumanReadableFormat(res); 
     this.getAssessments();
     this.getTestBatches();
-    this.destroyObs = this.broadCastService.changeInViewSubject$.subscribe(
+    this.destroyObs[0] = this.broadCastService.changeInViewSubject$.subscribe(
       {next: val => val == null ? null : this.view = val}
     )
+
+    this.destroyObs[1] = this.broadCast.search$.subscribe(val =>{
+      if(val != null && typeof val == 'object' && val.StartDate != '' && val.EndDate != ''){
+        this.isLoading = true;
+        this.view == 'Batch View' ? this.getTestBatches(InterviewTypesWithNumber.Test_Invite, this.pagination.currentPage, this.noOfRecords, val):
+        this.getAssessments(InterviewTypesWithNumber.Test_Invite, this.pagination.currentPage, this.noOfRecords, val);
+      }
+      else if(val == 'reload'){
+        this.useCurrentPage = true;
+        this.getAssessments();
+      } 
+    })
   }
 
-  // get FunctionToUse(): Function{
-  //   let functionToUse: Function;
-  //   this.view == 'Batch View' ? functionToUse = this.getTestBatches : functionToUse = 
-  // }
+  get functionToUse(){
+    return this.view == 'Batch View' ? this.getTestBatches : this.getAssessments;
+  }
 
   toggleDropDown(index: number){
     this.current = index
@@ -118,7 +131,7 @@ fetchASingleBatchOfTestApplicants(batch: BatchedSchedule, event?: Event, pageNum
 }
 
 
-  getAssessments(applicationStage?: InterviewTypesWithNumber, pageNumber?: number, noOfRecord?: number){
+  getAssessments(applicationStage?: InterviewTypesWithNumber, pageNumber?: number, noOfRecord?: number, SearchParams?: Partial<SearchParams>){
     this.isLoading = true;
     const pObs: PartialObserver<AssessmentResponseDS<AnAssessment[]>> = {
       next: ({ data, totalRecords, pageSize }) => {
@@ -157,7 +170,7 @@ fetchASingleBatchOfTestApplicants(batch: BatchedSchedule, event?: Event, pageNum
   }
 
   triggerAuditApprovalComponent(batch: BatchedSchedule){
-    if(this.sharedService.getRole() == ('HRAdmin' || 'Approver')) {
+    if(this.authService.getRole() == ('HRAdmin' || 'Approver')) {
       this.sharedService.errorSnackBar('Only user with audit role is allowed to approve');
       return;
     }
@@ -190,7 +203,7 @@ fetchASingleBatchOfTestApplicants(batch: BatchedSchedule, event?: Event, pageNum
    )
   }
 
-  getTestBatches(applicationStage?: InterviewTypesWithNumber, pageNumber?: number, noOfRecord?: number){
+  getTestBatches(applicationStage?: InterviewTypesWithNumber, pageNumber?: number, noOfRecord?: number, val?:Partial<SearchParams>){
     this.isLoading = true;
     const pObs: PartialObserver<AssessmentResponseDS<BatchedSchedule[]>> = {
       next: (val) => {
@@ -198,7 +211,7 @@ fetchASingleBatchOfTestApplicants(batch: BatchedSchedule, event?: Event, pageNum
 
         // this.pagination.paginationData.size > 0 && this.pagination.paginationData.get(1)!.length > 0 ? this.pagination.updatePaginationData = true : this.pagination.updatePaginationData = false;
         // this.pagination.calculatePagination<AnAssessment>(data, totalRecords);
-        // this.pagination.generatePagesForView();
+        // this.pagination.generatePagesForView()
         // this.isLoading = false;
         // this.noOfRecords = pageSize;
         // this.assessments = this.pagination.getAPageOfPaginatedData<AnAssessment>();
@@ -212,7 +225,7 @@ fetchASingleBatchOfTestApplicants(batch: BatchedSchedule, event?: Event, pageNum
       },
       error: console.error
     }
-    this.assessmentService.getAllTestBatches<BatchedSchedule[]>({ ApplicationStage: InterviewTypesWithNumber.Test_Invite, PageNumber: pageNumber ? pageNumber.toString() : this.useCurrentPage ? this.pagination.currentPage.toString() : '1', PageSize: noOfRecord ? noOfRecord.toString() : '10'}).subscribe(pObs)
+    this.assessmentService.getAllTestBatches<BatchedSchedule[]>({ ApplicationStage: InterviewTypesWithNumber.Test_Invite, PageNumber: pageNumber ? pageNumber.toString() : this.useCurrentPage ? this.pagination.currentPage.toString() : '1', PageSize: noOfRecord ? noOfRecord.toString() : '10', ...val}).subscribe(pObs)
   }
 
   loadNextSetOfPages() {
@@ -266,7 +279,9 @@ fetchASingleBatchOfTestApplicants(batch: BatchedSchedule, event?: Event, pageNum
   }
 
   ngOnDestroy(): void {
-    this.destroyObs ? this.destroyObs.unsubscribe() : null;
+    this.destroyObs.length > 0 ? this.destroyObs.forEach(elem => elem.unsubscribe()) : null;
+    this.pagination.clearPaginationStuff();
+    this.broadCast.broadCastSearchInformation(null);
   }
 
 }

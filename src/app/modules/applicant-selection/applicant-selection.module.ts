@@ -1,4 +1,4 @@
-import { Component, NgModule } from '@angular/core';
+import {  NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApplicantSelectionComponent } from '../../pages/applicant-selection/applicant-selection.component';
 import { RouterModule, Routes } from '@angular/router';

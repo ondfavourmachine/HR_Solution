@@ -2,10 +2,11 @@
     <div class="search_bar__container">
         <app-table-search-params-with-download-icons
                 [quartersToUse]="quartersToUse"
-                [callBackForLoadingData]="getTestBatches"
+                [callBackForLoadingData]="functionToUse"
                 [stopLoading]="stopLoading"
+                [hideSearch]="true"
                  ></app-table-search-params-with-download-icons>
-        <div class="download_icons">
+         <div class="download_icons">
                     <app-download-icons
                      [dataToUse]="dataForExcelAndPdf"
                     ></app-download-icons>

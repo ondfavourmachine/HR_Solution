@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { PartialObserver } from 'rxjs';
-import { AnAssessment, AssessmentDetails, AssessmentResponseDS } from 'src/app/models/assessment.models';
-import { RequiredQuarterFormat } from 'src/app/models/generalModels';
+import { AssessmentDetails, AssessmentResponseDS } from 'src/app/models/assessment.models';
+import { RequiredQuarterFormat, SearchParams } from 'src/app/models/generalModels';
 import { InterviewTypesWithNumber } from 'src/app/models/scheduleModels';
 import { AssessmentService } from 'src/app/services/assessment.service';
 import { SchedulerDateManipulationService } from 'src/app/services/scheduler-date-manipulation.service';
@@ -11,6 +11,9 @@ import { InterviewAssessmentDetailsComponent } from 'src/app/shared/interview-as
 import {  jsPDF } from "jspdf";
 import autoTable from 'jspdf-autotable';
 import {UserOptions} from 'jspdf-autotable';
+import { Subscription } from 'rxjs';
+import { BroadCastService } from 'src/app/services/broad-cast.service';
+import { PaginationService } from 'src/app/services/pagination.service';
 
 @Component({
   selector: 'app-interview-assessment',
@@ -22,10 +25,16 @@ export class InterviewAssessmentComponent implements OnInit {
   assessments!: AssessmentDetails[];
   quartersToUse: RequiredQuarterFormat[] = [];
   stopLoading: {stopLoading: boolean} = {stopLoading : false};
+  hideSearch: boolean=true;
+  destroyObs: Subscription[] = [];
+  useCurrentPage: boolean = false;
+  noOfRecords: number = 10;
   constructor(
      private sdm: SchedulerDateManipulationService,
      private assessmentService: AssessmentService,
      private sharedService:SharedService,
+     private pagination: PaginationService,
+     private broadCast: BroadCastService,
      private dialog: MatDialog) {
       this.getAssessments = this.getAssessments.bind(this);
       }
@@ -34,9 +43,20 @@ export class InterviewAssessmentComponent implements OnInit {
     const res = this.sdm.generateQuartersOfCurrentYear();
     this.quartersToUse = this.sdm.presentQuartersInHumanReadableFormat(res); 
     this.getAssessments();
+
+    this.destroyObs[1] = this.broadCast.search$.subscribe(val =>{
+      if(val != null && typeof val == 'object'){
+        this.isLoading = true;
+        this.getAssessments(InterviewTypesWithNumber.Test_Invite, this.pagination.currentPage, this.noOfRecords, val);
+      }
+      else if(val == 'reload'){
+        this.useCurrentPage = true;
+        this.getAssessments();
+      } 
+    })
   }
 
-  getAssessments(){
+  getAssessments(applicationStage?: InterviewTypesWithNumber, pageNumber?: number, noOfRecord?: number, SearchParams?: Partial<SearchParams>){
     this.isLoading = true;
     const pObs: PartialObserver<AssessmentResponseDS<AssessmentDetails[]>> = {
       next: ({ data }) => {
@@ -46,7 +66,7 @@ export class InterviewAssessmentComponent implements OnInit {
       },
       error: console.error
     }
-    this.assessmentService.getAssesmentsByParameters<AssessmentDetails[]>({ ApplicationStage: InterviewTypesWithNumber.Interview_Invite, PageNumber: '1', PageSize: '20' }).subscribe(pObs)
+    this.assessmentService.getAssesmentsByParameters<AssessmentDetails[]>({ ApplicationStage: InterviewTypesWithNumber.Interview_Invite, PageNumber: pageNumber ? pageNumber.toString() : this.useCurrentPage ? this.pagination.currentPage.toString() : '1', PageSize: noOfRecord ? noOfRecord.toString() : '10', ...SearchParams}).subscribe(pObs)
   }
 
   
@@ -99,4 +119,9 @@ export class InterviewAssessmentComponent implements OnInit {
     }
  
 
+    ngOnDestroy(): void {
+      this.destroyObs ? this.destroyObs.forEach(elem => elem.unsubscribe()) : null;
+      this.broadCast.broadCastSearchInformation(null);
+      this.pagination.clearPaginationStuff();
+    }
 }

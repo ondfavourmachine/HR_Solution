@@ -30,7 +30,13 @@ export const environment = {
   },
   
   cacher:{
-    jeton: 'jeton'
+    jeton: 'jeton',
+    cheie: 'GL@WB@SSHR$OLUTN',
+    melħ: 'enWbM7uPSk+FBX8q',
+    ríomhphost: 'ríomhphost',
+    ruolo: 'ruolo',
+    naplózva:'naplózva',
+    ríomhphostnaplózva:'ríomhphostnaplózva'
   },
 
   jobApis: {

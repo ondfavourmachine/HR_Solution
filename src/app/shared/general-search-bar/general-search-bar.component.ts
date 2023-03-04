@@ -1,3 +1,4 @@
+import { AfterViewInit, QueryList, ViewChildren } from '@angular/core';
 import { Component, OnInit, Input, ChangeDetectionStrategy, Output, OnChanges, EventEmitter, SimpleChanges, ElementRef, ViewChild } from '@angular/core';
 import { debounceTime, defer, distinctUntilChanged, fromEvent, tap } from 'rxjs';
 // import { PartialObserver } from 'rxjs';
@@ -13,13 +14,15 @@ import { SharedService } from 'src/app/services/sharedServices';
   styleUrls: ['./general-search-bar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GeneralSearchBarComponent implements OnInit, OnChanges {
+export class GeneralSearchBarComponent implements OnInit, OnChanges, AfterViewInit {
   @Input()quartersToUse!: RequiredQuarterFormat[];
   selectedQuarter!: number;
   @Input()states: GeneralLookUp[] | undefined;
   @Input()agesToUse!: number[];
+  @Input()barsToHide: string[] = [];
   @Output() emitChangeEventsOnSearchParams = new EventEmitter<any>();
   @ViewChild('generalInputSearch', {read: ElementRef, static: true}) generalInputSearch!: ElementRef<HTMLInputElement>
+  @ViewChildren("expendableSearchParams", {read: ElementRef}) expendableSearchParams!: QueryList<ElementRef>
   jobTitle!: string;
   searchParams: Partial<SearchParams> = {
     JobCategory: JobCategories.INTERNAL,
@@ -44,25 +47,47 @@ export class GeneralSearchBarComponent implements OnInit, OnChanges {
     defer(() => fromEvent<InputEvent, HTMLInputElement>(this.generalInputSearch.nativeElement, 'input', (event: Event)=> (event.target as HTMLInputElement) )
     .pipe(
       debounceTime(1000)))
-    .subscribe({next: this.handleTextFromInput, error: console.error})
-    
+    .subscribe({next: this.handleTextFromInput, error: console.error})  
+  }
+
+  ngAfterViewInit(): void {
+    this.barsToHide.length > 0 && this.barsToHide.forEach(elem => {
+      this.expendableSearchParams.forEach(element => {
+        const {classList} = element.nativeElement as HTMLElement;
+        if(classList.contains(elem)) (element.nativeElement as HTMLElement).classList.add('!hidden');
+      });
+    })
   }
 
   handleSelection(){
-    this.handleTextFromInput(this.generalInputSearch.nativeElement);
+    const obj = this.gatherInformationForBroadCast();
+    this.generalInputSearch.nativeElement.value != '' ? obj['JobTitle'] = this.generalInputSearch.nativeElement.value: null;
+    if(this.barsToHide.length > 0 ) {
+      delete obj['ClassOfDegree'];
+      delete obj['Age'];
+    }
+    this.broadCastService.broadCastSearchInformation(obj);
   }
 
   handleTextFromInput(input: HTMLInputElement){
-    if(input.value.length < 1){
+    if (input.value.length < 1){
       this.broadCastService.broadCastSearchInformation('reload');
       return;
     }
+    const obj = this.gatherInformationForBroadCast();
+    obj['JobTitle'] = input.value;
+    if(this.barsToHide.length > 0 ) {
+      delete obj['ClassOfDegree'];
+      delete obj['Age'];
+    }
+    this.broadCastService.broadCastSearchInformation(obj);
+  }
+  gatherInformationForBroadCast(): Partial<SearchParams>{
     const obj = structuredClone(this.searchParams);
     const q =obj.Quarter == 'First' ? 1 : obj.Quarter == 'Second' ? 2 : obj.Quarter == 'Third' ? 3 : 4;
     obj.Quarter = q;
     obj.State == '' ? obj.State = '25' : null;
-    obj['JobTitle'] = input.value;
-    this.broadCastService.broadCastSearchInformation(obj);
+    return obj
   }
 
     

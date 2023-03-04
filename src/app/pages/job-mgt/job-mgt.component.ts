@@ -4,6 +4,7 @@ import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dial
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { lastValueFrom, throwError } from 'rxjs';
 import { AGlobusBranch, AJob, ApplicationApprovalStatus, ApprovalProcessStatuses, DepartmentsInGlobus, InformationForApprovalModal, JobCategories, JobDraft, JobStatus, JobToBeCreated, JobType, otherRelevantData, PreviewJobDS, tabs, Views, WhoIsViewing } from 'src/app/models/generalModels';
+import { AuthService } from 'src/app/services/auth.service';
 import { JobsService } from 'src/app/services/jobs.service';
 import { SharedService } from 'src/app/services/sharedServices';
 import { ApprovalModalComponent } from 'src/app/shared/approval-modal/approval-modal.component';
@@ -55,13 +56,13 @@ export class JobMgtComponent implements OnInit, OnDestroy {
   redirectUrl!:string | null;
   jobIdFromExternalComp!: any;
   constructor(private dialog: MatDialog, private route: Router, private activatedRoute: ActivatedRoute,
-     public sharedService: SharedService, private jobservice: JobsService) { 
+     public sharedService: SharedService, private jobservice: JobsService, private authService: AuthService,) { 
     this.refresh = this.refresh.bind(this);
     this.handleInstructionToPreviewJobFromExternalComponent = this.handleInstructionToPreviewJobFromExternalComponent.bind(this);
   }
 
   ngOnInit(): void {
-    this.roleOfUser = this.sharedService.getRole();
+    this.roleOfUser = this.authService.getRole();
     console.log(this.roleOfUser)
     this.relevantData = {category: JobCategories.INTERNAL, whoIsViewing: WhoIsViewing.OTHERPERSONS};
     this.getBranchLocationsInGlobus()

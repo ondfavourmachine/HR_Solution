@@ -26,61 +26,61 @@ export class AssessmentService {
   }
 
   addApplicantTest(req: { applicationRef: string,score: number,status: string,comment?: string}){
-    const token = sessionStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    // const token = this.authService.retrieveItemStoredInCache(envir);
+    // const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     const url = `${environment.baseUrl}${environment.assessment.addApplicationTest}`
-    return this.http.post<any>(url, req, {headers});
+    return this.http.post<any>(url, req);
   }
 
   approveTestScore(req: {applicationRefNo: string, status: ApplicationApprovalStatus,comment: string}){
-    const token = sessionStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    // const token = sessionStorage.getItem('token');
+    // const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     const url = `${environment.baseUrl}${environment.assessment.approveTestScore}`
-    return this.http.post<any>(url, req, {headers});
+    return this.http.post<any>(url, req);
   }
 
   uploadATestScore(req: {SchRef: string, scoreSheet: File}){
     const formData= new FormData();
     formData.append('SchRef', req.SchRef);
     formData.append('ScoreSheet', req.scoreSheet)
-    const token = sessionStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    // const token = sessionStorage.getItem('token');
+    // const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     const url = `${environment.baseUrl}${environment.assessment.uploadATestScore}`
-    return this.http.post<any>(url, formData, {headers});
+    return this.http.post<any>(url, formData);
   }
 
   addInterviewChairDetails(req: Partial<RequiredDetailsFromInterviewChair>){
-    const token = sessionStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    // const token = sessionStorage.getItem('token');
+    // const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     const url = `${environment.baseUrl}${environment.assessment.addInterviewChairDetailsForAnInterview}`
-    return this.http.post<any>(url, req, {headers});
+    return this.http.post<any>(url, req);
   }
 
   addRatingForAnApplicantDuringInterview(req: Partial<RatingsInformationOnAnApplicant>){
-    const token = sessionStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    // const token = sessionStorage.getItem('token');
+    // const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     const url = `${environment.baseUrl}${environment.assessment.addInterviewerRatingsForAnApplicant}`
-    return this.http.post<any>(url, req, {headers});
+    return this.http.post<any>(url, req);
   }
 
   calculateScore(req: Partial<RatingsInformationOnAnApplicant>): Observable<number>{
-    const token = sessionStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    // const token = sessionStorage.getItem('token');
+    // const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     const url = `${environment.baseUrl}${environment.assessment.calculateScore}`
-    return this.http.post<any>(url, req, {headers});
+    return this.http.post<any>(url, req);
   }
 
   getInterviewersGradingForAnApplicant(req: {mail: string,scheduleRef: string,applicationRef: string}): Observable<RatingsInformationOnAnApplicant>{
-    const token = sessionStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    // const token = sessionStorage.getItem('token');
+    // const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     const url = `${environment.baseUrl}${environment.assessment.getGradesByAnInterviewer}`
-    return this.http.post<any>(url, req, {headers});
+    return this.http.post<any>(url, req);
   }
 
   getAllTestBatches<T>(searchParams: Partial<SearchParams>): Observable<AssessmentResponseDS<T>>{
     const params: HttpParams = Object.keys(searchParams).reduce((prev, curr) => prev.set(curr, (searchParams as SearchParams)[curr as keyof SearchParams]), new HttpParams());
     const url = `${environment.baseUrl}${environment.assessment.getTestBatches}`
-    return this.http.get<AssessmentResponseDS<T>>(url);
+    return this.http.get<AssessmentResponseDS<T>>(url, {params});
   }
 
   fetchASingleBatch<T>(searchParams: Partial<SearchParams> & {scheduleRef: string}): Observable<AssessmentResponseDS<T>>{

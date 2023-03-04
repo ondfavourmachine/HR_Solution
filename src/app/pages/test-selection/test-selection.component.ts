@@ -6,6 +6,7 @@ import { PartialObserver, Subscription } from 'rxjs';
 import { ApplicantSelectionStatistics, ApplicantsSelectionResponse, SelectionMethods, SpecialCandidate } from 'src/app/models/applicant-selection.models';
 import { AnApplication, ApplicationApprovalStatus, DownloadAsExcelAndPdfData, InformationForApprovalModal, InformationForModal, PaginationMethodsForSelectionAndAssessments, PreviewActions, RequiredQuarterFormat } from 'src/app/models/generalModels';
 import { ApplicantSelectionService } from 'src/app/services/applicant-selection.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { BroadCastService } from 'src/app/services/broad-cast.service';
 import { PaginationService } from 'src/app/services/pagination.service';
 import { SchedulerDateManipulationService } from 'src/app/services/scheduler-date-manipulation.service';
@@ -38,7 +39,8 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
      private dialog: MatDialog,
      private activatedRoute: ActivatedRoute,
      public pagination: PaginationService,
-     public sharedService: SharedService
+     public sharedService: SharedService,
+     private authService: AuthService,
      ) { 
       this.handleApplicantsFromServer = this.handleApplicantsFromServer.bind(this);
       this.triggerApprovalModalForAcceptingApplicant = this.triggerApprovalModalForAcceptingApplicant.bind(this);
@@ -51,7 +53,7 @@ export class TestSelectionComponent implements OnInit, SelectionMethods, Paginat
       const res = this.sdm.generateQuartersOfCurrentYear();
       this.quartersToUse = this.sdm.presentQuartersInHumanReadableFormat(res); 
       this.getApplicantsForSelection();   
-      this.role = this.sharedService.getRole() as string;
+      this.role = this.authService.getRole() as string;
       // refactor this with a base class that this test selection class will extend;
       this.destroyObs[0] = this.broadCast.search$.subscribe(val =>{
         if(val != null && typeof val == 'object'){

@@ -1,7 +1,8 @@
 
-    <form class="form_parent applicant_search_params">   
-      <div class="relative input_container ">
-          <input  #generalInputSearch [(ngModel)]="jobTitle" name="title"  type="search" id="job_search" class="" placeholder="Search by Job name" required="">
+    <form  class="form_parent applicant_search_params">   
+      <div class="relative input_container name_jobTitle">
+          <input  #generalInputSearch [(ngModel)]="jobTitle"
+             name="title"  type="search" id="job_search" class="" placeholder="Search by Job name" required="">
           <div class="svg_container  ">
             <svg aria-hidden="true" class="w-10 h-10 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z">
@@ -9,7 +10,7 @@
             </svg>
         </div>
       </div>
-        <div class="relative select_container">
+        <div class="relative select_container states">
           <select [(ngModel)]="searchParams.State" name="branch" (ngModelChange)="handleSelection()"  class="width-80">
             <option selected="">All Location</option>
             <option [value]="state.id" *ngFor="let state of states">
@@ -19,7 +20,7 @@
 
         </div>
 
-        <div class="relative select_container">
+        <div class="relative select_container job_category">
           <select [(ngModel)]="searchParams.JobCategory" name="category" (ngModelChange)="handleSelection()" class="width-80">
             <option selected="">All Job Category</option>
             <option [value]="cat" *ngFor="let cat of sharedService.convertJobCategoryToArray()">
@@ -29,7 +30,7 @@
 
         </div>
 
-        <div class="relative select_container">
+        <div class="relative select_container classOfDegree" #expendableSearchParams>
             <select [(ngModel)]="searchParams.ClassOfDegree" name="classOfDegree" (ngModelChange)="handleSelection()"  class="width-80">
               <option selected="">Class of Degree</option>
               <option [value]="classOfDegree" *ngFor="let classOfDegree of sharedService.convertClassOfDegreeToArray()">
@@ -38,14 +39,14 @@
             </select>
           </div>
 
-          <div class="relative select_container">
+          <div class="relative select_container age" #expendableSearchParams>
             <select [(ngModel)]="searchParams.Age" name="age" (ngModelChange)="handleSelection()" class="width-80">
               <option selected="">Select Age</option>
               <option [value]="age" *ngFor="let age of agesToUse; index as i"> {{ age }} </option>
             </select>
           </div>
 
-          <div class="relative select_container">
+          <div class="relative select_container quarter">
             <select  [(ngModel)]="searchParams.Quarter" name="selectedQuarter" (ngModelChange)="handleSelection()" id="" class="width-80">
               <option selected>Choose a Quarter</option>
                 <option [value]="quarter?.humanNameForQuarter" *ngFor="let quarter of quartersToUse; index as i">

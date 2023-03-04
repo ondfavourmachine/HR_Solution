@@ -22,10 +22,10 @@ export class ApplicantSelectionService {
   }
 
   selectAnApplicant(req: ApprovalRequestBody): Observable<BaseResponse>{
-    const token = sessionStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    // const token = sessionStorage.getItem('token');
+    // const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     const url = `${environment.baseUrl}${environment.applicationSelection.approveAnApplication}`;
-    return this.http.post<BaseResponse>(url, req, {headers});
+    return this.http.post<BaseResponse>(url, req);
   }
 
 

@@ -1,12 +1,11 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { lastValueFrom, Observable } from 'rxjs';
 import { timeout } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
-import { AuthResponse, BaseResponse, GeneratedToken, Role, StaffDetailsFromAd } from '../models/generalModels';
-import { SharedService } from './sharedServices';
+import {  BaseResponse, GeneratedToken, Role, StaffDetailsFromAd } from '../models/generalModels';
 
 @Injectable({
   providedIn: 'root'
@@ -15,17 +14,26 @@ export class AuthService {
   auth_url = `${environment.baseUrl}${environment.authUrl.login}`;
   constructor(
     private http: HttpClient,
-    private sharedService: SharedService,
     private router: Router
   ) { }
 
+  saveItemInCache(itemLocation: string, item: any): void{
+    const keyname = window.btoa(itemLocation);
+    const itemEnq = window.btoa(item);
+    sessionStorage.setItem(keyname, itemEnq);
+   }
+
+   retrieveItemStoredInCache(keyname: string): string{
+    const res =sessionStorage.getItem(window.btoa(keyname)) as string;
+    return window.atob(res);
+   }
   shouldAllowAccessToRoute(): boolean{
-    const t = this.sharedService.getItemFromCache(environment.cacher.jeton);
+    const t = this.retrieveItemStoredInCache(environment.cacher.jeton);
     return t != null ;
   }
  
-  authenticateUser(req: {username: string, password: string}):Observable<AuthResponse>{
-    return this.http.post<AuthResponse>(this.auth_url, req)
+  authenticateUser(req: {LoginText: string}):Observable<{loginResult: string}>{
+    return this.http.post<{loginResult: string}>(this.auth_url, req)
     .pipe(timeout(100000))
   }
 
@@ -33,6 +41,14 @@ export class AuthService {
     const url = environment.baseUrl + 'Role/GetRoles';
     return this.http.get<BaseResponse<Role>>(url)
     .pipe(timeout(100000))
+  }
+
+  getRole(): string {
+    return this.retrieveItemStoredInCache(environment.cacher.ruolo) as string;
+  }
+
+  getEmailOfLoggedInUser(): string {
+    return this.retrieveItemStoredInCache(environment.cacher.ríomhphost) as string;
   }
 
   searchForGlobusStaffByUserName(name: string): Observable<BaseResponse<StaffDetailsFromAd>>{
@@ -48,10 +64,10 @@ export class AuthService {
   }
 
   addStaffToHrSolution(req: { lookUpCode: string,lookUpEmail: string, lookUpName: string}){
-    const token = sessionStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    // const token = this.retrieveItemStoredInCache(environment.cacher.jeton);
+    // const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     const url = environment.baseUrl + `LookUp/AddLookUp`;
-    return this.http.post<BaseResponse>(url, req, {headers})
+    return this.http.post<BaseResponse>(url, req)
     .pipe(timeout(100000))
   }
 
@@ -62,20 +78,12 @@ export class AuthService {
     .pipe(timeout(100000))
   }
 
-//   createRole(req:{username: string, role: string}): Observable<GenericResponse<null>>{
-//     const url = `${environment.general_url}Auth/AddUser`
-//     return this.http.post<GenericResponse<null>>(url, req);
-//   }
-//   set setUserAccessRole(value: RoleInTPP){
-//     this.loggedInUserAccessRight = value;
-//   }
-
-//   get userIsApprover(): RoleInTPP | null{
-//     if(!this.loggedInUserAccessRight){
-//       return null;
-//     }
-//     return this.loggedInUserAccessRight;
-//   } 
-
+  async clearSession(){
+    const u = this.retrieveItemStoredInCache(environment.cacher.ríomhphost);
+    const url  = environment.baseUrl + 'Authenticate/LogOut';
+    const params = new HttpParams().set('Email', u as string);
+    await lastValueFrom(this.http.post<any>(url, {}, {params}));
+    sessionStorage.clear();
+  }
 
 }

@@ -18,6 +18,7 @@ import {  jsPDF } from "jspdf";
 import autoTable from 'jspdf-autotable';
 import {UserOptions} from 'jspdf-autotable';
 import { ActivatedRoute } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 // import { AssessmentSheetComponent } from 'src/app/shared/assessment-sheet/assessment-sheet.component';
 
 
@@ -47,6 +48,7 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
     private activatedRoute: ActivatedRoute,
     private applicationSelectionService: ApplicantSelectionService,
     private broadCast: BroadCastService,
+    private authService: AuthService,
     private sdm: SchedulerDateManipulationService,
     public pagination: PaginationService
     ) {
@@ -62,7 +64,7 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
     this.quartersToUse = this.sdm.presentQuartersInHumanReadableFormat(res);    
     this.getApplicantsForSelection();
     this.getGlobusBranchLocations();
-    this.role = this.sharedService.getRole() as string;
+    this.role = this.authService.getRole() as string;
     this.destroyObs[0] = this.broadCast.search$.subscribe(val =>{
       if(val != null && typeof val == 'object'){
         this.isLoading = true;
@@ -216,17 +218,6 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
       data
     }
      this.dialog.open(PreviewApplicationComponent, config);
-
-
-    // this.applicantAboutToBeAccepted = applicant;
-    // const data: InformationForModal<AnApplication> = { 
-    //   applicantData: applicant, extraInfo: {applicantSelectionScreen: true, interviewForm: false, callBack : this.triggerApprovalModalForAcceptingApplicant}}
-    // const config: MatDialogConfig = {
-    //   panelClass: 'preview_application',
-    //   width: '54vw',
-    //   height: '60vh',
-    // }
-    //  const dialogRef = this.dialog.open(AssessmentSheetComponent, config);  
   }
 
   loadNextSetOfPages(){
@@ -265,35 +256,7 @@ export class ApplicantSelectionComponent implements OnInit, SelectionMethods,Pag
     if (applicant.hR_Status == 'Rejected' && applicant.approverStatus == 'Approve') return 'Rejected';
     else return 'Pending';
   }
-  // downloadExcel(){
-  //   this.sharedService.downloadAsExcel(this.applicantsToBeSelected, 'applicants-selected');
-  // }
-
-  // downloadAsPdf(){
-  //   const columns: string[] = ['Serial_Number', 'Applicant_Name', 'Email', 'Age', 'Job_Title', 'Course', 'Date_Applied'];
-  //   const rows =  this.applicantsToBeSelected.map((elem, index) => {
-  //     return [
-  //       index > 8 ? `${index + 1}` : `0${index + 1}`,
-  //       `${elem.firstName} ${elem.middleName} ${elem.lastName}`,
-  //       `${elem.email}`,
-  //       `${elem.age.toString()}`,
-  //       `${elem.jobTitle || elem?.position}`,
-  //       `${elem.courseofStudy}`,
-  //       `${this.sharedService.covertDateToHumanFreiendlyFormat(elem.dateApplied, 'medium')}`
-  //     ]
-  //   })
-  // var doc =  new jsPDF('landscape', 'mm', [320, 320]);
-  // const options:UserOptions = {
-  //   head: [columns],
-  //   body: rows,
-  //   headStyles: {
-  //     fillColor: '#F4F7FF',
-  //     textColor: 'black'
-  //   }
-  // }
-  // autoTable(doc, options);
-  // doc.save('applicants_selected.pdf');
-  // }
+  
 
   setDataForPdfAndExcel(){
     const columns: string[] = ['Serial_Number', 'Applicant_Name', 'Email', 'Age', 'Job_Title', 'Course', 'Date_Applied'];

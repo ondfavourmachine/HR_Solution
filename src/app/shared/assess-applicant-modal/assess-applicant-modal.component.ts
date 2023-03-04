@@ -6,6 +6,7 @@ import { InformationForApprovingAnAssessment,  RatingsInformationOnAnApplicant, 
 import { AnApplication, mimeTypes, ApplicationApprovalStatus, ApprovalProcessStatuses, InformationForModal, PreviewActions, RequiredApplicantDetails } from 'src/app/models/generalModels';
 import { InterviewTypesWithNumber } from 'src/app/models/scheduleModels';
 import { AssessmentService } from 'src/app/services/assessment.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { SharedService } from 'src/app/services/sharedServices';
 import { InterviewApprovalComponent } from '../interview-approval/interview-approval.component';
 import { InterviewAssessmentDetailsComponent } from '../interview-assessment-details/interview-assessment-details.component';
@@ -60,7 +61,7 @@ export class AssessApplicantModalComponent implements OnInit {
   loggedInUserHasntGradedApplicant: boolean = false;
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: InformationForModal<AnApplication & RequiredApplicantDetails>,
-    public sharedService: SharedService, private assessment: AssessmentService, 
+    public sharedService: SharedService, private assessment: AssessmentService, private authService : AuthService,
      private dialog: MatDialog, private dialogRef: MatDialogRef<InterviewAssessmentDetailsComponent>,
   ) {
     
@@ -68,8 +69,8 @@ export class AssessApplicantModalComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this.data)
-    this.role = this.sharedService.getRole();
-    this.email = this.sharedService.getEmailOfLoggedInUser();
+    this.role = this.authService.getRole();
+    this.email = this.authService.getEmailOfLoggedInUser();
     if(this.disableInput){
       this.interviewChairDetails = {
         ...this.data.applicantData.chairPersonInfo as unknown as RequiredDetailsFromInterviewChair

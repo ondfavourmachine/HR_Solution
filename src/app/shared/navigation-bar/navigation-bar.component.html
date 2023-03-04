@@ -1,4 +1,4 @@
-<header class="header_wrapper" *ngIf="!showApplicantNavigation">
+<header class="header_wrapper laptop_view" *ngIf="!showApplicantNavigation">
     <nav class="header_content_container">
         <a href="" class="globus_logo">
             <img src="../../../assets/images/globus_logo_with_text.svg" alt="Globus Logo with Text">
@@ -12,7 +12,26 @@
     </nav>
 </header>
 
-<header class="header_wrapper applied_job_header" *ngIf="showApplicantNavigation">
+<header class="header_wrapper mobile_view" [ngClass]="{'elongate': elongate}">
+    <nav class="header_content_container" [ngClass]="{}">
+        <a href="" class="globus_logo">
+            <img src="../../../assets/images/mobile_globus_logo.svg" alt="Globus Logo with Text">
+        </a>
+        <div (click)="toggleHeader()" tabindex="0" class="button_wrapper">
+             <span>
+                <img src="../../../assets/images/harmburger.svg" alt="">
+             </span>
+         </div>
+    </nav>
+    <div class="action_buttons" [ngClass]="{'!z-10 !bottom-2 !opacity-100': elongate}">
+        <a routerLink="/login" class="generic_button track_application white_inside">
+            Track Your Application
+        </a>
+        <a [routerLink]="['jobs', 'External']" class=" generic_button join_tribe red_inside">Join Our Team</a>
+    </div>
+</header>
+
+<header class="header_wrapper laptop_view applied_job_header" *ngIf="showApplicantNavigation">
     <nav class="header_content_container">
         <a href="" class="globus_logo">
             <img src="../../../assets/images/globus_logo_with_text.svg" alt="Globus Logo with Text">

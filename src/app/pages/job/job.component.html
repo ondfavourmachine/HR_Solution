@@ -2,12 +2,16 @@
     <div class="job_title">
       <span> {{ AnApprovedJob?.position }} </span>
       <span>  {{ AnApprovedJob?.departmentName }} </span>
+      <a class="mobile_view"> {{ AnApprovedJob?.locationName}} </a>
     </div>
 
     <div class="job_location">
       <span> {{ AnApprovedJob?.locationName}} </span>
       <span> {{ AnApprovedJob?.grade}} </span>
       <span>{{ AnApprovedJob?.category}}</span>
+      <a  class="mobile_view">
+        {{ AnApprovedJob?.departmentName }}
+      </a>
     </div>
 
     <div class="job_dead_line">

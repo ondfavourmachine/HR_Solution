@@ -25,10 +25,10 @@ export class ScheduleService {
   }
 
   createSchedule(schedule: Partial<ASchedule>): Observable<BaseResponse<any>>{
-    const token = sessionStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    // const token = sessionStorage.getItem('token');
+    // const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     const url = `${environment.baseUrl}${environment.schedule.createASchedule}`
-    return this.http.post<BaseResponse<any>>(url, schedule, {headers});
+    return this.http.post<BaseResponse<any>>(url, schedule);
   }
 
   getSchedules(startOfWeek: string, endOfWeek: string, inviteType?: InterviewTypes): Observable<GetScheduleResponse>{
@@ -44,9 +44,9 @@ export class ScheduleService {
     status: number,
     comment: string
   }): Observable<BaseResponse<any>>{
-    const token = sessionStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    // const token = sessionStorage.getItem('token');
+    // const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     const url = `${environment.baseUrl}${environment.schedule.approveSchedule}`
-    return this.http.post<BaseResponse<any>>(url, req, {headers});
+    return this.http.post<BaseResponse<any>>(url, req);
   }
 }

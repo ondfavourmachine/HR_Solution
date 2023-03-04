@@ -12,12 +12,14 @@
 
     <div class="w-full my-3" *ngIf="showBackButton">
         <a (click)="goBackToBatchView()" 
-          class="transition-all cursor-pointer inline-flex gap-3  hover:px-3 hover:py-2 hover:border hover:border-hrms-read-notification hover:rounded-xl pl-2"><img src="../../../assets/images/go_back.svg" alt=""> Go back</a>
+          class="transition-all cursor-pointer inline-flex gap-3  hover:px-3 hover:py-2 hover:border hover:border-hrms-read-notification hover:rounded-xl pl-2">
+          <img src="../../../assets/images/go_back.svg" alt=""> Go back</a>
      </div>
 
-    <section class="search_bar">
+    <section class="search_bar" [ngClass]="{'!hidden': hideTopSearchBars}">
         <div class="search_bar__container"> 
             <app-general-search-bar
+             [barsToHide]="searchBarsTohide"
              [quartersToUse]="quartersToUse"
              [agesToUse]="agesToUse"
              [states]="(states$ | async)?.result"

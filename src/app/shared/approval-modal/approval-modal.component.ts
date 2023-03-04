@@ -5,6 +5,8 @@ import { SpecialCandidate } from 'src/app/models/applicant-selection.models';
 import { InformationForApprovalModal, PreviewActions } from 'src/app/models/generalModels';
 // import { ApplicantSelectionComponent } from 'src/app/pages/applicant-selection/applicant-selection.component';
 import { DashboardComponent } from 'src/app/pages/dashboard/dashboard.component';
+import { AuthService } from 'src/app/services/auth.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-approval-modal',
@@ -18,11 +20,11 @@ export class ApprovalModalComponent implements OnInit {
   roleOfLoggedInUser!: string
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: InformationForApprovalModal<string, string, Function>,
-    private dailog: MatDialogRef<DashboardComponent>) { }
+    private dailog: MatDialogRef<DashboardComponent>, private authService:AuthService) { }
 
   ngOnInit(): void {
     console.log(this.data);
-    this.roleOfLoggedInUser = sessionStorage.getItem('role') as string;
+    this.roleOfLoggedInUser = this.authService.retrieveItemStoredInCache(environment.cacher.ruolo) as string;
   }
 
 

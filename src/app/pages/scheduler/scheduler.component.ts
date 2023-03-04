@@ -5,6 +5,7 @@ import { FormTypesForJobApplication, tabs, WeekDayNameAndTheirCorrespondingNumbe
 import { ASchedule, CreateInviteDS, ScheduleDay, ScheduleSummaryStats, ScheduleSummaryTypes, StageOfCreation } from 'src/app/models/scheduleModels';
 import { ScheduleSwitching } from 'src/app/modules/schedule-master/base-schedule-switcher';
 import { CreateScheduleComponent } from 'src/app/modules/schedule-master/create-schedule/create-schedule.component';
+import { AuthService } from 'src/app/services/auth.service';
 import { ScheduleService } from 'src/app/services/schedule.service';
 import { SchedulerDateManipulationService } from 'src/app/services/scheduler-date-manipulation.service';
 import { SharedService } from 'src/app/services/sharedServices';
@@ -34,6 +35,7 @@ export class SchedulerComponent extends ScheduleSwitching implements OnInit {
  }
   constructor(
     private sharedService: SharedService,
+    private authService: AuthService,
     public override dialog: MatDialog,
     private scheduleService: ScheduleService,
     private sdm: SchedulerDateManipulationService
@@ -52,7 +54,7 @@ export class SchedulerComponent extends ScheduleSwitching implements OnInit {
     this.setUpDaysOfWeekAsHeadersOfScheduler(this.daysOfCurrentWeek);
     this.getMatrixOfScheduler();
     this.fillUpCalendarMonths();  
-    this.role = this.sharedService.getRole();
+    this.role = this.authService.getRole();
   }
 
   handleChangeOfTab(event: string){}

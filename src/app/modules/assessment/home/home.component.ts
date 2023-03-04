@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Observable, PartialObserver, Subscription } from 'rxjs';
 import { AGlobusBranch, BaseResponse, GeneralLookUp, RequiredQuarterFormat, tabs } from 'src/app/models/generalModels';
 import { BroadCastService } from 'src/app/services/broad-cast.service';
+import { LookUpService } from 'src/app/services/look-up.service';
 import { SchedulerDateManipulationService } from 'src/app/services/scheduler-date-manipulation.service';
 import { SharedService } from 'src/app/services/sharedServices';
 
@@ -18,9 +19,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   quartersToUse: RequiredQuarterFormat[] = [];
   destroyObs!: Subscription;
   showBackButton!: boolean;
+  hideTopSearchBars: boolean = true;
+  searchBarsTohide: string[] = ['age', 'classOfDegree'];
   constructor(
     private sdm: SchedulerDateManipulationService, 
     private router: Router,
+    private lookUpService: LookUpService,
     private broadCastService: BroadCastService,
     private sharedService: SharedService) { }
 
@@ -28,6 +32,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     const res = this.sdm.generateQuartersOfCurrentYear();
     this.quartersToUse = this.sdm.presentQuartersInHumanReadableFormat(res); 
     this.agesToUse = this.sharedService.generateAges();
+    this.states$ = this.lookUpService.getStates();
     this.destroyObs = this.broadCastService.changeInViewSubject$.subscribe({next: val => val == 'Single View' ? this.showBackButton = true : this.showBackButton = false,})
   }
 
@@ -48,9 +53,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     console.log(event);
     switch(event){
       case 'Interview Assessments':
+      this.hideTopSearchBars = false;
       this.router.navigateByUrl('dashboard/assessment/all/interview-assessments');
       break;
       default:
+      this.hideTopSearchBars = true;
       this.router.navigateByUrl('dashboard/assessment/all/test-assessments');
     }
   }

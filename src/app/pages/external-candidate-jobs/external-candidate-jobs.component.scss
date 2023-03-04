@@ -1,11 +1,34 @@
+// .main.laptop_view{
+//     @apply block;
+// }
 
+// .main.mobile_view{
+//     @apply hidden;
+// }
+
+// @media (width <= 768px) {
+//     .main.laptop_view{
+//         @apply hidden;
+//     }
+
+//     .main.mobile_view{
+//         @apply block;
+//     }
+// }
 
 .jobs_wrapper .jobs_section .jobs.plenty{
-    grid-template-columns: repeat(auto-fit, minmax(28vw, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(30vw, 1fr));
+
+    @media(width <= 1024px){
+        grid-template-columns: repeat(auto-fit, minmax(35vw, 1fr));
+    }
+
+    @media(width <=768px){
+        grid-template-columns: repeat(auto-fit, minmax(85vw, 1fr));
+    }
 }
 
 .jobs_wrapper .jobs_section .jobs.one{
-    // grid-template-columns: repeat(auto-fit, minmax(26vw, 1fr));
     grid-template-columns: 45%
 }
 
@@ -14,7 +37,7 @@
 
 
     & .warning{
-        font-size: .875em;
+        font-size: var(--step--1);
         @apply flex gap-4 font-hrmsCamptonExtraLight;
     }
 
@@ -101,7 +124,6 @@
 .form_fields.hide_field{
     opacity: 0 !important;
     height: 0px !important;
-    // display: none;
 } 
 
 
@@ -109,5 +131,27 @@
         @apply w-auto #{!important};
 }
 
+
+@media(63.5em > width){
+    .jobs_wrapper{
+        @apply px-6;
+    }
+}
+
+.main.main.mobile_view{
+    @apply px-4;
+    & .content_wrapper{
+        @apply w-full mt-[7.25rem];
+
+        & .navigation_to_go_back{
+            @apply transition-all cursor-pointer inline-flex gap-3  hover:px-3 hover:py-2 hover:border hover:border-hrms-read-notification hover:rounded-xl pl-2;
+        }
+
+        & .warning{
+            font-size: var(--step-1);
+            @apply flex mt-3 gap-3;
+        }
+    }
+}
 
 

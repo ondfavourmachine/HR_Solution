@@ -34,8 +34,8 @@ export class LoginComponent implements OnInit {
   }
 
   handleExternalJobApplicantSignIn(response: AuthResponse){
-    sessionStorage.setItem('emailOfLoggedInUser', response?.email as string);
-    this.router.navigate(['external-applicant', `${response?.email}`]);
+    this.authservice.saveItemInCache(environment.cacher.ríomhphostnaplózva, response?.Email as string);
+    this.router.navigate(['external-applicant', `${response?.Email}`]);
   }
 
 
@@ -50,35 +50,46 @@ export class LoginComponent implements OnInit {
     const prevText = btn.textContent;
     this.sharedService.loading4button(btn, 'yes', 'Signing you in. Please wait...');
     const {value} = this.loginForm;
-    const pObs: PartialObserver<AuthResponse> = {
+    const e = this.sharedService.EncryptData(JSON.stringify(value));
+    const pObs: PartialObserver<{loginResult: string}> = {
       next: (val) => {
-          if(!val.hasError){
-                  const keyname = window.btoa(environment.cacher.jeton);
-                  this.sharedService.successSnackBar(`Welcome ${this.titleCasePipe.transform((value.username as string).toString())}`, 'close');
-                  this.sharedService.loading4button(btn, 'done', prevText as string);
-                  this.sharedService.saveItemInCache(environment.cacher.jeton, val.token);
-                  sessionStorage.setItem('loggedInUser', val.fullName);
-                  sessionStorage.setItem('role', val.role);
-                  sessionStorage.setItem('email', this.loginForm.get('username')?.value);
-                  const {username }= this.loginForm.value;
-                  const isAStaff = /@globusbank.com$/gi.test(username);
-                  if(isAStaff){
-                    this.gotoDashboard();
-                    return;
-                  }  
-                  this.handleExternalJobApplicantSignIn(val);
-                  return;
-                }
-                this.sharedService.loading4button(btn, 'done', prevText as string);
-                this.sharedService.errorSnackBar(`${val.message}`, 'close');
+          let d : string | AuthResponse = this.sharedService.DecryptData(val.loginResult) as string;
+          try {
+            d = JSON.parse(d) as AuthResponse;
+            if(!d.HasError){
+              this.sharedService.successSnackBar(`Welcome ${this.titleCasePipe.transform((value.username as string).toString())}`, 'close');
+              this.sharedService.loading4button(btn, 'done', prevText as string);
+              this.authservice.saveItemInCache(environment.cacher.jeton, d.Token);
+              this.authservice.saveItemInCache(environment.cacher.ríomhphost, this.loginForm.get('username')?.value);
+              // sessionStorage.setItem('loggedInUser', d.fullName);
+              // sessionStorage.setItem('role', d.role);
+              this.authservice.saveItemInCache(environment.cacher.ruolo, d.Role);
+              this.authservice.saveItemInCache(environment.cacher.naplózva, d.FullName);
+              // sessionStorage.setItem('email', this.loginForm.get('username')?.value);
+              const { username }= this.loginForm.value;
+              const isAStaff = /@globusbank.com$/gi.test(username);
+              if(isAStaff){
+                this.gotoDashboard();
+                return;
+              }  
+              this.handleExternalJobApplicantSignIn(d);
+              return;
+            }
+            this.sharedService.loading4button(btn, 'done', prevText as string);
+            this.sharedService.errorSnackBar(`${d.message}`, 'close');
+          } catch (error) {
+            this.sharedService.loading4button(btn, 'done', prevText as string);
+            this.sharedService.errorSnackBar(`Unable to login at this moment`, 'close');
+          }
+          
       },
       error: (err) => {
-        console.log(err);
+      console.log(err);
       this.sharedService.loading4button(btn, 'done', prevText as string);
       this.sharedService.errorSnackBar(`Wrong Username or password.`, 'close');
       }
     }
-    this.authservice.authenticateUser(value)
+    this.authservice.authenticateUser({LoginText: e})
     .subscribe(pObs);
   }
 

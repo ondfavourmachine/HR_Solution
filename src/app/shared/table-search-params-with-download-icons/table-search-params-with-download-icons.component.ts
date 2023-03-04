@@ -18,6 +18,8 @@ export class TableSearchParamsWithDownloadIconsComponent implements OnInit, OnCh
   @Input()quartersToUse!: RequiredQuarterFormat[];
   @Input('stopLoading')stopLoading!: {stopLoading: boolean}
   @Input()callBackForLoadingData!: Function | [Function, Function];
+  @Input()hideSearch: boolean = false;
+  @Input()placeHolderToUse!: string
   range!: FormGroup;
   minDate!: Date;
   maxDate!: Date;
@@ -25,6 +27,7 @@ export class TableSearchParamsWithDownloadIconsComponent implements OnInit, OnCh
   @ViewChild('LocalSearch', {read: ElementRef, static: true}) LocalSearch!: ElementRef<HTMLInputElement>
   constructor(private sdm: SchedulerDateManipulationService, private sharedService: SharedService, private pagination: PaginationService, private broadCastService: BroadCastService) {
     this.handleTextFromInput = this.handleTextFromInput.bind(this);
+    this.handleOnlyDateSearch = this.handleOnlyDateSearch.bind(this);
    }
 
    ngOnChanges(){}
@@ -37,14 +40,22 @@ export class TableSearchParamsWithDownloadIconsComponent implements OnInit, OnCh
       start: new FormControl<Date | null>(this.minDate),
       end: new FormControl<Date | null>(this.maxDate),
     });
-    this.range.valueChanges.subscribe(console.log);
+    this.range.valueChanges
+    .pipe(
+      tap(event => {
+        event.start instanceof Date && event.end instanceof Date ? null: this.broadCastService.broadCastSearchInformation(null);
+      }),
+      debounceTime(1500),
+    )
+    .subscribe({next: this.handleOnlyDateSearch, error: console.error});
 
     defer(() => fromEvent<InputEvent, HTMLInputElement>(this.LocalSearch.nativeElement, 'input', (event: Event)=> (event.target as HTMLInputElement) )
     .pipe(
       tap(event => {
         if(event.value.length < 1) this.broadCastService.broadCastSearchInformation(null);
       }),
-      debounceTime(1000)))
+      debounceTime(1000)
+      ))
     .subscribe({next: this.handleTextFromInput, error: console.error})
   }
 
@@ -59,6 +70,15 @@ export class TableSearchParamsWithDownloadIconsComponent implements OnInit, OnCh
 
   triggerCalendarOfDatePicker(){
     this.picker.open();
+  }
+
+  handleOnlyDateSearch(event: {start: Date, end: Date}){
+    const obj: Partial<SearchParams> = {
+      StartDate: event.start instanceof Date ? (event.start as Date).toISOString().split('T')[0] : '',
+      EndDate: event.end instanceof Date ? (event.end as Date).toISOString().split('T')[0] : '',
+    }
+    console.log(obj)
+    this.broadCastService.broadCastSearchInformation(obj);
   }
 
   handleTextFromInput(event: HTMLInputElement | MouseEvent){

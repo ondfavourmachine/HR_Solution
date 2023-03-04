@@ -6,6 +6,7 @@ import { NecessaryModalMethods } from 'src/app/models/applicant-selection.models
 import { InformationForApprovingAnAssessment } from 'src/app/models/assessment.models';
 import { ASchedule, InterviewTypesWithNumber, ScheduleApprovalNum, StageOfCreation } from 'src/app/models/scheduleModels';
 import { ScheduleSwitching } from 'src/app/modules/schedule-master/base-schedule-switcher';
+import { AuthService } from 'src/app/services/auth.service';
 import { ScheduleService } from 'src/app/services/schedule.service';
 import { SharedService } from 'src/app/services/sharedServices';
 // import { AnIndividualScheduleComponent } from 'src/app/shared/an-individual-schedule/an-individual-schedule.component';
@@ -24,13 +25,14 @@ appropriateDateTimeToDisplay!:string
        @Inject(MAT_DIALOG_DATA) public data: Partial<ASchedule>,  
        private scheduleService: ScheduleService,
        private sharedService: SharedService,
+       private authService: AuthService,
        private datePipe: DatePipe,
        private dialog:MatDialog,
        private dialogRef: MatDialogRef<ScheduleSwitching>) { }
 
   ngOnInit(): void {
     this.modifyDateForDisplay();
-    this.role = this.sharedService.getRole();
+    this.role = this.authService.getRole();
   }
 
   closeBtn(){

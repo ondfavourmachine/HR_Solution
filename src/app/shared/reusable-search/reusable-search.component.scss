@@ -9,3 +9,36 @@
         @apply h-40 flex items-end;
     }
 }
+
+@media(63.5em > width){
+
+    .search_bar {
+        @apply px-6 h-auto #{!important};
+
+        &.sticky_bar{
+            position: relative !important;
+        }
+
+        &__container .form_parent{
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, auto);
+            gap: 1rem;
+
+            & .input_container{
+                grid-column: span 2;
+                grid-row: span 1;
+            }
+
+            & .select_container{
+                grid-column: span 1;
+                grid-row: 2/3;
+
+                & label{
+                    @apply hidden;
+                }
+            }
+        }
+    }
+
+}   

@@ -1,7 +1,7 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { PartialObserver } from 'rxjs';
+import { PartialObserver, Subscription } from 'rxjs';
 import { ApplicantSelectionStatistics, ApplicantsSelectionResponse, SelectionMethods } from 'src/app/models/applicant-selection.models';
 import { AnApplication, PreviewActions, ApplicationApprovalStatus, RequiredQuarterFormat, InformationForModal, InformationForApprovalModal, PaginationMethodsForSelectionAndAssessments } from 'src/app/models/generalModels';
 import { ApplicantSelectionService } from 'src/app/services/applicant-selection.service';
@@ -26,7 +26,7 @@ export class PostAcceptanceSelectionComponent implements OnInit, SelectionMethod
   noOfRecords: number = 0;
   useCurrentPage: boolean = false;
   stopLoading: {stopLoading: boolean} = {stopLoading : false};
-
+  destroyObs!: Subscription;
   constructor(
     private applicationSelectionService: ApplicantSelectionService, 
     private broadCast: BroadCastService,
@@ -44,7 +44,21 @@ export class PostAcceptanceSelectionComponent implements OnInit, SelectionMethod
     const res = this.sdm.generateQuartersOfCurrentYear();
     this.quartersToUse = this.sdm.presentQuartersInHumanReadableFormat(res); 
     this.getApplicantsForSelection();
+ // for search
+    this.destroyObs = this.broadCast.search$.subscribe(val =>{
+      if(val != null && typeof val == 'object'){
+        this.isLoading = true;
+       const pObs: PartialObserver<ApplicantsSelectionResponse> = {
+        next: this.handleApplicantsFromServer,
+        error: (err) => console.log(err)
+      }
+        this.applicationSelectionService.getApplicants({...val, ApplicationStage: 7, PageNumber: this.pagination.currentPage.toString(), PageSize: this.noOfRecords.toString()})
+        .subscribe(pObs)
+      }
+      else if(val == 'reload')this.getApplicantsForSelection() 
+    })
   }
+  
   getApplicantsForSelection(ApplicationStage?: number, pageNumber?: number, noOfRecord?: number): void {
     this.isLoading = true;
     const pObs: PartialObserver<ApplicantsSelectionResponse> = {
@@ -154,5 +168,6 @@ export class PostAcceptanceSelectionComponent implements OnInit, SelectionMethod
 
   ngOnDestroy(): void {
     this.pagination.clearPaginationStuff();
+    this.destroyObs ? this.destroyObs.unsubscribe() : null;
   }
 }

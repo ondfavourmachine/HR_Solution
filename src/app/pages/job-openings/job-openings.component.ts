@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { tap, map, Observable, of, lastValueFrom } from 'rxjs';
 import { AGlobusBranch, AJob, JobCategories, PreviewJobDS, tabs, Views } from 'src/app/models/generalModels';
+import { AuthService } from 'src/app/services/auth.service';
 import { ExternalApplicantService } from 'src/app/services/external-applicant.service';
 import { JobsService } from 'src/app/services/jobs.service';
 import { SharedService } from 'src/app/services/sharedServices';
@@ -26,10 +27,10 @@ export class JobOpeningsComponent implements OnInit {
   objForPreviewOfJob!: PreviewJobDS;
   locationsOfGlobus: AGlobusBranch[] = [];
   showTabs: boolean = false;
-  constructor(private jobService: JobsService,private sharedService: SharedService, private externalCandidateService: ExternalApplicantService) { }
+  constructor(private jobService: JobsService, private authService: AuthService,private sharedService: SharedService, private externalCandidateService: ExternalApplicantService) { }
 
   ngOnInit(): void {
-    this.applicantEmail = this.sharedService.getEmailOfLoggedInUser();
+    this.applicantEmail = this.authService.getEmailOfLoggedInUser();
     this.getApprovedJobs();
     this.getBranchLocationsInGlobus();
   }

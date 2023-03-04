@@ -16,7 +16,8 @@ import { ExternalCandidateDashboardComponent } from './external-candidate-dashbo
 import { RoleComponent } from './pages/role/role.component';
 import { GlobalInterceptorInterceptor } from './services/global-interceptor.interceptor';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
-import { NgImageSliderModule } from 'ng-image-slider';
+import { SlickCarouselModule } from 'ngx-slick-carousel';
+import { UserIdleModule } from 'angular-user-idle';
 
 
 
@@ -35,12 +36,13 @@ import { NgImageSliderModule } from 'ng-image-slider';
     BrowserModule,
     AppRoutingModule,
     MatSnackBarModule,
+    SlickCarouselModule,
     ReactiveFormsModule,
     SharedModule,
     HttpClientModule,
     MatDialogModule,
     BrowserAnimationsModule,
-    NgImageSliderModule,
+    UserIdleModule.forRoot({idle: 180, timeout: 180, ping: 100})
   ],
   providers: [TitleCasePipe, DatePipe,  { 
     provide: HTTP_INTERCEPTORS, useClass: GlobalInterceptorInterceptor, multi:true

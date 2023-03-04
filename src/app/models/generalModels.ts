@@ -143,13 +143,14 @@ export interface AGlobusBranch {
 
 
   export interface AuthResponse extends BaseResponse{
-  email?: string
-  token: string
-  info: null | string,
-  expiration: string,
-  fullName: string
-  message: string
-  role: string
+  Email?: string
+  Token: string
+  Info: null | string,
+  Expiration: string,
+  FullName: string
+  Message: string
+  Role: string,
+  HasError: boolean,
 
   }
 

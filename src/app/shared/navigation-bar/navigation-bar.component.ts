@@ -1,5 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
+import { SharedService } from 'src/app/services/sharedServices';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-navigation-bar',
@@ -11,18 +14,23 @@ export class NavigationBarComponent implements OnInit {
  showLogout: boolean = false;
  emailOfLoggedInUser!: string;
  loggedInUser!: string;
-  constructor(private router: Router) { }
+ elongate: boolean = false;
+  constructor(private router: Router, private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.loggedInUser = sessionStorage.getItem('loggedInUser') as string
-    this.emailOfLoggedInUser = sessionStorage.getItem('emailOfLoggedInUser') as string;
+    this.loggedInUser = this.authService.retrieveItemStoredInCache(environment.cacher.naplózva) as string
+    this.emailOfLoggedInUser = this.authService.retrieveItemStoredInCache(environment.cacher.ríomhphostnaplózva) as string;
   }
 
-  logout(){
-    sessionStorage.clear();
-    this.router.navigate(['']);
-  }
+  async logout(){
+    await this.authService.clearSession();
+     this.router.navigate(['/login']);
+   }
 
+
+  toggleHeader(){
+    this.elongate = !this.elongate
+  }
   
 
 }

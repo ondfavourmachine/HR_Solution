@@ -3,6 +3,7 @@ import {  Component, Inject, OnInit, } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FullInterviewerDetailsAndInterviewResponse } from 'src/app/models/applicant-selection.models';
 import { AnApplication, ApplicationApprovalStatus, ApprovalProcessStatuses, InformationForModal, PostAcceptanceInfo, PreviewActions, RequiredApplicantDetails } from 'src/app/models/generalModels';
+import { AuthService } from 'src/app/services/auth.service';
 import { SharedService } from 'src/app/services/sharedServices';
 import { AssessmentSheetComponent } from 'src/app/shared/assessment-sheet/assessment-sheet.component';
 import { ExternalCandidateJobsComponent } from '../external-candidate-jobs/external-candidate-jobs.component';
@@ -20,6 +21,7 @@ export class PreviewApplicationComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: InformationForModal<AnApplication & RequiredApplicantDetails & PostAcceptanceInfo>,
     private sharedService: SharedService,
+    private authService: AuthService,
     private dialog: MatDialog,
     private currencypipe:CurrencyPipe,
     private matDialogRef: MatDialogRef<ExternalCandidateJobsComponent>
@@ -31,7 +33,7 @@ export class PreviewApplicationComponent implements OnInit {
     if(Array.isArray(this.data.applicantData.certification)){
       this.data.applicantData.certification = this.data.applicantData.certification.map((elem: {certificate: string}) => elem.certificate ).join(' , ');
     }
-    this.role = this.sharedService.getRole();
+    this.role = this.authService.getRole();
   }
 
   edit(){

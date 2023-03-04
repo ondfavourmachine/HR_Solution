@@ -43,6 +43,7 @@ import { PreviewJobDetailsComponent } from '../../shared/preview-job-details/pre
 import { ApplyForJobByInternalStaffComponent } from '../../shared/apply-for-job-by-internal-staff/apply-for-job-by-internal-staff.component';
 import { TestAssessmentAuditApprovalComponent } from '../../shared/test-assessment-audit-approval/test-assessment-audit-approval.component';
 import { DownloadIconsComponent } from '../../shared/download-icons/download-icons.component';
+import { IdlePromptComponentComponent } from '../../shared/idle-prompt-component/idle-prompt-component.component';
 
 @NgModule({
   declarations: [
@@ -79,6 +80,7 @@ import { DownloadIconsComponent } from '../../shared/download-icons/download-ico
     ApplyForJobByInternalStaffComponent,
     TestAssessmentAuditApprovalComponent,
     DownloadIconsComponent,
+    IdlePromptComponentComponent,
 
   ],
   imports: [

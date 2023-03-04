@@ -2,7 +2,7 @@ import { ElementRef, Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http'
 import { environment } from 'src/environments/environment';
 import { AGlobusBranch, AnApplication, BaseResponse, ClassOfDegree, DepartmentsInGlobus, GRADES, InformationForApprovalModal, JobCategories, JobToBeCreated, JobToBeCreatedKeys, JobType, NYSCStrings, RolesInThisApp, UnitsInGlobus } from '../models/generalModels';
-import { Observable } from 'rxjs';
+import { lastValueFrom, Observable } from 'rxjs';
 import { MatSnackBarConfig, MatSnackBar } from '@angular/material/snack-bar';
 import { ages, convertToBytesToMB } from './small_reusable_functions';
 
@@ -12,6 +12,8 @@ import { InterviewSummaryComponent } from '../shared/interview-summary/interview
 import { saveAs  } from 'file-saver';
 import * as XLSX from 'xlsx';
 import { DatePipe } from '@angular/common';
+import {enc, mode , pad, AES} from 'crypto-js';
+// import { AuthService } from './auth.service';
 
 
 @Injectable({
@@ -19,6 +21,8 @@ import { DatePipe } from '@angular/common';
 })
 export class SharedService {
    private fileSizeLimit: number = 2;
+   susi = enc.Utf8.parse(environment.cacher.cheie);
+   asin = enc.Utf8.parse(environment.cacher.melħ);
    constructor(private http: HttpClient, private _snackBar:MatSnackBar, private dialog: MatDialog, private datePipe: DatePipe) {
     
    }
@@ -116,15 +120,12 @@ export class SharedService {
     } 
   }
 
-   saveItemInCache(itemLocation: string, item: any): void{
-    const keyname = window.btoa(itemLocation);
-    sessionStorage.setItem(keyname, item);
-   }
+   
 
-   getItemFromCache(itemLocation: string): any {
-    const keyname = window.btoa(itemLocation);
-    return sessionStorage.getItem(keyname);
-   }
+  //  getItemFromCache(itemLocation: string): any {
+  //   const keyname = window.btoa(itemLocation);
+  //   return sessionStorage.getItem(keyname);
+  //  }
    
   insertIntoAdjacentHtmlOfElement<T extends Element, K extends ElementRef<T>, S extends string>(
     obj: {element: K, content: S}[]
@@ -190,13 +191,6 @@ export class SharedService {
     return dialog;
   }
 
-  getRole(): string {
-    return sessionStorage.getItem('role') as string;
-  }
-
-  getEmailOfLoggedInUser(): string {
-    return sessionStorage.getItem('email') as string;
-  }
 
   generateAges(){
     return ages(20, 61).sort();
@@ -259,6 +253,30 @@ getClassToDisplay(applicant: AnApplication) : string{
   return 'Approved';
 }
 
+DecryptData(data: any): string | unknown {
+  try {
+   let plaintext = AES.decrypt(data, this.susi, {
+      iv: this.asin,
+      mode: mode.CBC,
+      padding: pad.Pkcs7
+    })
+    return enc.Utf8.stringify(plaintext);
+  }
+  catch (err) {
+    return err;
+  }
+}
+
+
+EncryptData(decryptedData: any): string {
+  let the_encrypted = AES.encrypt(decryptedData, this.susi,
+    {
+      iv: this.asin,
+      mode: mode.CBC,
+      padding: pad.Pkcs7
+    });
+  return the_encrypted.toString();
+}
 
   
   
