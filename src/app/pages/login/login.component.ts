@@ -76,7 +76,7 @@ export class LoginComponent implements OnInit {
               return;
             }
             this.sharedService.loading4button(btn, 'done', prevText as string);
-            this.sharedService.errorSnackBar(`${d.message}`, 'close');
+            this.sharedService.errorSnackBar(`${d.Message}`, 'close');
           } catch (error) {
             this.sharedService.loading4button(btn, 'done', prevText as string);
             this.sharedService.errorSnackBar(`Unable to login at this moment`, 'close');
