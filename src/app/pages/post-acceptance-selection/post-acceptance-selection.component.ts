@@ -3,7 +3,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { PartialObserver, Subscription } from 'rxjs';
 import { ApplicantSelectionStatistics, ApplicantsSelectionResponse, SelectionMethods } from 'src/app/models/applicant-selection.models';
-import { AnApplication, PreviewActions, ApplicationApprovalStatus, RequiredQuarterFormat, InformationForModal, InformationForApprovalModal, PaginationMethodsForSelectionAndAssessments } from 'src/app/models/generalModels';
+import { AnApplication, PreviewActions, ApplicationApprovalStatus, RequiredQuarterFormat, InformationForModal, InformationForApprovalModal, PaginationMethodsForSelectionAndAssessments, DownloadAsExcelAndPdfData } from 'src/app/models/generalModels';
 import { ApplicantSelectionService } from 'src/app/services/applicant-selection.service';
 import { BroadCastService } from 'src/app/services/broad-cast.service';
 import { PaginationService } from 'src/app/services/pagination.service';
@@ -27,6 +27,7 @@ export class PostAcceptanceSelectionComponent implements OnInit, SelectionMethod
   useCurrentPage: boolean = false;
   stopLoading: {stopLoading: boolean} = {stopLoading : false};
   destroyObs!: Subscription;
+  dataForExcelAndPdf!: DownloadAsExcelAndPdfData
   constructor(
     private applicationSelectionService: ApplicantSelectionService, 
     private broadCast: BroadCastService,
@@ -101,6 +102,7 @@ export class PostAcceptanceSelectionComponent implements OnInit, SelectionMethod
     this.applicantsToBeSelected = this.pagination.getAPageOfPaginatedData<AnApplication>();
     this.useCurrentPage = false;
     this.stopLoading = {stopLoading: false};
+    this.setDataForPdfAndExcel();
   }
   gotoApplicantView(applicant: AnApplication): void {
     const data: InformationForModal<AnApplication> = { 
@@ -162,8 +164,19 @@ export class PostAcceptanceSelectionComponent implements OnInit, SelectionMethod
     return applicant.applicationRefNo; // or item.id
   }
 
-  downloadExcel(){
-    this.sharedService.downloadAsExcel(this.applicantsToBeSelected, 'applicants-with-uploaded-docs');
+  setDataForPdfAndExcel(){
+    const columns: string[] = ['Serial_Number', 'Applicant_Name', 'Email', 'Invitation', 'PickUp_Status', 'Acceptance_status',];
+    const rows =  this.applicantsToBeSelected.map((elem, index) => {
+      return [
+        index > 8 ? `${index + 1}` : `0${index + 1}`,
+        `${elem.firstName} ${elem.middleName} ${elem.lastName}`,
+        `${elem.email}`,
+        `${elem.position}`,
+        `${elem.offerAcceptance}`,
+        `${elem.infoStatus}`,
+      ]
+    })
+    this.dataForExcelAndPdf = {data: this.applicantsToBeSelected, columns: columns, rows}
   }
 
   ngOnDestroy(): void {

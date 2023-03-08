@@ -7,7 +7,9 @@
              [stopLoading]="stopLoading"
              ></app-table-search-params-with-download-icons>
              <div class="download_icons">
-                <app-download-icons></app-download-icons>
+                <app-download-icons
+                 [dataToUse]="dataForExcelAndPdf"
+                ></app-download-icons>
             </div>
         </div>
     </div>

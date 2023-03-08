@@ -247,18 +247,16 @@
 
         <li class="">
           <p class="heading">
-            <span>Test Required</span> 
-            
+            <span>Test Required</span>   
           </p>
-          <p class="text">{{data?.job?.isTestRequired ? 'Yes' : 'No' }}</p>
+          <p class="text">{{(data?.job?.isTestRequired || data?.job?.testIsRequired) | titlecase }}</p>
         </li>
 
         <li class="">
           <p class="heading">
-            <span>Interview Required</span> 
-            
+            <span>Interview Required</span>  
           </p>
-          <p class="text">{{ data?.job?.isInterviewRequired ? 'Yes' : 'No' }}</p>
+          <p class="text">{{ (data?.job?.isInterviewRequired || data?.job?.interviewIsRequired) | titlecase }}</p>
         </li>
 
       </ul>
@@ -269,13 +267,6 @@
       class="btn-red-custom">
         {{ buttonText || 'Submit for Approval'}}
       </button>
-
-      <!-- <button 
-      (click)="sendJobForApproval($event)"
-      [ngClass]="{'!hidden': data?.job?.hasApplied == 1}"
-      class="btn-red-custom">
-        {{ buttonText || 'Submit for Approval'}}
-      </button> -->
     </aside>
    </div>
 </div>

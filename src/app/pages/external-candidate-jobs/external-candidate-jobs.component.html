@@ -288,8 +288,8 @@
                         class="error_text phone">Enter a valid Nigerian phone !! </small>
                     <div class="input_sub_group">   
                       <input [ngClass]="{'required': phone?.touched && phone?.errors}"  
-                        formControlName="phone" type="tel" class="an_input half" maxlength="11" placeholder="Primary">
-                      <input formControlName="secondaryPhone" type="tel" class="an_input half" placeholder="Secondary (Optional)">
+                        formControlName="phone" (keypress)="sharedService.numberOnly($event)" type="tel" class="an_input half" maxlength="11" placeholder="Primary">
+                      <input formControlName="secondaryPhone" (keypress)="sharedService.numberOnly($event)" type="tel" class="an_input half" placeholder="Secondary (Optional)">
                      </div>
                   </div>
                    
@@ -298,7 +298,7 @@
                 <div class="form_fields_with_radios laptop_view">
                    <label for="" class="important_content">Gender</label>
                    <div class="input_group_radio">                    
-                    <input formControlName="gender" name="gender" value="Male" type="radio" class="an_input half" id="male" >
+                    <input formControlName="gender"  name="gender" value="Male" type="radio" class="an_input half" id="male" >
                     <label for="male">Male</label>
                   </div>
 
@@ -361,10 +361,7 @@
                    <label for="divorced">Divorced</label>
                  </div>
                 </div>
-             </div>
-
-               
-
+               </div>
 
                 <div class="form_fields">
                   <label for="" class="important_content">Residential State</label>
@@ -424,9 +421,7 @@
                   <div class="form_fields">
                     <label for="degree" class="important_content">Degree</label>
                     <div class="input_group">                    
-                      <!-- <input formControlName="degree"  type="text" id="degree"
-                       class="an_input full" placeholder="First Degree"> -->
-
+                      
                        <select formControlName="degree" class="a_select full" id="degree">
                         <option value="" selected>Select a degree</option>
                         <option [value]="degree.description" *ngFor="let degree of degrees">
@@ -486,7 +481,7 @@
                     </div>
                   </div>
 
-                  <div class="form_fields_with_radios">
+                  <div class="form_fields_with_radios laptop_view">
                     <label for="" class="important_content">Completed NYSC</label>
                     <div class="input_group_radio">                    
                      <input value="Completed" 
@@ -514,6 +509,37 @@
                     <label for="exempted">Exempted</label>
                   </div>
                  </div>
+
+                 <div class="form_fields_with_radios mobile_view">
+                  <label for="" class="important_content">Completed NYSC</label>
+                  <div class="wrapper">
+                    <div class="input_group_radio">  
+                                   
+                      <input value="Completed" 
+                      formControlName="completedNYSC" 
+                      name="completedNYSC"
+                      type="radio" class="an_input half" id="completed" >
+                      <label for="single">Yes</label>
+                     </div>
+     
+                    <div class="input_group_radio">                    
+                      <input formControlName="completedNYSC"  
+                      name="completedNYSC" 
+                      value="InProgress" 
+                      type="radio" class="an_input half" id="in_progress">
+                      <label for="married">No</label>
+                    </div>
+     
+                    <div class="input_group_radio">                    
+                     <input formControlName="completedNYSC"  
+                     name="completedNYSC" 
+                     value="Exempted" 
+                     type="radio" class="an_input half" id="exempted">
+                     <label for="divorced">Exempted</label>
+                   </div>
+                  </div>
+               </div>
+                   
 
                     <!-- {{ completedNYSC?.value }} -->
                   <div class="form_fields" [ngClass]="{'disabled': completedNYSC?.value != 'Completed'}">
@@ -576,7 +602,7 @@
                       <span>Years of Experience</span>
                       <small>Optional</small>
                     </label>
-                    <div class="input_group ml-4">                    
+                    <div class="input_group lg:ml-4">                    
                       <input formControlName="yearsOfExperience" type="text" class="an_input full" placeholder="Example 2, 4, 10 etc.">
                     </div>
                   </div>
@@ -586,7 +612,7 @@
                       <span>Current Employer</span>
                       <small>Optional</small>
                     </label>
-                    <div class="input_group ml-4">                    
+                    <div class="input_group lg:ml-4">                    
                       <input formControlName="currentEmployer" type="text" class="an_input full" placeholder="Eg AbokiNetwork Inc.">
                     </div>
                   </div>

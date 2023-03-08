@@ -44,7 +44,7 @@
 }
 
 .input_sub_group, .input_group{
-    @apply overflow-visible;
+    @apply overflow-visible w-full flex gap-10;
 }
 
 .form_fields{
@@ -135,6 +135,13 @@
 @media(63.5em > width){
     .jobs_wrapper{
         @apply px-6;
+    }
+
+}
+
+@media (width > 768px) {
+    .form_fields_with_radios.mobile_view{
+        @apply hidden #{!important};
     }
 }
 

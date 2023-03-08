@@ -7,16 +7,16 @@ import {
   HttpResponse
 } from '@angular/common/http';
 import { Observable, Subscription, tap } from 'rxjs';
-import { SharedService } from './sharedServices';
 import { environment } from 'src/environments/environment';
 import { NavigationStart, Router } from '@angular/router';
 import { AuthService } from './auth.service';
+import { MatDialog } from '@angular/material/dialog';
 
 @Injectable()
 export class GlobalInterceptorInterceptor implements HttpInterceptor, OnDestroy {
   destroySubs!: Subscription;
   urlInApp: string= '';
-  constructor( private authService: AuthService, private router: Router) {
+  constructor( private authService: AuthService, private router: Router, private matdialog: MatDialog) {
     // this.destroySubs = router.events.subscribe(
     //   val => {
     //     if(val instanceof NavigationStart){
@@ -53,7 +53,7 @@ export class GlobalInterceptorInterceptor implements HttpInterceptor, OnDestroy 
 
   reRouteToLogin(){
     this.router.navigateByUrl('/login');
-    // sessionStorage.clear();
+    this.matdialog.closeAll();
   }
   ngOnDestroy(): void {
       this.destroySubs ? this.destroySubs.unsubscribe() : null;

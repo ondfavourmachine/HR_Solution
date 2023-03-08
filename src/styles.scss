@@ -1954,6 +1954,18 @@ input:focus, select:focus, textarea:focus {
                 @apply flex gap-4 items-center font-hrmsCamptonBook text-hrms-read-notification;
               }
            }
+
+           @media(width <= 768px){
+              @apply h-auto;
+              & .front_facing{
+                @apply w-full border-0 h-auto flex-col items-start flex gap-8;
+
+                & .choose_file{
+                    font-size: .715em;
+                    @apply border-dashed border-2 text-hrms-border-dull-blue font-semibold border-hrms-border-dull-blue py-1 px-14 rounded-md;
+                  }
+              }
+           }
         }
 
         & small{

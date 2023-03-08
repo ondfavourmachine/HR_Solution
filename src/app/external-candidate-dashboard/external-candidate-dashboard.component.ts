@@ -147,7 +147,7 @@ export class ExternalCandidateDashboardComponent implements OnInit {
       this.dialog.open(TestInviteDescriptionViewComponent, config)
     } catch (error) {
       console.log(error);
-      this.sharedService.errorSnackBar('Failed to fetch test details. Please try again!')
+      this.sharedService.errorSnackBar('Failed to fetch test details. Please try again!');
     }
   }
 

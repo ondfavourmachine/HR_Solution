@@ -57,6 +57,7 @@ export class PreviewJobDetailsComponent implements OnInit, OnChanges {
       this.sharedService.showAllChildren([this.JobObjectives, this.PersonSpecifications, this.Accountability, this.ProfessionalCompetencies, this.Experience, this.EducationalQualifications, this.OrganisationalCompetencies, this.BehavioralCompetencies]);
       return;
     }
+    console.log(this.data);
   }
 
   ngOnInit(): void {

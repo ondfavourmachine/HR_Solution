@@ -72,14 +72,11 @@
               "sourceMap": false
             },
             "development": {
-              "buildOptimizer": true,
-              "optimization": {
-                "scripts": true,
-                "styles": true
-              },
-              "vendorChunk": false,
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
               "extractLicenses": false,
-              "sourceMap": false,
+              "sourceMap": true,
               "namedChunks": true
             }
           },
