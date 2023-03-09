@@ -1,0 +1,67 @@
+
+
+.firstHalf{
+    background: #075bae url(../../../assets/images/external_login_image.png) 60% 40% no-repeat;
+}
+.secondHalf{
+    background: url(../../../assets/images/second_half_bg.png);
+    @apply w-full md:w-1/2 px-6 md:px-10 lg:px-16 xl:px-36 h-screen flex justify-center items-center; 
+}
+
+.showOrHide{
+    text-transform: uppercase;
+    font-family: "Campton Semi Bold";
+    color: var(--light-bgColor);
+}
+
+.loginCustom{
+    @apply w-full px-4 sm:px-16 lg:px-7 xl:px-28 h-full  py-12
+}
+
+.loginForm{
+    .login-title{
+        font-size: 2em;
+        @apply flex justify-between font-hrmsCamptonBold;
+    }
+
+    .sub-title{
+        font-size: 1em;
+    }
+
+    .forgot_password{
+        color: var(--light-bgColor);
+        & span{
+        line-height: 2.1;
+        border-bottom: 2px dashed #5485b6;
+        }
+    }
+}
+
+
+.globus_logo_text{
+    font-family: 'Campton Medium';
+}
+
+.first_text{
+    font-family: "Campton Semi Bold";
+    letter-spacing: -1px;
+    @apply text-3xl sm:text-5xl  md:text-5xl xl:text-7xl overflow-visible;
+}
+
+.second_text{
+    font-family: "Campton Semi Bold";
+    @apply text-4xl sm:text-6xl md:text-6xl xl:text-8xl overflow-visible;
+}
+
+.token_generation{
+    @apply absolute right-1 bottom-10 rounded bg-hrms-hoverBlue-1 hover:bg-hrms-genBlueColor-1 cursor-pointer py-2 px-3 text-white;
+
+    &.disabled{
+        @apply pointer-events-none opacity-10;
+    }
+}
+
+button:disabled{
+    @apply pointer-events-none opacity-25;
+}
+

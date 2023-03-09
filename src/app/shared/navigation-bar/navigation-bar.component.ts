@@ -23,8 +23,13 @@ export class NavigationBarComponent implements OnInit {
   }
 
   async logout(){
+    const isExternal = sessionStorage.getItem('isExternal') as string;
     await this.authService.clearSession();
-     this.router.navigate(['/login']);
+    if(!isExternal) {
+      this.router.navigate(['/login']);
+      return;
+    }
+     this.router.navigate(['/signin']);
    }
 
 

@@ -19,7 +19,7 @@ export class DownloadIconsComponent implements OnInit {
   }
 
   downloadExcel(){
-    this.sharedService.downloadAsExcel(this.dataToUse.data, 'applicants-selected');
+    this.sharedService.downloadAsExcel(this.dataToUse.data, this.dataToUse.fileName ? this.dataToUse.fileName :'applicants-selected');
   }
 
   downloadAsPdf(){

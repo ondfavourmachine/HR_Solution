@@ -1,4 +1,4 @@
-<main class="preview_application__container">
+<main class="preview_application__container laptop_view">
     <header *ngIf="!isPreviewForExternalApplicant">
         <div class="first_part gap-20">
          Preview Application   
@@ -1047,6 +1047,213 @@
         </section>
 
     </div>
+</main>
+
+<main class="preview_application__container mobile_view ">
+     <a 
+       (click)="closeBtn()"
+      class="history pl-2"><img src="../../../assets/images/go_back.svg" alt=""> Go back</a>
+     <div class="warning">
+        <span><img src="../../../assets/images/exclamation_mark.png" alt=""></span>
+        <span>Please note that within <strong>a six-month period</strong>, only <strong>one position</strong> may be applied for.</span>
+      </div>
+
+      <div class="preview_content">
+         <h3>Preview Application</h3>
+
+         <div class="other_contents_of_application">
+            <div class="image_of_applicant">
+                
+                <img #ImageContainer >
+            </div>
+
+            <h5 class="">Curriculum Vitae</h5>
+            <div class="cv_box">
+                <img src="../../../assets/images/word_doc_icon.svg" alt="">
+                <span #CVContainer class="break-words"></span>
+            </div>
+
+            <div class="other_information">
+                <div class="aContent">
+                    <div class="labels">First Name:</div>
+                    <div class="content"> {{ data.applicantData?.firstName }} </div>
+                </div>
+
+                <div class="aContent">
+                    <div class="labels">
+                        Middle Name:
+                    </div>
+                    <div class="content">
+                        {{ data.applicantData?.middleName || 'Nil' }}
+                    </div>
+                </div>
+
+                <div class="aContent">
+                    <div class="labels">
+                        Last Name:
+                    </div>
+                    <div class="content">
+                        {{ data.applicantData?.lastName }}
+                    </div>
+                </div>
+
+                <div class="aContent">
+                    <div class="labels">Email:</div>
+                    <div class="content">
+                        {{ data.applicantData?.email }}
+                    </div>
+                </div>
+
+                <div class="aContent">
+                    <div class="labels">Date of Birth:</div>
+                    <div class="content">
+                        {{ (data?.applicantData?.dob | date:'mediumDate') ||  data.applicantData?.dob  }}
+                    </div>
+                </div>
+
+                <div class="aContent">
+                    <div class="labels">Age:</div>
+                    <div class="content">
+                        {{ data.applicantData?.age }}
+                    </div>
+                </div>
+
+                <div class="aContent">
+                    <div class="labels">Phone Number:</div>
+                    <div class="content">
+                        {{ data.applicantData?.phone }}
+                    </div>
+                </div>
+
+                <div class="aContent">
+                    <div class="labels">Secondary Number:</div>
+                    <div class="content">
+                        {{ data.applicantData?.secondaryPhone || 'Nil' }}
+                    </div>
+                </div>
+
+                <div class="aContent">
+                    <div class="labels">Gender:</div>
+                    <div class="content">
+                        {{ data.applicantData?.gender }}
+                    </div>
+                </div>
+
+                <div class="aContent">
+                    <div class="labels">Marital Status:</div>
+                    <div class="content">
+                        {{ data.applicantData?.maritalStatus }}
+                    </div>
+                </div>
+
+                <div class="aContent">
+                    <div class="labels">Residential State:</div>
+                    <div class="content">
+                        {{ data.applicantData?.residential_State || data?.applicantData?.stateName || 'Nil' }}
+                    </div>
+                </div>
+
+                <div class="aContent">
+                    <div class="labels">Residential Address:</div>
+                    <div class="content">
+                        {{ data.applicantData?.residentialAddress }}
+                    </div>
+                </div>
+
+                <hr class="my-4 border border-l-hrms-text-light">
+
+                <div class="aContent">
+                    <div class="labels">University:</div>
+                    <div class="content">
+                        {{  data?.applicantData?.universityBSc }}
+                    </div>
+                </div>
+
+                <div class="aContent">
+                    <div class="labels">Degree:</div>
+                    <div class="content">
+                        {{ data?.applicantData?.degree }}
+                    </div>
+                </div>
+
+                <div class="aContent">
+                    <div class="labels">Class of Degree:</div>
+                    <div class="content">
+                        {{ data?.applicantData?.classOfDegree }}
+                    </div>
+                </div>
+
+                <div class="aContent">
+                    <div class="labels">Course of Study:</div>
+                    <div class="content">
+                        {{ data?.applicantData?.courseofStudy }}
+                    </div>
+                </div>
+
+                <div class="aContent">
+                    <div class="labels">University (Master):</div>
+                    <div class="content">
+                        {{ data?.applicantData?.universityMSc }}
+                    </div>
+                </div>
+
+                <div class="aContent">
+                    <div class="labels">Course of Study (Master):</div>
+                    <div class="content">
+                        {{ data?.applicantData?.courseMsc || 'Nil' }}
+                    </div>
+                </div>
+
+                <div class="aContent">
+                    <div class="labels">Completed NYSC:</div>
+                    <div class="content">
+                        {{ data?.applicantData?.completedNYSC || 'Nil' }}
+                        
+                    </div>
+                </div>
+
+                <div class="aContent">
+                    <div class="labels">Year of Completion:</div>
+                    <div class="content">
+                        {{ data?.applicantData?.yearOfCompletion || 'Nil' }}
+                    </div>
+                </div>
+
+                <hr class="my-4 border border-l-hrms-text-light">
+
+                <div class="aContent">
+                    <div class="labels">Profession Certificate:</div>
+                    <div class="content">
+                        {{ data?.applicantData?.certification || 'Nil' }}
+                    </div>
+                </div>
+                <div class="aContent">
+                    <div class="labels">Year of Experience:</div>
+                    <div class="content">
+                        {{ data?.applicantData?.yearsOfExperience || 'Nil' }}
+                    </div>
+                </div>
+                <div class="aContent">
+                    <div class="labels">Current Employer:</div>
+                    <div class="content">
+                        {{ data?.applicantData?.currentEmployer || 'Nil' }}
+                    </div>
+                </div>
+
+            </div>
+         </div>
+      </div>
+
+      <div class="floating_footer">
+         <a (click)="edit()">   
+            <img  class="edit_button" src="../../../assets/images/edit_button.svg" alt="">   Edit
+          </a>
+          <button
+           (click)="submit()" 
+           class="btn-red-custom">
+              Submit Application
+          </button>
+      </div>
 </main>
 
 

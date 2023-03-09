@@ -14,3 +14,72 @@
 .text.wrap-word{
     overflow-wrap: break-word !important;
 }
+
+.preview_application__container.mobile_view{
+    @apply px-2;
+    .history{
+        @apply w-full inline-flex gap-1 mt-1 mb-2;
+    }
+    & .warning{
+        font-size: var(--step-0);
+        @apply flex gap-4 font-hrmsCamptonExtraLight h-[5.5rem] overflow-visible mb-2;
+    }
+
+    & .preview_content{
+        @apply border-2 border-hrms-text-dark rounded-md mb-14;
+
+        & h3{
+            font-size: var(--step-2);
+            @apply border-b-2 border-hrms-text-dark py-3 px-2  font-hrmsCamptonMedium;
+        }
+
+        & .other_contents_of_application{
+            @apply h-auto w-full px-2 pt-3;
+
+            & .image_of_applicant{
+                @apply h-40 w-40 mb-3 ;
+            }
+
+            & h5{
+                font-size: var(--step-1);
+                @apply my-1
+            }
+
+            & .cv_box{
+                font-size: var(--step-2);
+                @apply rounded-lg w-3/4 border border-hrms-bgBlue-1 py-3 px-2 mb-2 flex gap-2 break-words items-center;
+            }
+
+            & .other_information{
+                // @apply h-[60vh];
+                & .aContent{
+                    @apply grid grid-rows-1 grid-cols-2 gap-1 my-2;
+
+                    & .labels{
+                        font-size: var(--step-1);
+                        @apply col-span-1 row-span-1 break-words;
+                    }
+
+                    & .content{
+                        font-size: var(--step-2);
+                        @apply col-span-1 row-span-1 text-hrms-bgBlue-1 font-hrmsCamptonMedium font-medium break-words;
+                    }
+                }
+            }
+        }
+    }
+
+    & .floating_footer{
+        font-size: var(--step-2);
+        @apply h-28 bg-white fixed bottom-0 left-0 right-0 flex justify-end items-center gap-5 px-2;
+
+        & a {
+            font-size: var(--step-1);
+            @apply inline-flex items-center overflow-visible w-max gap-1 h-9 border-b border-dashed border-b-hrms-bgBlue-1 text-hrms-genBlueColor-1 #{!important};
+        }
+
+        & button.btn-red-custom{
+            @apply w-max px-4 flex justify-center items-center py-[6px] mb-0 #{!important};
+        }
+    }
+}

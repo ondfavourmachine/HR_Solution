@@ -1,5 +1,5 @@
 import { CurrencyPipe } from '@angular/common';
-import {  Component, Inject, OnInit, } from '@angular/core';
+import {  Component, ElementRef, Inject, OnInit, ViewChild, } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FullInterviewerDetailsAndInterviewResponse } from 'src/app/models/applicant-selection.models';
 import { AnApplication, ApplicationApprovalStatus, ApprovalProcessStatuses, InformationForModal, PostAcceptanceInfo, PreviewActions, RequiredApplicantDetails } from 'src/app/models/generalModels';
@@ -18,6 +18,9 @@ import { ExternalCandidateJobsComponent } from '../external-candidate-jobs/exter
 })
 export class PreviewApplicationComponent implements OnInit {
   role!: string;
+  @ViewChild('CVContainer') CVContainer!: ElementRef<HTMLElement>;
+  @ViewChild('ImageContainer') ImageContainer!: ElementRef<HTMLImageElement>;
+  cvName!: string;
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: InformationForModal<AnApplication & RequiredApplicantDetails & PostAcceptanceInfo>,
     private sharedService: SharedService,
@@ -34,6 +37,20 @@ export class PreviewApplicationComponent implements OnInit {
       this.data.applicantData.certification = this.data.applicantData.certification.map((elem: {certificate: string}) => elem.certificate ).join(' , ');
     }
     this.role = this.authService.getRole();
+  }
+
+  ngAfterViewInit(): void {
+    this.CVContainer.nativeElement.textContent = this.data.applicantData.cv! instanceof File ? this.data.applicantData.cv?.name  as string : this.data.applicantData.cv as unknown as string || this.cvName;
+    const {passport, passport_URL} = this.data.applicantData;
+    if(passport_URL && passport_URL.includes('http')){
+      this.ImageContainer.nativeElement.src = passport_URL;
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.ImageContainer.nativeElement.src = e.target?.result as any;
+    }
+    reader.readAsDataURL(passport as File);
   }
 
   edit(){

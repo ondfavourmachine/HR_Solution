@@ -52,6 +52,7 @@ export class GlobalInterceptorInterceptor implements HttpInterceptor, OnDestroy 
 
 
   reRouteToLogin(){
+    // const isExternal = sessionStorage.getItem('isExternal') as string;
     this.router.navigateByUrl('/login');
     this.matdialog.closeAll();
   }

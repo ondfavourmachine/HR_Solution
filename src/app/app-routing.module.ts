@@ -3,6 +3,7 @@ import { Route, Router, RouterModule, Routes, UrlSegment } from '@angular/router
 import { ExternalCandidateDashboardComponent } from './external-candidate-dashboard/external-candidate-dashboard.component';
 import { ExternalCandidateJobsComponent } from './pages/external-candidate-jobs/external-candidate-jobs.component';
 import { LandingPageComponent } from './pages/landing-page/landing-page.component';
+import { LoginExternalComponent } from './pages/login-external/login-external.component';
 import { LoginComponent } from './pages/login/login.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { RoleComponent } from './pages/role/role.component';
@@ -19,6 +20,7 @@ const routes: Routes = [
   { path: 'jobs', component: ExternalCandidateJobsComponent},
   { path: 'jobs/:category', component: ExternalCandidateJobsComponent},
   { path: 'login', component: LoginComponent},
+  { path: 'signin', component: LoginExternalComponent},
   { path: 'assign-roles', component: RoleComponent},
   { path: 'dashboard', canMatch: [allowAccessToDashboard],  loadChildren: () => import('./modules/dashboard/dashboard.module').then(m => m.DashboardModule)},
   { path: 'external-applicant', component: ExternalCandidateDashboardComponent},

@@ -18,6 +18,7 @@ import { GlobalInterceptorInterceptor } from './services/global-interceptor.inte
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { UserIdleModule } from 'angular-user-idle';
+import { LoginExternalComponent } from './pages/login-external/login-external.component';
 
 
 
@@ -30,6 +31,7 @@ import { UserIdleModule } from 'angular-user-idle';
     ExternalCandidateDashboardComponent,
     RoleComponent,
     NotFoundComponent,
+    LoginExternalComponent,
   
   ],
   imports: [
@@ -44,9 +46,13 @@ import { UserIdleModule } from 'angular-user-idle';
     BrowserAnimationsModule,
     UserIdleModule.forRoot({idle: 180, timeout: 180, ping: 100})
   ],
-  providers: [TitleCasePipe, DatePipe,  { 
+  providers: [
+    TitleCasePipe, 
+    DatePipe,  
+    { 
     provide: HTTP_INTERCEPTORS, useClass: GlobalInterceptorInterceptor, multi:true
-  },],
+   }
+   ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

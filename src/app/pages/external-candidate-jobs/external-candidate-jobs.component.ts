@@ -269,6 +269,17 @@ export class ExternalCandidateJobsComponent implements OnInit, AfterViewInit {
     if(this.applicationView == 3) return;
     this.applicationView = this.applicationView + 1;
     this.setApplicationViewName();
+    console.log(this.personalDataForm);
+    // const tempCandidateDetails = JSON.parse(sessionStorage.getItem('preview') as string)
+    // const config: MatDialogConfig = {
+    //   panelClass: 'preview_application',
+    //   width: '84.5vw',
+    //   height: '75vh',
+    //   maxWidth: '85vw',
+    //   data: {applicantData: tempCandidateDetails, extraInfo: {applicantSelectionScreen: false}}
+    // }
+    // const dialog = this.dialog.open(PreviewApplicationComponent, config);
+
   }
 
   gotoPreviousApplicationForm(){

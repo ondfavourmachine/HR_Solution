@@ -6,10 +6,11 @@
                 [stopLoading]="stopLoading"
                 [hideSearch]="hideSearch"
                  ></app-table-search-params-with-download-icons>
-        <div class="download_icons">
+                 <div class="download_icons">
                     <app-download-icons
+                     [dataToUse]="dataForExcelAndPdf"
                     ></app-download-icons>
-        </div>
+                 </div>
     </div>
 </div>
 <div class="table-contents overflow-hidden">

@@ -2066,6 +2066,12 @@ input:focus, select:focus, textarea:focus {
     @apply p-0 transition-all;
 }
 
+@media (width <= 768px) {
+    .preview_application{
+        @apply w-[97vw] h-[98.5vh] max-h-[99vh] max-w-[97.5vw] #{!important};
+    }
+}
+
 .interview_summary_comp.shrinkUp .mat-dialog-container{
     transform: scale(0.1) !important;
 }
@@ -2492,7 +2498,7 @@ table{
 }
 
 // preview application styles here and assessment
-.preview_application__container, .assessment_applicant__container{
+.preview_application__container.laptop_view, .assessment_applicant__container{
     @apply w-[84vw] h-[74.5vh] bg-white overflow-hidden;
 
     & header{
@@ -2599,7 +2605,7 @@ table{
             @apply  relative overflow-y-hidden pl-7;
 
             & .main_content{
-                @apply  h-[39.5rem] overflow-y-scroll;
+                @apply  h-[36.5rem] overflow-y-scroll;
 
                 &::-webkit-scrollbar {
                     width: .5em;
@@ -2713,6 +2719,17 @@ table{
             @apply min-w-max flex;
         }
     }
+}
+
+@media (width <= 768px) {
+    .preview_application__container.laptop_view{
+        @apply hidden;
+    }
+
+    .preview_application__container.mobile_view{
+        @apply w-[95vw] h-[96vh] max-w-[96vh] bg-white p-3;
+    }
+    
 }
 
 .assessment_applicant__container{

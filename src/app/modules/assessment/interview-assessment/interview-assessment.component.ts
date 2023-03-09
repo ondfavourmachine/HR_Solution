@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { PartialObserver } from 'rxjs';
 import { AssessmentDetails, AssessmentResponseDS } from 'src/app/models/assessment.models';
-import { RequiredQuarterFormat, SearchParams } from 'src/app/models/generalModels';
+import { DownloadAsExcelAndPdfData, RequiredQuarterFormat, SearchParams } from 'src/app/models/generalModels';
 import { InterviewTypesWithNumber } from 'src/app/models/scheduleModels';
 import { AssessmentService } from 'src/app/services/assessment.service';
 import { SchedulerDateManipulationService } from 'src/app/services/scheduler-date-manipulation.service';
@@ -29,6 +29,7 @@ export class InterviewAssessmentComponent implements OnInit {
   destroyObs: Subscription[] = [];
   useCurrentPage: boolean = false;
   noOfRecords: number = 10;
+  dataForExcelAndPdf!:DownloadAsExcelAndPdfData;
   constructor(
      private sdm: SchedulerDateManipulationService,
      private assessmentService: AssessmentService,
@@ -63,6 +64,7 @@ export class InterviewAssessmentComponent implements OnInit {
         this.isLoading = false;
         this.assessments = data;
         this.stopLoading = {stopLoading: false};
+        this.setDataForPdfAndExcel();
       },
       error: console.error
     }
@@ -116,6 +118,22 @@ export class InterviewAssessmentComponent implements OnInit {
     }
     autoTable(doc, options);
     doc.save('applicants_selected.pdf');
+    }
+
+    setDataForPdfAndExcel(){
+      const columns: string[] = ['Serial_Number', 'Job_Title', 'Department', 'Date', 'Applicants', 'interviewers', 'interview_status',];
+      const rows =  this.assessments.map((elem, index) => {
+        return [
+          index > 8 ? `${index + 1}` : `0${index + 1}`,
+          `${elem.jobTitle}`,
+          `${elem.departmentName}`,
+          `${this.sharedService.covertDateToHumanFreiendlyFormat(elem.dateTime, 'medium')}`,
+          `${elem.applicants.length}`,
+          `${elem.interviewers.length}`,
+          `${elem.isInterviewDone}`,
+        ]
+      })
+      this.dataForExcelAndPdf = {data: this.assessments, columns: columns, rows, fileName: 'Interview Assessment'}
     }
  
 

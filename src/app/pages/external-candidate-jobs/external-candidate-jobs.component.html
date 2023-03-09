@@ -298,12 +298,12 @@
                 <div class="form_fields_with_radios laptop_view">
                    <label for="" class="important_content">Gender</label>
                    <div class="input_group_radio">                    
-                    <input formControlName="gender"  name="gender" value="Male" type="radio" class="an_input half" id="male" >
+                    <input formControlName="gender"  name="gender" value="Male" type="radio" class="an_input half" id="male_laptop" >
                     <label for="male">Male</label>
                   </div>
 
                   <div class="input_group_radio">                    
-                    <input formControlName="gender" name="gender" value="Female" type="radio" class="an_input half" id="female">
+                    <input formControlName="gender" name="gender" value="Female" type="radio" class="an_input half" id="female_laptop">
                     <label for="female">Female</label>
                   </div>
                 </div>
@@ -312,13 +312,13 @@
                   <label for="" class="important_content">Gender</label>
                   <div class="wrapper">
                     <div class="input_group_radio">                    
-                      <input formControlName="gender" name="gender" value="Male" type="radio" class="an_input half" id="male" >
-                      <label for="male">Male</label>
+                      <input formControlName="gender"  value="Male" type="radio" class="an_input half" id="male_mobile" >
+                      <label for="male_mobile">Male</label>
                     </div>
    
                     <div class="input_group_radio">                    
-                      <input formControlName="gender" name="gender" value="Female" type="radio" class="an_input half" id="female">
-                      <label for="female">Female</label>
+                      <input formControlName="gender"  value="Female" type="radio" class="an_input half" id="female_mobile">
+                      <label for="female_mobile">Female</label>
                     </div>
                   </div>
                </div>
@@ -327,18 +327,18 @@
                   <label for="" class="important_content">Marital Status</label>
                   <div class="input_group_radio">  
                                    
-                   <input formControlName="maritalStatus" name="maritalStatus" value="Single" type="radio" class="an_input half" id="single" >
-                   <label for="single">Single</label>
+                   <input formControlName="maritalStatus" name="maritalStatus" value="Single" type="radio" class="an_input half" id="single_laptop" >
+                   <label for="single_laptop">Single</label>
                  </div>
 
                  <div class="input_group_radio">                    
-                   <input formControlName="maritalStatus" name="maritalStatus" value="Married" type="radio" class="an_input half" id="married">
-                   <label for="married">Married</label>
+                   <input formControlName="maritalStatus" name="maritalStatus" value="Married" type="radio" class="an_input half" id="married_laptop">
+                   <label for="married_laptop">Married</label>
                  </div>
 
                  <div class="input_group_radio">                    
-                  <input formControlName="maritalStatus" name="maritalStatus" value="Divorced" type="radio" class="an_input half" id="divorced">
-                  <label for="divorced">Divorced</label>
+                  <input formControlName="maritalStatus" name="maritalStatus" value="Divorced" type="radio" class="an_input half" id="divorced_laptop">
+                  <label for="divorced_laptop">Divorced</label>
                 </div>
                </div>
 
@@ -347,18 +347,18 @@
                 <div class="wrapper">
                   <div class="input_group_radio">  
                                  
-                    <input formControlName="maritalStatus" name="maritalStatus" value="Single" type="radio" class="an_input half" id="single" >
-                    <label for="single">Single</label>
+                    <input formControlName="maritalStatus"  value="Single" type="radio" class="an_input half" id="single_mobile" >
+                    <label for="single_mobile">Single</label>
                    </div>
    
                   <div class="input_group_radio">                    
-                    <input formControlName="maritalStatus" name="maritalStatus" value="Married" type="radio" class="an_input half" id="married">
-                    <label for="married">Married</label>
+                    <input formControlName="maritalStatus"  value="Married" type="radio" class="an_input half" id="married_mobile">
+                    <label for="married_mobile">Married</label>
                   </div>
    
                   <div class="input_group_radio">                    
-                   <input formControlName="maritalStatus" name="maritalStatus" value="Divorced" type="radio" class="an_input half" id="divorced">
-                   <label for="divorced">Divorced</label>
+                   <input formControlName="maritalStatus"  value="Divorced" type="radio" class="an_input half" id="divorced_mobile">
+                   <label for="divorced_mobile">Divorced</label>
                  </div>
                 </div>
                </div>
@@ -517,14 +517,14 @@
                                    
                       <input value="Completed" 
                       formControlName="completedNYSC" 
-                      name="completedNYSC"
+                      
                       type="radio" class="an_input half" id="completed" >
                       <label for="single">Yes</label>
                      </div>
      
                     <div class="input_group_radio">                    
                       <input formControlName="completedNYSC"  
-                      name="completedNYSC" 
+                      
                       value="InProgress" 
                       type="radio" class="an_input half" id="in_progress">
                       <label for="married">No</label>
@@ -532,7 +532,7 @@
      
                     <div class="input_group_radio">                    
                      <input formControlName="completedNYSC"  
-                     name="completedNYSC" 
+                     
                      value="Exempted" 
                      type="radio" class="an_input half" id="exempted">
                      <label for="divorced">Exempted</label>
@@ -620,7 +620,7 @@
                  </form>
 
               <div class="button_fields">
-                <!-- [disabled]="enableNextButtonsForPersonal",  [disabled]="educationRelatedRecords.invalid"  -->
+                <!-- [disabled]="enableNextButtonsForPersonal" -->
                 <a (click)="gotoPreviousApplicationForm()" >Previous</a>
                  <button class="btn-red-custom" 
                  [disabled]="enableNextButtonsForPersonal"
